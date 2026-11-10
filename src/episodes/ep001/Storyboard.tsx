@@ -213,9 +213,9 @@ const S10: React.FC = () => (
 );
 
 const Stat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <Card style={{ width: 340, padding: "34px 36px", display: "flex", flexDirection: "column", gap: 8 }}>
+  <Card style={{ minWidth: 300, padding: "34px 36px", display: "flex", flexDirection: "column", gap: 8 }}>
     <div style={{ fontSize: 30, fontWeight: 700, opacity: 0.6 }}>{label}</div>
-    <div style={{ fontSize: 76, fontWeight: 900, color: color.main, letterSpacing: "-0.04em" }}>{value}</div>
+    <div style={{ fontSize: 72, fontWeight: 900, color: color.main, letterSpacing: "-0.04em", whiteSpace: "nowrap" }}>{value}</div>
   </Card>
 );
 
@@ -292,7 +292,7 @@ const S14: React.FC = () => (
         <span style={{ fontSize: 52, fontWeight: 900, color: color.main }}>손님이 직접 확인</span>
       </Card>
     </div>
-    <div style={{ position: "absolute", left: 100, right: 100, bottom: 70, display: "flex", alignItems: "center", gap: 14, flexWrap: "nowrap" }}>
+    <div style={{ position: "absolute", left: 560, right: 100, top: 560, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", maxWidth: 820 }}>
       {["접수", "입고 사진", "세탁", "완료 사진", "자동 문자", "손님 앱 확인"].map((t, i, a) => (
         <React.Fragment key={t}>
           <FlowChip t={t} hl={i === a.length - 1} />
