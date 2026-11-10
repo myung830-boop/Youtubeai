@@ -110,7 +110,7 @@ export const HookScene: React.FC = () => {
       {/* B1: 간판 + 등장 */}
       <Beat f={b1} len={b1 - b2} inT="cut" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.35, y: 60 }, { f: 40, zoom: 1.05, y: 0 }, { f: 70, zoom: 1.12 }]} shake={impact(b1 - 12, 14)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <HangingSign f={b1 - 6} />
           {[0, 1, 2, 3].map((i) => (
             <div key={i} style={{ position: "absolute", left: 980 + i * 200, top: 650 + floatY(frame, 16, 0.09, i * 1.7), transform: `rotate(${Math.sin(frame * 0.06 + i) * 16}deg)` }}>
@@ -126,7 +126,7 @@ export const HookScene: React.FC = () => {
       {/* B2: 코딩 몰라요 */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0, rot: -2 }, { f: 60, zoom: 1.12, rot: 1, x: 40 }]} shake={impact(b2 - 30, 20)}>
-          <GridBg tone="navy" cell={60} />
+          <GridBg tone="navy" cell={60} bleed />
           <SpeedLines f={b2} colorLine="#ffffff" opacity={0.08} />
           <div style={{ position: "absolute", left: 860, top: 210 }}>
             <Pop f={b2 - 2} from={{ x: 400, rotateY: 80, scale: 0.6 }}><CodeWindow f={b2 - 6} /></Pop>
@@ -143,7 +143,7 @@ export const HookScene: React.FC = () => {
       {/* B3: 앱 3개가 날아듦 */}
       <Beat f={b3} len={b3 - b4} inT="zoom" outT="cut">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.2, x: -260, ry: 10 }, { f: b3 - p2 + 6, zoom: 1.08, x: 0, ry: 0 }, { f: b3 - p3 + 10, zoom: 1.0, x: 120, ry: -6 }, { f: b3 - b4 + 20, zoom: 0.95, x: 60, ry: -3 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 60% 50%, rgba(180,85,246,0.18), transparent 60%)` }} />
           <FlyPhone f={b3 - 2} label="접수 시스템" x={330} y={190} tilt={-7} phase={0}><IntakeScreen w={330} /></FlyPhone>
           <FlyPhone f={p2} label="문자 발송" x={780} y={150} tilt={2} phase={1.5}><SmsScreen w={330} /></FlyPhone>
@@ -157,7 +157,7 @@ export const HookScene: React.FC = () => {
       {/* B4: 제가 직접 만들었습니다! */}
       <Beat f={b4} len={b4 - b5} inT="cut" outT="cut">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.4 }, { f: 10, zoom: 1.0 }, { f: 45, zoom: 1.08 }]} shake={impact(b4 - 6, 26)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT }} />
+          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.6}deg at 50% 60%, rgba(255,255,255,0.14) 0deg 8deg, transparent 8deg 16deg)` }} />
           <SpeedLines f={b4} colorLine="#fff" opacity={0.25} cy={620} />
           {[[-560, 40, -16, 0], [520, 20, 14, 1], [-380, -250, -8, 2]].map(([x, y, r, i]) => (
@@ -185,7 +185,7 @@ export const HookScene: React.FC = () => {
       {/* B5: 어떻게 / 얼마 / 5분 */}
       <Beat f={b5} len={100000} inT="iris" inDur={12}>
         <Camera start={frame - b5} keys={[{ f: 0, zoom: 1.12, rot: 2 }, { f: 120, zoom: 1.0, rot: 0 }]} shake={impact(q3 - 2, 10)}>
-          <GridBg tone="navy" cell={60} />
+          <GridBg tone="navy" cell={60} bleed />
           <div style={{ position: "absolute", left: 0, right: 0, top: 90, display: "flex", justifyContent: "center" }}>
             <div style={{ fontFamily: font.family, fontWeight: 900, fontSize: 64, color: color.white, letterSpacing: "-0.03em" }}>
               <KText f={b5 - 2} text="오늘 전부 공개합니다" size={64} color={color.white} />

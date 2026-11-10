@@ -2,18 +2,19 @@ import React from "react";
 import { color, font, ui } from "../styles/theme";
 
 /** 실험 노트(모눈종이) 배경. tone="light" | "navy" */
-export const GridBg: React.FC<{ tone?: "light" | "navy"; cell?: number; children?: React.ReactNode; style?: React.CSSProperties }> = ({
+export const GridBg: React.FC<{ tone?: "light" | "navy"; cell?: number; children?: React.ReactNode; style?: React.CSSProperties; bleed?: boolean }> = ({
   tone = "light",
   cell = 48,
   children,
   style,
+  bleed = false,
 }) => {
   const line = tone === "light" ? ui.grid : ui.gridDark;
   return (
     <div
       style={{
         position: "absolute",
-        inset: 0,
+        inset: bleed ? -1500 : 0, // bleed: 카메라가 움직여도 가장자리가 안 보이게 크게
         background: tone === "light" ? color.bg : color.main,
         backgroundImage: `linear-gradient(${line} 2px, transparent 2px), linear-gradient(90deg, ${line} 2px, transparent 2px)`,
         backgroundSize: `${cell}px ${cell}px`,

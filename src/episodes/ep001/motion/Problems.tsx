@@ -14,7 +14,7 @@ export const IntroDynamic: React.FC = () => {
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
       <Camera keys={[{ f: 0, zoom }]} shake={impact(f - 8, 16)} handheld={0.5}>
-        <GridBg tone="navy" cell={64} />
+        <GridBg tone="navy" cell={64} bleed />
         <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${f * 1.4}deg at 35% 55%, rgba(255,255,255,0.07) 0deg 9deg, transparent 9deg 18deg)` }} />
         <div style={{ position: "absolute", left: 300, top: 250 }}>
           <BossActor size={640} enter="jump" enterAt={0} poses={[{ f: 0, pose: "wave", expression: "joy" }]} hops={[30]} />
@@ -144,7 +144,7 @@ export const ProblemsScene: React.FC = () => {
       {/* 1. 손이 정말 많이 가요: 신발이 쏟아짐 */}
       <Beat f={b1} len={b1 - b2} inT="whipUp" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.25, y: -40 }, { f: 80, zoom: 1.0, y: 0 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           {Array.from({ length: 16 }, (_, i) => {
             const t = b1 - i * 3;
             const y = t < 0 ? -300 : Math.min(760 + (i % 4) * 40, -300 + t * t * 1.4);
@@ -172,7 +172,7 @@ export const ProblemsScene: React.FC = () => {
       {/* 2. 종이 장부 */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="whip">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.15, rot: -3, ry: 12 }, { f: 80, zoom: 1.0, rot: 0, ry: 0 }]} shake={impact(b2 - 34, 22)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <div style={{ position: "absolute", left: 230, top: 170, transform: `rotate(-6deg)` }}>
             <Pop f={b2} from={{ y: 600, rotateX: 70, scale: 0.6 }}><Notebook f={b2 - 6} /></Pop>
             <div style={{ position: "absolute", left: 120, top: 280 }}><Stamp f={b2 - 34} size={100} rot={-16}>✗ 종이 장부</Stamp></div>
@@ -190,7 +190,7 @@ export const ProblemsScene: React.FC = () => {
       {/* 3. 사진첩 뒤죽박죽 */}
       <Beat f={b3} len={b3 - b4} inT="whip" outT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.3, rot: 4 }, { f: 40, zoom: 1.0, rot: -1 }]} shake={impact(b3 - 22, 12)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <div style={{ position: "absolute", left: 160, top: 280 }}><PhotoPile f={b3} /></div>
           <div style={{ position: "absolute", right: 120, top: 150, textAlign: "right" }}>
             <KText f={b3 - 4} text="사진첩에" size={90} />
@@ -205,7 +205,7 @@ export const ProblemsScene: React.FC = () => {
       {/* 4. 한 분 한 분 문자 */}
       <Beat f={b4} len={b4 - b5} inT="zoom" outT="whip">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.0, x: 40 }, { f: 75, zoom: 1.06, x: 90 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <div style={{ position: "absolute", left: 470, top: 140, transform: `rotate(-5deg)` }}>
             <Pop f={b4} from={{ x: -500, rotate: -30 }}><SmsScreen w={380} /></Pop>
           </div>
@@ -224,7 +224,7 @@ export const ProblemsScene: React.FC = () => {
       {/* 5. 문의 폭탄 */}
       <Beat f={b5} len={b5 - b6} inT="whip" outT="cut">
         <Camera start={frame - b5} keys={[{ f: 0, zoom: 1.2 }, { f: 70, zoom: 1.0 }]} shake={6 + impact(b5 - 6, 16)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <SpeedLines f={b5} cy={500} opacity={0.1} />
           <Ringing f={b5} />
           <div style={{ position: "absolute", left: 60, bottom: -140 }}>
@@ -236,7 +236,7 @@ export const ProblemsScene: React.FC = () => {
       {/* 6. 6년 넘게 전부 손으로 */}
       <Beat f={b6} len={100000} inT="cut">
         <Camera start={frame - b6} keys={[{ f: 0, zoom: 1.5, rot: -4 }, { f: 8, zoom: 1.0, rot: 0 }, { f: 90, zoom: 1.1 }]} shake={impact(b6 - 22, 26)}>
-          <GridBg tone="navy" cell={60} />
+          <GridBg tone="navy" cell={60} bleed />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.5}deg at 50% 45%, rgba(255,255,255,0.06) 0deg 8deg, transparent 8deg 16deg)` }} />
           <div style={{ position: "absolute", left: 250, top: 260 }}><Pop f={b6 - 4} from={{ x: -300, rotate: -40 }}><Calendar f={b6 - 4} /></Pop></div>
           <div style={{ position: "absolute", left: 640, top: 150, fontFamily: font.family, fontWeight: 900, color: color.white, letterSpacing: "-0.05em", lineHeight: 1 }}>

@@ -82,7 +82,7 @@ export const KText: React.FC<{ f: number; text: string; size?: number; color?: s
 }) => {
   const { fps } = useVideoConfig();
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", fontFamily: font.family, fontWeight: weight, fontSize: size, color: c, letterSpacing: "-0.04em", lineHeight: 1.1, ...style }}>
+    <div style={{ display: "flex", flexWrap: "nowrap", whiteSpace: "nowrap", fontFamily: font.family, fontWeight: weight, fontSize: size, color: c, letterSpacing: "-0.04em", lineHeight: 1.1, ...style }}>
       {Array.from(text).map((ch, i) => {
         const p = spring({ frame: f - i * stagger, fps, config: { damping: 10, stiffness: 220, mass: 0.6 } });
         return (

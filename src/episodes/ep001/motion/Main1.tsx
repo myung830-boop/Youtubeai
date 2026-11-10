@@ -24,7 +24,7 @@ export const S04M: React.FC = () => {
     <AbsoluteFill style={{ background: color.main, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b2} inT="whip" outT="zoom">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.2, rot: -3 }, { f: 70, zoom: 1.0, rot: 1 }]}>
-          <GridBg tone="navy" cell={60} />
+          <GridBg tone="navy" cell={60} bleed />
           {Array.from({ length: 7 }, (_, i) => (
             <Abs key={i} x={120 + ((i * 263) % 1600)} y={120 + ((i * 151) % 700) + floatY(frame, 20, 0.07, i)}>
               <Pop f={b1 - 6 - i * 3} from={{ scale: 0, rotate: 90 }}>
@@ -77,7 +77,7 @@ export const S05M: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Camera start={0} keys={[{ f: 0, zoom: 1.15, x: -120 }, { f: Math.max(1, frame - b2) + 1, zoom: 1.0, x: -120 }, { f: frame - b2 + 25, zoom: 1.0, x: 120 }]}>
-        <GridBg tone="light" cell={60} />
+        <GridBg tone="light" cell={60} bleed />
         <Abs x={60} y={340}><BossActor size={720} enter="slideL" enterAt={0} poses={[{ f: 0, pose: "point", expression: "talk" }]} /></Abs>
         {/* 소리 파동 */}
         {[0, 1, 2].map((i) => {
@@ -128,7 +128,7 @@ export const S06M: React.FC = () => {
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b2} inT="whip" outT="flip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.1, rx: 18 }, { f: 60, zoom: 1.0, rx: 8 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={120} y={140}><T size={64}>인테리어 업자한테 말하듯</T></Abs>
           <Abs x={140} y={260}><Pop f={b1} from={{ rotateX: 80, y: 200 }}><Blueprint f={b1} fCounter={bCounter} fShelf={bShelf} /></Pop></Abs>
           <Abs x={1180} y={330}><BossActor size={700} enter="slideR" enterAt={frame - b1} poses={[{ f: 0, pose: "point", expression: "talk" }]} /></Abs>
@@ -136,7 +136,7 @@ export const S06M: React.FC = () => {
       </Beat>
       <Beat f={b2} len={b2 - b3} inT="flip" outT="whip">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }, { f: 60, zoom: 1.1 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={300} y={140} style={{ transform: "rotate(-6deg)" }}><Pop f={b2} from={{ rotateY: -90 }}><IntakeScreen w={340} /></Pop></Abs>
           <Abs x={800} y={330}><KText f={b2 - 4} text="그걸 앱으로!" size={130} color={color.main} stroke={false} /></Abs>
           <Burst f={b2 - 6} x={470} y={460} />
@@ -144,7 +144,7 @@ export const S06M: React.FC = () => {
       </Beat>
       <Beat f={b3} len={b3 - b4} inT="whip" outT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.2 }, { f: 30, zoom: 1.0 }, { f: 120, zoom: 1.06, rot: 1 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={760} y={150}><Pop f={b3} from={{ y: 400, scale: 0.5 }}><CustomerAppScreen w={380} /></Pop></Abs>
           {[[b3, "🎨 화면 디자인", 180, 240, -6], [f2, "🗂 손님 정보 저장", 1220, 330, 5], [f3, "🔗 인터넷 주소", 220, 620, 4]].map(([f, t, x, y, r]) => (
             <Abs key={t as string} x={x as number} y={(y as number) + floatY(frame, 8, 0.1, x as number)}>
@@ -200,7 +200,7 @@ export const S07M: React.FC = () => {
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b3} inT="whip" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.15 }, { f: 90, zoom: 1.0 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={140} y={150}><KText f={b1 - 2} text="사용법은 정말" size={90} /></Abs>
           <Abs x={140} y={260}><T size={150}><MarkSweep f={b1 - 16}><KText f={b1 - 8} text="간단해요" size={150} color={color.main} /></MarkSweep></T></Abs>
           {["가입", "말로 쓰기", "미리보기", "말로 고치기", "게시"].map((t, i) => (
@@ -210,9 +210,9 @@ export const S07M: React.FC = () => {
         </Camera>
       </Beat>
       <Beat f={b3} len={100000} inT="whip">
-        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0, ry: -10 }, { f: b3 - b4, zoom: 1.0, ry: 0 }, { f: b3 - b4 + 20, zoom: 1.25, x: 120, y: 60 }, { f: b3 - b5, zoom: 1.0, x: 0, y: 0 }]}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={70} y={60}><StepBadge f={b3} n={1} label="가입" /></Abs>
+        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0, ry: -10 }, { f: b3 - b4, zoom: 1.0, ry: 0 }, { f: b3 - b4 + 20, zoom: 1.1, x: 60, y: 30 }, { f: b3 - b5, zoom: 1.0, x: 0, y: 0 }]}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={90}><StepBadge f={b3} n={1} label="가입" /></Abs>
           <Abs x={110} y={200}>
             <Pop f={b3 - 2} from={{ rotateY: 60, x: 300, scale: 0.6 }}>
               <Browser w={1100} h={680} url="lovable.dev">
@@ -256,9 +256,9 @@ export const S08M: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b4} inT="whip" outT="whip">
-        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b3, zoom: 1.0 }, { f: b1 - b3 + 25, zoom: 1.22, y: 40 }]}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={70} y={60}><StepBadge f={b1} n={2} label="말로 쓰기" /></Abs>
+        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b3, zoom: 1.0 }, { f: b1 - b3 + 25, zoom: 1.08, y: 30 }]}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={90}><StepBadge f={b1} n={2} label="말로 쓰기" /></Abs>
           <Abs x={110} y={210}><KText f={b1 - 4} text="그냥 말로 써요" size={100} color={color.main} /></Abs>
           <Abs x={160} y={420}>
             <Pop f={b2 - 2} from={{ y: 300, rotateX: 60 }}>
@@ -274,7 +274,7 @@ export const S08M: React.FC = () => {
       </Beat>
       <Beat f={b4} len={100000} inT="whip">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.1 }, { f: 40, zoom: 1.0 }]} shake={impact(b5 - 6, 14)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={110} y={120}>
             <Pop f={b4} from={{ x: -300, rotate: -10 }}>
               <div style={{ width: 720, background: "#FFF1F1", border: `7px solid ${color.ink}`, borderRadius: 32, padding: "30px 40px", boxShadow: ui.shadow(10), fontFamily: font.family }}>
@@ -326,9 +326,9 @@ export const S09M: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b3} inT="whip" outT="zoom">
-        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b2, zoom: 1.0 }, { f: b1 - bBtn + 20, zoom: 1.18, x: -120, y: 40 }]}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={70} y={50}>
+        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b2, zoom: 1.0 }, { f: b1 - bBtn + 20, zoom: 1.1, x: -60, y: 20 }]}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={80}>
             <div style={{ display: "flex", gap: 20 }}>
               <StepBadge f={b1} n={3} label="미리보기" />
               {b2 >= 0 && <StepBadge f={b2} n={4} label="말로 고치기" />}
@@ -370,9 +370,9 @@ export const S09M: React.FC = () => {
         </Camera>
       </Beat>
       <Beat f={b3} len={100000} inT="zoom">
-        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.3 }, { f: 18, zoom: 1.0 }, { f: b3 - b5, zoom: 1.0, x: 0 }, { f: b3 - b5 + 20, zoom: 1.0, x: 200 }]}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={70} y={50}><StepBadge f={b3} n={5} label="게시" /></Abs>
+        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.3 }, { f: 18, zoom: 1.0 }, { f: b3 - b5, zoom: 1.0, x: 0 }, { f: b3 - b5 + 20, zoom: 1.0, x: 120 }]}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={80}><StepBadge f={b3} n={5} label="게시" /></Abs>
           <Abs x={330} y={300}>
             <Pop f={b3} from={{ scale: 0.2, rotate: -20 }}>
               <div style={{ background: LOVABLE_GRADIENT, color: "#fff", border: `8px solid ${color.ink}`, borderRadius: 30, padding: "30px 90px", fontFamily: font.family, fontWeight: 900, fontSize: 96, boxShadow: ui.shadow(14), transform: `scale(${b3 > 36 && b3 < 42 ? 0.9 : 1})` }}>Publish</div>

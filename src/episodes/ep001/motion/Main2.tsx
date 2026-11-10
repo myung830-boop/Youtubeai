@@ -30,7 +30,7 @@ export const S10M: React.FC = () => {
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b2} inT="whipUp" outT="zoom">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.2 }, { f: 50, zoom: 1.0 }]}>
-          <GridBg tone="navy" cell={60} />
+          <GridBg tone="navy" cell={60} bleed />
           {Array.from({ length: 14 }, (_, i) => {
             const t = b1 - i * 2;
             return <Abs key={i} x={80 + ((i * 131) % 1750)} y={t < 0 ? -200 : Math.min(860, -200 + t * t * 1.2)}><CoinIcon size={90 + (i % 3) * 20} label="₩" spin={frame * 0.2 + i} /></Abs>;
@@ -41,7 +41,7 @@ export const S10M: React.FC = () => {
       </Beat>
       <Beat f={b2} len={b2 - b4} inT="zoom" outT="whip">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.1 }, { f: 100, zoom: 1.0 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={160} y={170}><Pop f={b2} from={{ scale: 0, rotate: 360 }}><CoinIcon size={260} spin={frame * 0.12} /></Pop></Abs>
           <Abs x={480} y={200}><KText f={b2 - 4} text="크레딧 = AI 이용권" size={96} color={color.main} /></Abs>
           {/* 요청할 때마다 동전이 빠짐 */}
@@ -68,7 +68,7 @@ export const S10M: React.FC = () => {
       </Beat>
       <Beat f={b4} len={100000} inT="whip">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.0, x: -160 }, { f: b4 - b5, zoom: 1.0, x: -160 }, { f: b4 - b5 + 20, zoom: 1.0, x: 120 }]} shake={impact(b5 - 6, 20)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={340} y={180}>
             <Pop f={b4} from={{ y: 500, rotate: -20 }}>
               <Card style={{ width: 560, padding: "44px 50px", transform: "rotate(-3deg)" }}>
@@ -108,7 +108,7 @@ export const S11M: React.FC = () => {
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b3} inT="whip" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b2, zoom: 1.0 }, { f: b1 - b2 + 6, zoom: 1.15 }]} shake={impact(b2 - 2, 30)}>
-          <GridBg tone="navy" cell={60} />
+          <GridBg tone="navy" cell={60} bleed />
           <SpeedLines f={b2} colorLine="#fff" opacity={b2 >= 0 ? 0.12 : 0} />
           <Abs x={120} y={140}><KText f={b1} text="저는 한 달 동안" size={80} color={color.white} /></Abs>
           <Abs x={110} y={300}>
@@ -126,7 +126,7 @@ export const S11M: React.FC = () => {
       </Beat>
       <Beat f={b3} len={b3 - b5} inT="whip" outT="whip">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.1 }, { f: 80, zoom: 1.0 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={120} y={130}>
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
               <div style={{ fontSize: 110, transform: `rotate(${-frame * 6}deg)` }}>⏪</div>
@@ -152,7 +152,7 @@ export const S11M: React.FC = () => {
       </Beat>
       <Beat f={b5} len={b5 - b6} inT="whip" outT="zoom">
         <Camera start={frame - b5} keys={[{ f: 0, zoom: 1.0 }]} shake={4 + impact(b5 - 30, 16)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={0} y={110} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b5} text="한꺼번에 시키면?" size={100} /></Abs>
           <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
             <path d={Array.from({ length: 30 }, (_, i) => `${i ? "L" : "M"}${960 + Math.cos(i * 1.7) * (80 + i * 9)},${560 + Math.sin(i * 2.3) * (60 + i * 6)}`).join(" ")} fill="none" stroke={color.ink} strokeWidth={14} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={9000} strokeDashoffset={lerp(b5 - 6, 0, 40, 9000, 0)} />
@@ -163,7 +163,7 @@ export const S11M: React.FC = () => {
       </Beat>
       <Beat f={b6} len={100000} inT="zoom">
         <Camera start={frame - b6} keys={[{ f: 0, zoom: 1.15 }, { f: 100, zoom: 1.0 }]} shake={impact(b6 - 70, 22)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT }} />
+          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.6}deg at 50% 50%, rgba(255,255,255,0.12) 0deg 8deg, transparent 8deg 16deg)` }} />
           <Abs x={140} y={260}>
             <Pop f={b6} from={{ x: -400, rotate: -20 }}>
@@ -208,7 +208,7 @@ export const S12M: React.FC = () => {
   const vals: Array<[string, string]> = [["손님", "김○○"], ["전화번호", "010-****-1234"], ["신발", "운동화 2켤레"], ["서비스", "기본 세탁 + 얼룩"], ["금액", "24,000원"]];
   const ticket = b5 < 0 ? 0 : b5 < 24 ? Math.floor((b5 * 37) % 9999) : 128;
   return (
-    <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
+    <AbsoluteFill style={{ background: color.main, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b2} inT="iris" inDur={12} outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.2 }, { f: 70, zoom: 1.0 }]}>
           <AbsoluteFill style={{ background: "#0C1530" }} />
@@ -219,9 +219,9 @@ export const S12M: React.FC = () => {
         </Camera>
       </Beat>
       <Beat f={b2} len={b2 - b6} inT="whip" outT="whip">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0, ry: -8 }, { f: b2 - b5, zoom: 1.05, ry: 0 }, { f: b2 - b5 + 10, zoom: 1.2, y: 60 }]} shake={impact(b5 - 26, 18)}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={90} y={60}><StepBadge f={b2} n={1} label="접수" /></Abs>
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0, ry: -8 }, { f: b2 - b5, zoom: 1.05, ry: 0 }, { f: b2 - b5 + 10, zoom: 1.1, y: 30 }]} shake={impact(b5 - 26, 18)}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={90}><StepBadge f={b2} n={1} label="접수" /></Abs>
           <Abs x={700} y={70}>
             <Pop f={b2} from={{ y: 600, rotateY: 50 }}>
               <Phone w={430} title="신규 접수">
@@ -252,7 +252,7 @@ export const S12M: React.FC = () => {
       </Beat>
       <Beat f={b6} len={100000} inT="zoom">
         <Camera start={frame - b6} keys={[{ f: 0, zoom: 1.1 }, { f: 60, zoom: 1.0 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           {/* 종이 장부가 휴지통으로 */}
           <Abs x={b6 < 18 ? 500 : 500 + (b6 - 18) * 26} y={b6 < 18 ? 220 : 220 + (b6 - 18) * 6 + (b6 - 18) ** 2 * 0.9} style={{ transform: `rotate(${Math.max(0, b6 - 18) * 14}deg) scale(${b6 < 18 ? 1 : Math.max(0.2, 1 - (b6 - 18) * 0.035)})`, opacity: b6 > 44 ? 0 : 1 }}>
             <Pop f={b6} from={{ y: -300 }}><div style={{ width: 380, height: 460, background: "#FFFDF6", border: `7px solid ${color.ink}`, borderRadius: 14, boxShadow: ui.shadow(10), display: "flex", alignItems: "center", justifyContent: "center", fontFamily: font.family, fontWeight: 900, fontSize: 60 }}>📒 장부</div></Pop>
@@ -282,9 +282,9 @@ export const S13M: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b4} inT="whip" outT="whipUp">
-        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b2, zoom: 1.0 }, { f: b1 - b2 + 20, zoom: 1.08, x: 80 }]}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={90} y={60}><StepBadge f={b1} n={2} label="사진 관리" /></Abs>
+        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b2, zoom: 1.0 }, { f: b1 - b2 + 20, zoom: 1.05, x: 40 }]}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={90}><StepBadge f={b1} n={2} label="사진 관리" /></Abs>
           {/* 사진 찰칵 */}
           {[0, 1, 2, 3].map((i) => {
             const fIn = b1 + 6 - i * 10;
@@ -310,8 +310,8 @@ export const S13M: React.FC = () => {
       </Beat>
       <Beat f={b4} len={100000} inT="whipUp">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.0 }, { f: b4 - b6, zoom: 1.0, x: 0 }, { f: b4 - b6 + 20, zoom: 1.05, x: 160 }]} shake={impact(b5 - 14, 14)}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={90} y={60}><StepBadge f={b4} n={3} label="문자 발송" /></Abs>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={90}><StepBadge f={b4} n={3} label="문자 발송" /></Abs>
           <Abs x={260} y={380}>
             <Pop f={b4 + 6} from={{ scale: 0.3, rotate: -15 }}>
               <div style={{ background: b5 > 14 ? "#22C55E" : color.point, color: "#fff", border: `8px solid ${color.ink}`, borderRadius: 40, padding: "40px 80px", fontFamily: font.family, fontWeight: 900, fontSize: 96, boxShadow: b5 > 14 && b5 < 20 ? ui.shadow(2) : ui.shadow(14), transform: `translate(${b5 > 14 && b5 < 20 ? 10 : 0}px, ${b5 > 14 && b5 < 20 ? 10 : 0}px)` }}>세탁 완료 ✓</div>
@@ -346,7 +346,7 @@ export const S14M: React.FC = () => {
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b2} inT="zoom" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.3 }, { f: 16, zoom: 1.0 }]} shake={impact(b1 - 6, 18)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT }} />
+          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.8}deg at 50% 50%, rgba(255,255,255,0.12) 0deg 8deg, transparent 8deg 16deg)` }} />
           <Abs x={0} y={200} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b1} text="제일 뿌듯한 건?" size={140} color={color.white} stroke /></Abs>
           <Abs x={760} y={460}><BossActor size={600} enter="jump" enterAt={frame - b1} poses={[{ f: 0, pose: "happy" }]} hops={[frame - b1 + 20]} /></Abs>
@@ -354,9 +354,9 @@ export const S14M: React.FC = () => {
         </Camera>
       </Beat>
       <Beat f={b2} len={b2 - b5} inT="whip" outT="zoom">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0, x: -100 }, { f: b2 - b3, zoom: 1.0, x: -100 }, { f: b2 - b3 + 20, zoom: 1.2, x: 40, y: 80 }]}>
-          <GridBg tone="light" cell={60} />
-          <Abs x={90} y={60}><StepBadge f={b2} n={4} label="손님용 앱" /></Abs>
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0, x: -100 }, { f: b2 - b3, zoom: 1.0, x: -100 }, { f: b2 - b3 + 20, zoom: 1.1, x: 20, y: 40 }]}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={120} y={90}><StepBadge f={b2} n={4} label="손님용 앱" /></Abs>
           <Abs x={140} y={330}><Pop f={b2 + 4} from={{ x: -200, scale: 0.5 }}><div style={{ display: "flex", alignItems: "center", gap: 20 }}><PersonIcon size={150} /><div style={{ background: "#fff", border: `6px solid ${color.ink}`, borderRadius: 26, padding: "16px 30px", fontFamily: font.family, fontWeight: 800, fontSize: 40, boxShadow: ui.shadow(7) }}>🔗 문자 링크 톡!</div></div></Pop></Abs>
           <Abs x={780} y={60}>
             <Pop f={b2 + 10} from={{ y: 700 }}>
@@ -372,8 +372,8 @@ export const S14M: React.FC = () => {
         </Camera>
       </Beat>
       <Beat f={b5} len={100000} inT="zoom">
-        <Camera start={frame - b5} keys={[{ f: 0, zoom: 1.0, x: -480 }, { f: b5 - b6 + 30, zoom: 1.0, x: 480 }, { f: b5 - b6 + 60, zoom: 0.82, x: 0 }]}>
-          <GridBg tone="navy" cell={60} />
+        <Camera start={frame - b5} keys={[{ f: 0, zoom: 1.0, x: -480 }, { f: b5 - b6 + 30, zoom: 1.0, x: 480 }, { f: b5 - b6 + 60, zoom: 0.66, x: -30 }]}>
+          <GridBg tone="navy" cell={60} bleed />
           <Abs x={-380} y={150}><KText f={b5} text="한 흐름으로 쭉!" size={90} color={color.white} /></Abs>
           <svg width={3000} height={200} style={{ position: "absolute", left: -480, top: 470 }}>
             <line x1={60} y1={100} x2={60 + lerp(b5, 6, (b5 - b6) + 40, 0, 2780)} y2={100} stroke={color.accent} strokeWidth={18} strokeLinecap="round" />
@@ -412,7 +412,7 @@ export const S15M: React.FC = () => {
   const b9 = useCue("러버블 AI를 쓰면", 17.0);
   const bulFall = Math.max(0, b3 - 4);
   return (
-    <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
+    <AbsoluteFill style={{ background: color.main, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b4} inT="iris" inDur={12} outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.15 }, { f: 120, zoom: 1.0 }]}>
           <AbsoluteFill style={{ background: "#0C1530" }} />
@@ -433,7 +433,7 @@ export const S15M: React.FC = () => {
       </Beat>
       <Beat f={b4} len={b4 - b6} inT="whip" outT="zoom">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.0 }, { f: 120, zoom: 1.06 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={110} y={110}><KText f={b4} text="서비스 질 UP" size={90} color={color.main} /></Abs>
           <svg width={900} height={520} style={{ position: "absolute", left: 110, top: 260 }}>
             <line x1={20} y1={500} x2={880} y2={500} stroke={color.ink} strokeWidth={8} />
@@ -450,7 +450,7 @@ export const S15M: React.FC = () => {
       </Beat>
       <Beat f={b6} len={b6 - b8} inT="zoom" outT="whip">
         <Camera start={frame - b6} keys={[{ f: 0, zoom: 1.1 }, { f: 60, zoom: 1.0 }]} shake={impact(b7 - 4, 20)}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={140} y={180}><KText f={b6} text="아쉬운 점?" size={130} /></Abs>
           <Abs x={300 + Math.sin(frame * 0.15) * 220} y={420 + Math.cos(frame * 0.2) * 60}><div style={{ fontSize: 160 }}>🔍</div></Abs>
           <Abs x={760} y={430}><Stamp f={b7} bg={color.accent} fg={color.ink} size={140} rot={-6}>아직 없어요!</Stamp></Abs>
@@ -459,7 +459,7 @@ export const S15M: React.FC = () => {
       </Beat>
       <Beat f={b8} len={100000} inT="whip">
         <Camera start={frame - b8} keys={[{ f: 0, zoom: 1.0 }, { f: b8 - b9, zoom: 1.0 }, { f: b8 - b9 + 10, zoom: 1.12 }, { f: b8 - b9 + 140, zoom: 1.02 }]} shake={impact(b9 - 2, 20)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT }} />
+          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.5}deg at 50% 50%, rgba(255,255,255,0.1) 0deg 8deg, transparent 8deg 16deg)` }} />
           <Abs x={0} y={120} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b8} text="한 줄로 정리하면" size={70} color={color.white} /></Abs>
           <Abs x={160} y={290}>
@@ -493,7 +493,7 @@ export const S16M: React.FC = () => {
     <AbsoluteFill style={{ background: color.main, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b3} inT="whip" outT="flip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.1 }, { f: 100, zoom: 1.0 }]}>
-          <GridBg tone="light" cell={60} />
+          <GridBg tone="light" cell={60} bleed />
           <Abs x={0} y={90} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b1} text="여러분 가게엔 어떤 기능이?" size={90} /></Abs>
           {shops.map(([e, t], i) => (
             <Abs key={t} x={150 + i * 340} y={270 + floatY(frame, 12, 0.08, i)}>
@@ -517,7 +517,7 @@ export const S16M: React.FC = () => {
       </Beat>
       <Beat f={b3} len={100000} inT="flip">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.1 }, { f: 120, zoom: 1.0 }]} shake={impact(b4 - 10, 14)}>
-          <GridBg tone="navy" cell={60} />
+          <GridBg tone="navy" cell={60} bleed />
           <Abs x={110} y={110}><KText f={b3} text="다음 실험 예고" size={70} color={color.white} /></Abs>
           <Abs x={110} y={240}>
             <Pop f={b3 + 8} from={{ rotateY: 180, scale: 0.6 }}>
