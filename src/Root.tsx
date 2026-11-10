@@ -22,6 +22,20 @@ const thumbB: ThumbProps = {
   tone: "navy",
 };
 
+const thumbEp001: ThumbProps = {
+  no: 1,
+  lines: [["신발세탁소"], [{ mark: "가게 앱" }], ["직접 만들었다"]],
+  pose: "happy",
+  sticker: "러버블 AI",
+};
+const thumbEp001Alt: ThumbProps = {
+  no: 1,
+  lines: [["코딩 몰라도"], [{ mark: "우리 가게 앱" }], ["이렇게 만듦"]],
+  pose: "point",
+  tone: "navy",
+  sticker: "접수·사진·문자",
+};
+
 export const RemotionRoot: React.FC = () => (
   <>
     {/* 채널 아트 */}
@@ -31,6 +45,8 @@ export const RemotionRoot: React.FC = () => (
     <Still id="Watermark" component={Watermark} width={150} height={150} />
     <Still id="ThumbnailA" component={Thumbnail} width={1280} height={720} defaultProps={thumbA} />
     <Still id="ThumbnailB" component={Thumbnail} width={1280} height={720} defaultProps={thumbB} />
+    <Still id="Ep001Thumb" component={Thumbnail} width={1280} height={720} defaultProps={thumbEp001} />
+    <Still id="Ep001ThumbAlt" component={Thumbnail} width={1280} height={720} defaultProps={thumbEp001Alt} />
     <Still id="StyleBoard" component={StyleBoard} width={1920} height={1080} />
 
     {/* 영상 스타일 */}
