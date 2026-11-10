@@ -331,7 +331,13 @@ export type BossProps = {
 
 const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288] } as const;
 
-export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink = false, talk = 0, size = 480, crop = "full", style }) => {
+/** 영상 모드에서 모든 캐릭터에 깜빡임/말하기를 자동으로 넣기 위한 컨텍스트 */
+export const BossLive = React.createContext<{ blink: boolean; talk: number } | null>(null);
+
+export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink: blinkProp, talk: talkProp, size = 480, crop = "full", style }) => {
+  const live = React.useContext(BossLive);
+  const blink = blinkProp ?? live?.blink ?? false;
+  const talk = talkProp ?? live?.talk ?? 0;
   const vb = VIEWBOX[crop];
   const exp = expression ?? DEFAULT_EXPRESSION[pose];
   const arms = ARMS[pose];

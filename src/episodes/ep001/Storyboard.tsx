@@ -7,8 +7,13 @@ import { Intro } from "../../brand/VideoStyle";
 import { color, font, ui } from "../../styles/theme";
 import { CustomerAppScreen, IntakeScreen, PhotoScreen, SmsScreen } from "./mockups";
 
+/** 영상 모드에선 장면별 고정 자막을 숨기고 SRT 자막을 씀 */
+export const VideoMode = React.createContext(false);
+
 /** 모든 장면 공통 틀: 모눈 배경 + 실험 태그 + 워드마크 + 자막 */
-const Frame: React.FC<{ children: React.ReactNode; caption?: React.ReactNode; tone?: "light" | "navy"; hideChrome?: boolean }> = ({ children, caption, tone = "light", hideChrome }) => (
+const Frame: React.FC<{ children: React.ReactNode; caption?: React.ReactNode; tone?: "light" | "navy"; hideChrome?: boolean }> = ({ children, caption, tone = "light", hideChrome }) => {
+  const videoMode = React.useContext(VideoMode);
+  return (
   <AbsoluteFill style={{ fontFamily: font.family }}>
     <GridBg tone={tone} cell={54} />
     {!hideChrome && (
@@ -22,13 +27,14 @@ const Frame: React.FC<{ children: React.ReactNode; caption?: React.ReactNode; to
       </>
     )}
     {children}
-    {caption && (
+    {caption && !videoMode && (
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 56, textAlign: "center" }}>
         <Caption fontSize={44}>{caption}</Caption>
       </div>
     )}
   </AbsoluteFill>
-);
+  );
+};
 
 const S01: React.FC = () => (
   <Frame caption={<>이걸 <Mark>제가 직접</Mark> 만들었습니다</>}>
@@ -48,7 +54,8 @@ const S03: React.FC = () => (
       <XItem fontSize={50}>접수는 종이 장부에</XItem>
       <XItem fontSize={50}>사진은 사진첩에 뒤죽박죽</XItem>
       <XItem fontSize={50}>완료 문자는 한 분씩 직접</XItem>
-      <XItem fontSize={50}>"제 신발 다 됐어요?" 전화 하루 [ ]통</XItem>
+      <XItem fontSize={50}>"제 신발 다 됐어요?" 문의</XItem>
+      <div style={{ fontSize: 40, fontWeight: 800, color: color.main, marginTop: 6 }}>→ <Mark>6년 넘게</Mark> 전부 손으로</div>
     </Card>
     <div style={{ position: "absolute", right: 80, bottom: -40 }}><Boss pose="worry" size={680} /></div>
   </Frame>
@@ -132,8 +139,10 @@ const S08: React.FC = () => (
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, #fff 0%, #FFF1F6 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 30 }}>
         <div style={{ fontSize: 46, fontWeight: 800, color: color.ink }}>무엇을 만들고 싶으세요?</div>
         <div style={{ width: 900, background: color.white, border: `4px solid ${color.ink}`, borderRadius: 24, padding: "28px 34px", fontSize: 32, fontWeight: 600, lineHeight: 1.5, color: color.ink, boxShadow: ui.shadow(8) }}>
-          신발세탁소 <Mark>접수 관리 앱</Mark>을 만들어줘. 손님 이름, 전화번호, 신발 종류, 서비스, 금액을 입력하면 <Mark>접수번호</Mark>가 자동으로 생기게 해줘.
-          <div style={{ marginTop: 12, fontSize: 24, opacity: 0.5 }}>[사장님 실제 첫 요청 문장으로 교체]</div>
+          신발세탁소에 <Mark>접수 시스템</Mark>을 만들고 싶어.
+          <br />
+          먼저 <Mark>기획부터</Mark> 해줘.
+          <div style={{ marginTop: 16, fontSize: 26, color: color.point, fontWeight: 700 }}>💡 바로 만들기보다 기획부터 부탁하면 훨씬 편해요</div>
         </div>
       </div>
     </Browser>
@@ -196,7 +205,7 @@ const S10: React.FC = () => (
     </div>
     <div style={{ position: "absolute", left: 90, top: 400, display: "flex", gap: 40 }}>
       <PlanCard name="Free" price="$0" credit="하루 5개 (월 최대 30)" />
-      <PlanCard name="Pro" price="$25/월" credit="월 100개 +" hl />
+      <PlanCard name="Pro" price="$25/월" credit="월 100개부터" hl />
     </div>
     <div style={{ position: "absolute", left: 90, top: 780, fontSize: 26, fontWeight: 600, opacity: 0.55 }}>※ 촬영 시점 기준, 공식 요금 페이지 확인 후 수정</div>
     <div style={{ position: "absolute", right: 60, bottom: -60 }}><Boss pose="point" size={640} /></div>
@@ -213,14 +222,14 @@ const Stat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
 const S11: React.FC = () => (
   <Frame caption={<>제가 <Mark>실제로 쓴 비용</Mark> 공개</>}>
     <div style={{ position: "absolute", left: 90, top: 190, display: "flex", gap: 34 }}>
-      <Stat label="쓴 크레딧" value="[ ]개" />
-      <Stat label="걸린 기간" value="[ ]일" />
-      <Stat label="총비용" value="[ ]원" />
+      <Stat label="걸린 기간" value="1달" />
+      <Stat label="총비용" value="약 100만원" />
+      <Stat label="자동화된 수작업" value="6년+" />
     </div>
     <Card bg={color.sub} style={{ position: "absolute", left: 90, top: 500, width: 1090, padding: "30px 40px", display: "flex", flexDirection: "column", gap: 18 }}>
-      <div style={{ fontSize: 32, fontWeight: 800, color: color.point }}>크레딧 아끼는 팁</div>
+      <div style={{ fontSize: 32, fontWeight: 800, color: color.point }}>다시 만든다면? 크레딧 아끼는 팁</div>
       <CheckItem fontSize={34}>한 번에 하나씩 요청하기</CheckItem>
-      <CheckItem fontSize={34}>큰 작업은 먼저 '계획'부터 상의하기</CheckItem>
+      <CheckItem fontSize={34}>큰 작업은 먼저 '기획'부터 상의하기</CheckItem>
     </Card>
     <div style={{ position: "absolute", right: 30, bottom: -60 }}><Boss pose="surprise" size={620} /></div>
   </Frame>
@@ -245,7 +254,7 @@ const S12: React.FC = () => (
     <div style={{ position: "absolute", left: 870, top: 150, fontSize: 40, fontWeight: 800, color: color.point }}>AFTER</div>
     <div style={{ position: "absolute", left: 880, top: 220 }}><IntakeScreen w={330} /></div>
     <Bubble tail="left" fontSize={30} style={{ position: "absolute", left: 1290, top: 260, width: 520 }}>
-      💬 "손님 이름, 전화번호, 신발, 서비스, 금액 입력하는 접수 화면 만들어줘"
+      💬 "신발세탁소에 접수 시스템을 만들고 싶어. 먼저 기획부터 해줘."
     </Bubble>
     <div style={{ position: "absolute", right: 0, bottom: -70 }}><Boss pose="thumbsUp" size={480} /></div>
   </Frame>
@@ -279,8 +288,8 @@ const S14: React.FC = () => (
         <Mark>진행상황 확인</Mark>
       </SceneTitle>
       <Card style={{ marginTop: 40, padding: "26px 36px", display: "inline-flex", alignItems: "center", gap: 24 }}>
-        <span style={{ fontSize: 40, fontWeight: 800 }}>📞 문의 전화</span>
-        <span style={{ fontSize: 56, fontWeight: 900, color: color.main }}>[ ]통 → [ ]통</span>
+        <span style={{ fontSize: 44, fontWeight: 800 }}>📱 문의 대신</span>
+        <span style={{ fontSize: 52, fontWeight: 900, color: color.main }}>손님이 직접 확인</span>
       </Card>
     </div>
     <div style={{ position: "absolute", left: 100, right: 100, bottom: 70, display: "flex", alignItems: "center", gap: 14, flexWrap: "nowrap" }}>
@@ -296,26 +305,43 @@ const S14: React.FC = () => (
 );
 
 const S15: React.FC = () => (
-  <Frame caption={<>여러분 가게엔 <Mark>어떤 기능</Mark>이 필요하세요? 💬</>}>
+  <Frame caption={<>한 줄 평: <Mark>불가능 → 가능</Mark></>}>
     <div style={{ position: "absolute", left: 90, top: 170, display: "flex", gap: 36 }}>
       <Card style={{ width: 520, padding: "36px 40px", display: "flex", flexDirection: "column", gap: 22 }}>
         <div style={{ fontSize: 40, fontWeight: 900, color: color.point }}>👍 좋았던 점</div>
-        <CheckItem fontSize={34}>[ 전화 문의 감소 ]</CheckItem>
-        <CheckItem fontSize={34}>[ 사진 찾는 시간 0 ]</CheckItem>
-        <CheckItem fontSize={34}>[ ]</CheckItem>
+        <CheckItem fontSize={34}>불가능했던 일이 시스템으로</CheckItem>
+        <CheckItem fontSize={34}>서비스 질 UP → 손님 UP</CheckItem>
       </Card>
       <Card style={{ width: 520, padding: "36px 40px", display: "flex", flexDirection: "column", gap: 22 }}>
         <div style={{ fontSize: 40, fontWeight: 900, color: "#E5484D" }}>😅 아쉬운 점</div>
-        <XItem fontSize={34}>[ 문자 연동이 어려움 ]</XItem>
-        <XItem fontSize={34}>[ 에러 고치느라 크레딧 ]</XItem>
-        <XItem fontSize={34}>[ ]</XItem>
+        <div style={{ fontSize: 46, fontWeight: 900, color: color.ink, marginTop: 10 }}>아직 없어요! 😄</div>
       </Card>
     </div>
     <div style={{ position: "absolute", left: 90, top: 640, fontSize: 36, fontWeight: 700 }}>
-      다음 실험 ▶ <Mark>[ 예약 기능 붙이기 ]</Mark>
+      <span style={{ fontSize: 44, fontWeight: 900 }}>"러버블 AI를 쓰면 <Mark>불가능한 것들이 가능해진다!</Mark>"</span>
     </div>
-    <div style={{ position: "absolute", right: 40, bottom: -60 }}><Boss pose="wave" size={640} /></div>
+    <div style={{ position: "absolute", right: 40, bottom: -60 }}><Boss pose="happy" size={640} /></div>
   </Frame>
 );
 
-export const EP001_SCENES: Record<string, React.FC> = { S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15 };
+const S16: React.FC = () => (
+  <Frame tone="navy" caption={<>여러분 가게엔 <Mark>어떤 기능</Mark>이 필요하세요? 💬</>}>
+    <div style={{ position: "absolute", left: 110, top: 200 }}>
+      <SceneTitle light size={60}>다음 실험 예고</SceneTitle>
+      <Card style={{ marginTop: 30, padding: "36px 48px", display: "inline-block" }}>
+        <div style={{ fontSize: 30, fontWeight: 800, color: color.point }}>실험 #002</div>
+        <div style={{ fontSize: 76, fontWeight: 900, letterSpacing: "-0.04em", marginTop: 6 }}>
+          <Mark>어사이드 브라우저</Mark>
+        </div>
+        <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>쓰면서 달라진 점</div>
+      </Card>
+      <div style={{ marginTop: 50, display: "flex", gap: 20 }}>
+        <div style={{ background: "#FF0033", color: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "14px 40px", fontSize: 40, fontWeight: 900, boxShadow: ui.shadow(7) }}>구독</div>
+        <div style={{ background: color.white, border: `5px solid ${color.ink}`, borderRadius: 999, padding: "14px 40px", fontSize: 40, fontWeight: 900, boxShadow: ui.shadow(7) }}>💬 댓글</div>
+      </div>
+    </div>
+    <div style={{ position: "absolute", right: 60, bottom: -60 }}><Boss pose="wave" size={680} /></div>
+  </Frame>
+);
+
+export const EP001_SCENES: Record<string, React.FC> = { S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15, S16 };
