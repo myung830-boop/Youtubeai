@@ -5,6 +5,8 @@ import { StyleBoard } from "./brand/StyleBoard";
 import { Intro, LongformFrame, ShortsFrame, WipeTransition } from "./brand/VideoStyle";
 import { CharacterPreview } from "./compositions/CharacterPreview";
 import { PoseSheet } from "./compositions/PoseSheet";
+import { Ep001ThumbDynamicA, Ep001ThumbDynamicB } from "./episodes/ep001/Thumbs";
+import { EP001_SCENES } from "./episodes/ep001/Storyboard";
 import { loadFonts } from "./styles/fonts";
 
 loadFonts();
@@ -47,6 +49,8 @@ export const RemotionRoot: React.FC = () => (
     <Still id="ThumbnailB" component={Thumbnail} width={1280} height={720} defaultProps={thumbB} />
     <Still id="Ep001Thumb" component={Thumbnail} width={1280} height={720} defaultProps={thumbEp001} />
     <Still id="Ep001ThumbAlt" component={Thumbnail} width={1280} height={720} defaultProps={thumbEp001Alt} />
+    <Still id="Ep001ThumbDynamicA" component={Ep001ThumbDynamicA} width={1280} height={720} />
+    <Still id="Ep001ThumbDynamicB" component={Ep001ThumbDynamicB} width={1280} height={720} />
     <Still id="StyleBoard" component={StyleBoard} width={1920} height={1080} />
 
     {/* 영상 스타일 */}
@@ -55,6 +59,11 @@ export const RemotionRoot: React.FC = () => (
     <Still id="LongformFrame" component={LongformFrame} width={1920} height={1080} />
     <Composition id="Intro" component={Intro} width={1920} height={1080} fps={30} durationInFrames={60} />
     <Composition id="WipeTransition" component={WipeTransition} width={1920} height={1080} fps={30} durationInFrames={15} />
+
+    {/* 실험 #001 스토리보드 장면 */}
+    {Object.entries(EP001_SCENES).map(([k, C]) => (
+      <Composition key={k} id={`Ep001-${k}`} component={C} width={1920} height={1080} fps={30} durationInFrames={60} />
+    ))}
 
     {/* 캐릭터 */}
     <Still id="PoseSheet" component={PoseSheet} width={1920} height={1080} />
