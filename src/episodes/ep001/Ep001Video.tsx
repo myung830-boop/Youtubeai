@@ -8,9 +8,14 @@ import { EP001_SCENES, VideoMode } from "./Storyboard";
 import { CueClock } from "../../motion/core";
 import { HookScene } from "./motion/Hook";
 import { IntroDynamic, ProblemsScene } from "./motion/Problems";
+import { S04M, S05M, S06M, S07M, S08M, S09M } from "./motion/Main1";
+import { S10M, S11M, S12M, S13M, S14M, S15M, S16M } from "./motion/Main2";
 
 /** 모션그래픽 버전이 있는 장면은 그걸 우선 사용 */
-const MOTION_SCENES: Record<string, React.FC> = { S01: HookScene, S03: ProblemsScene };
+const MOTION_SCENES: Record<string, React.FC> = {
+  S01: HookScene, S03: ProblemsScene, S04: S04M, S05: S05M, S06: S06M, S07: S07M, S08: S08M, S09: S09M,
+  S10: S10M, S11: S11M, S12: S12M, S13: S13M, S14: S14M, S15: S15M, S16: S16M,
+};
 
 /**
  * 음성 파일 + SRT만 넣으면 장면·자막·캐릭터 입이 자동으로 맞춰지는 실험 #001 영상.
