@@ -5,6 +5,12 @@ import { Caption, Mark } from "../../components/brand";
 import { WipeTransition } from "../../brand/VideoStyle";
 import { Cue, norm, parseSrt } from "../../lib/srt";
 import { EP001_SCENES, VideoMode } from "./Storyboard";
+import { CueClock } from "../../motion/core";
+import { HookScene } from "./motion/Hook";
+import { IntroDynamic, ProblemsScene } from "./motion/Problems";
+
+/** 모션그래픽 버전이 있는 장면은 그걸 우선 사용 */
+const MOTION_SCENES: Record<string, React.FC> = { S01: HookScene, S03: ProblemsScene };
 
 /**
  * 음성 파일 + SRT만 넣으면 장면·자막·캐릭터 입이 자동으로 맞춰지는 실험 #001 영상.
@@ -112,6 +118,8 @@ export const Ep001Video: React.FC<Ep001Props> = ({ audio, bgm, cues = [], plan =
   const speaking = !!cue && !(t >= introAt && t < introAt + INTRO_SEC);
   const talk = speaking ? 0.25 + 0.75 * Math.abs(Math.sin(frame / 2.3) * Math.cos(frame / 5.1)) : 0;
   const blink = frame % 95 >= 91;
+  const capF = cue ? frame - Math.round(cue.start * fps) : 0;
+  const capPop = spring({ frame: capF, fps, config: { damping: 12, stiffness: 260, mass: 0.5 } }) * 0.12 + 0.88;
 
   return (
     <BossLive.Provider value={{ blink, talk }}>
@@ -120,29 +128,38 @@ export const Ep001Video: React.FC<Ep001Props> = ({ audio, bgm, cues = [], plan =
           {plan.map((p, i) => {
             const from = Math.round(p.from * fps);
             const to = i + 1 < plan.length ? Math.round(plan[i + 1].from * fps) : durationInFrames;
+            const M = MOTION_SCENES[p.id];
             const C = EP001_SCENES[p.id];
             return (
               <Sequence key={p.id} from={from} durationInFrames={Math.max(1, to - from)}>
-                <SceneEnter>
-                  <C />
-                </SceneEnter>
+                <CueClock.Provider value={{ cues, sceneFrom: from, fps }}>
+                  {M ? (
+                    <M />
+                  ) : (
+                    <SceneEnter>
+                      <C />
+                    </SceneEnter>
+                  )}
+                </CueClock.Provider>
               </Sequence>
             );
           })}
           {/* 장면 전환 와이프 */}
-          {plan.slice(1).map((p) => (
+          {plan.slice(1).filter((p) => !MOTION_SCENES[p.id]).map((p) => (
             <Sequence key={`w${p.id}`} from={Math.round(p.from * fps) - 7} durationInFrames={15}>
               <WipeTransition />
             </Sequence>
           ))}
           {/* 인트로 */}
           <Sequence from={Math.round(introAt * fps)} durationInFrames={Math.round(INTRO_SEC * fps)}>
-            <EP001_SCENES.S02 />
+            <IntroDynamic />
           </Sequence>
           {/* 자막 */}
           {cue && !(t >= introAt && t < introAt + INTRO_SEC) && (
             <div style={{ position: "absolute", left: 120, right: 120, bottom: 56, textAlign: "center" }}>
-              <Caption fontSize={44}>{highlight(cue.text)}</Caption>
+              <div style={{ display: "inline-block", transform: `scale(${capPop})`, transformOrigin: "50% 100%" }}>
+                <Caption fontSize={44}>{highlight(cue.text)}</Caption>
+              </div>
             </div>
           )}
           {/* 목소리: 인트로 자리에 쉼(audioGap)을 끼워 두 토막으로 재생 */}
