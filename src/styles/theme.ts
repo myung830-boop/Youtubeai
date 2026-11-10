@@ -31,3 +31,12 @@ export const boss = {
 export const font = {
   family: "Pretendard, sans-serif",
 } as const;
+
+// 공통 UI 규칙: 캐릭터와 같은 굵은 외곽선 + 살짝 어긋난 그림자 = "스티커" 느낌
+export const ui = {
+  radius: 28,
+  stroke: 6,
+  shadow: (px = 10) => `${px}px ${px}px 0 ${color.ink}`,
+  grid: "rgba(15,59,130,0.07)", // 실험 노트(모눈종이) 배경선
+  gridDark: "rgba(255,255,255,0.06)",
+} as const;

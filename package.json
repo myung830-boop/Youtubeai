@@ -5,7 +5,8 @@
   "scripts": {
     "studio": "remotion studio",
     "still:poses": "remotion still PoseSheet out/pose-sheet.png",
-    "render:sample": "remotion render Sample30 out/sample30.mp4"
+    "render:sample": "remotion render Sample30 out/sample30.mp4",
+    "brand": "for id in ProfileImage Banner Watermark ThumbnailA ThumbnailB StyleBoard ShortsFrame LongformFrame; do remotion still $id docs/brand/$id.png; done && remotion render Intro docs/brand/Intro.mp4"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.300",

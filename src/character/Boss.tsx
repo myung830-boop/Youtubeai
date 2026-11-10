@@ -325,16 +325,20 @@ export type BossProps = {
   blink?: boolean;
   talk?: number;
   size?: number; // 높이(px)
+  crop?: "full" | "head"; // head: 프로필/워터마크용 얼굴 클로즈업 (정사각형)
   style?: React.CSSProperties;
 };
 
-export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink = false, talk = 0, size = 480, style }) => {
+const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288] } as const;
+
+export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink = false, talk = 0, size = 480, crop = "full", style }) => {
+  const vb = VIEWBOX[crop];
   const exp = expression ?? DEFAULT_EXPRESSION[pose];
   const arms = ARMS[pose];
   const back = arms.filter((a) => !a.front);
   const front = arms.filter((a) => a.front);
   return (
-    <svg viewBox="-20 -30 440 510" height={size} width={(size * 440) / 510} style={{ overflow: "visible", ...style }}>
+    <svg viewBox={vb.join(" ")} height={size} width={(size * vb[2]) / vb[3]} style={{ overflow: crop === "head" ? "hidden" : "visible", ...style }}>
       {back.map((a, i) => (
         <ArmShape key={`b${i}`} arm={a} />
       ))}
