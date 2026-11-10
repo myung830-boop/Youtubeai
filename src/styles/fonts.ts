@@ -16,6 +16,8 @@ let loaded = false;
 export const loadFonts = () => {
   if (loaded || typeof document === "undefined") return;
   loaded = true;
+  // Pretendard가 시스템 폰트로 설치된 렌더 환경: REMOTION_SYSTEM_FONTS=1 이면 로딩을 건너뜀
+  if (process.env.REMOTION_SYSTEM_FONTS === "1") return;
   const css = weights
     .map(([name, w]) => `@font-face{font-family:"Pretendard";font-weight:${w};font-display:block;src:url("${staticFile(`fonts/Pretendard-${name}.woff2`)}") format("woff2");}`)
     .join("\n");
