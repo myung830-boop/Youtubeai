@@ -62,7 +62,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="WipeTransition" component={WipeTransition} width={1920} height={1080} fps={30} durationInFrames={15} />
 
     {/* 실험 #001 완성 영상: public/ep001/voice.mp3 + voice.srt */}
-    <Composition id="Ep001" component={Ep001Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep001/voice.mp3", srt: "ep001/voice.srt" }} calculateMetadata={calcEp001} />
+    <Composition id="Ep001" component={Ep001Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep001/voice.mp3", srt: "ep001/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp001} />
 
     {/* 실험 #001 스토리보드 장면 */}
     {Object.entries(EP001_SCENES).map(([k, C]) => (

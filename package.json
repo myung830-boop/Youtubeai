@@ -7,8 +7,10 @@
     "still:poses": "remotion still PoseSheet out/pose-sheet.png",
     "render:sample": "remotion render Sample30 out/sample30.mp4",
     "brand": "for id in ProfileImage Banner Watermark ThumbnailA ThumbnailB StyleBoard ShortsFrame LongformFrame; do remotion still $id docs/brand/$id.png; done && remotion render Intro docs/brand/Intro.mp4",
-    "render:ep001": "remotion render Ep001 out/ep001.mp4",
-    "test-voice:ep001": "python3 scripts/make_test_voice.py"
+    "render:ep001": "remotion render Ep001 out/ep001-raw.mp4 && scripts/finalize.sh out/ep001-raw.mp4 out/ep001.mp4",
+    "test-voice:ep001": "python3 scripts/make_test_voice.py",
+    "sample:ep001": "remotion render Ep001 out/ep001-sample-raw.mp4 --frames=0-899 && scripts/finalize.sh out/ep001-sample-raw.mp4 out/ep001-sample30.mp4",
+    "bgm": "python3 scripts/make_bgm.py"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.300",

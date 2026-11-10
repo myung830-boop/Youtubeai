@@ -18,10 +18,10 @@ const SCENE_MAP: Array<{ id: string; starts: string }> = [
   { id: "S04", starts: "프로그램으로 해결" },
   { id: "S05", starts: "러버블은 한마디로" },
   { id: "S06", starts: "인테리어 업자" },
-  { id: "S07", starts: "사용법은" },
+  { id: "S07", starts: "간단해요" },
   { id: "S08", starts: "둘째" },
   { id: "S09", starts: "셋째" },
-  { id: "S10", starts: "궁금하실 돈" },
+  { id: "S10", starts: "돈 얘기" },
   { id: "S11", starts: "한 달 동안" },
   { id: "S12", starts: "제가 만든 걸" },
   { id: "S13", starts: "두 번째" },
@@ -35,7 +35,25 @@ const HIGHLIGHTS = ["러버블", "접수 시스템", "문자 발송", "손님용
 
 const INTRO_SEC = 2.2;
 
-export type Ep001Props = { audio: string; srt: string; cues?: Cue[]; plan?: Array<{ id: string; from: number }>; introAt?: number };
+const BGM_SPEAKING = 0.07; // 말할 때
+const BGM_IDLE = 0.16; // 쉴 때 / 인트로
+/** 목소리가 잘 들리도록 말하는 구간에서 BGM을 부드럽게 줄임 */
+const bgmVolume = (t: number, cues: Cue[], introAt: number, total: number) => {
+  const RAMP = 0.35;
+  let duck = 0;
+  for (const c of cues) {
+    if (t < c.start - RAMP || t > c.end + RAMP) continue;
+    const inR = Math.min(1, (t - (c.start - RAMP)) / RAMP);
+    const outR = Math.min(1, (c.end + RAMP - t) / RAMP);
+    duck = Math.max(duck, Math.min(inR, outR));
+  }
+  let v = BGM_IDLE - (BGM_IDLE - BGM_SPEAKING) * duck;
+  if (t >= introAt && t < introAt + INTRO_SEC) v = 0.22;
+  v *= Math.min(1, t / 1.0) * Math.min(1, Math.max(0, (total - t) / 2)); // 페이드 인/아웃
+  return v;
+};
+
+export type Ep001Props = { audio: string; srt: string; bgm?: string; cues?: Cue[]; plan?: Array<{ id: string; from: number }>; introAt?: number; audioGap?: number };
 
 export const calcEp001: CalculateMetadataFunction<Ep001Props> = async ({ props }) => {
   const fps = 30;
@@ -64,8 +82,14 @@ export const calcEp001: CalculateMetadataFunction<Ep001Props> = async ({ props }
   const second = plan[1];
   const lastHookCue = cues.filter((c) => !second || c.end <= second.from + 0.01).pop();
   const introAt = lastHookCue ? lastHookCue.end : 15;
-  const end = (cues.length ? cues[cues.length - 1].end : 10) + 2.5;
-  return { durationInFrames: Math.ceil(end * fps), fps, props: { ...props, cues, plan, introAt } };
+  // 녹음에 인트로용 쉼이 없으면, 인트로 길이만큼 음성·자막·장면을 뒤로 밀어서 자리를 만든다
+  const nextStart = second ? second.from : introAt;
+  const gap = Math.max(0, INTRO_SEC - (nextStart - introAt));
+  const shift = (x: number) => (x >= introAt - 0.001 ? x + gap : x);
+  const shiftedCues = cues.map((c) => ({ ...c, start: shift(c.start), end: shift(c.end) }));
+  const shiftedPlan = plan.map((p) => ({ ...p, from: p.from === 0 ? 0 : shift(p.from) }));
+  const end = (shiftedCues.length ? shiftedCues[shiftedCues.length - 1].end : 10) + 2.5;
+  return { durationInFrames: Math.ceil(end * fps), fps, props: { ...props, cues: shiftedCues, plan: shiftedPlan, introAt, audioGap: gap } };
 };
 
 const highlight = (t: string): React.ReactNode => {
@@ -80,7 +104,7 @@ const SceneEnter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <AbsoluteFill style={{ transform: `scale(${interpolate(p, [0, 1], [0.97, 1])})`, opacity: interpolate(p, [0, 0.4], [0, 1], { extrapolateRight: "clamp" }) }}>{children}</AbsoluteFill>;
 };
 
-export const Ep001Video: React.FC<Ep001Props> = ({ audio, cues = [], plan = [], introAt = 15 }) => {
+export const Ep001Video: React.FC<Ep001Props> = ({ audio, bgm, cues = [], plan = [], introAt = 15, audioGap = 0 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
   const t = frame / fps;
@@ -121,7 +145,15 @@ export const Ep001Video: React.FC<Ep001Props> = ({ audio, cues = [], plan = [], 
               <Caption fontSize={44}>{highlight(cue.text)}</Caption>
             </div>
           )}
-          <Audio src={staticFile(audio)} />
+          {/* 목소리: 인트로 자리에 쉼(audioGap)을 끼워 두 토막으로 재생 */}
+          <Sequence from={0} durationInFrames={Math.max(1, Math.round(introAt * fps))}>
+            <Audio src={staticFile(audio)} endAt={Math.round(introAt * fps)} />
+          </Sequence>
+          <Sequence from={Math.round((introAt + audioGap) * fps)}>
+            <Audio src={staticFile(audio)} startFrom={Math.round(introAt * fps)} />
+          </Sequence>
+          {/* BGM: 말할 땐 작게(덕킹), 쉴 땐 살짝 크게 */}
+          {bgm && <Audio src={staticFile(bgm)} loop volume={(f) => bgmVolume(f / fps, cues, introAt, durationInFrames / fps)} />}
         </AbsoluteFill>
       </VideoMode.Provider>
     </BossLive.Provider>
