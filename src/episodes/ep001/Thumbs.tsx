@@ -36,24 +36,27 @@ export const Ep001ThumbDynamicA: React.FC = () => (
       <IntakeScreen w={190} />
     </div>
     {/* 캐릭터 */}
-    <div style={{ position: "absolute", right: -40, bottom: -110 }}>
-      <Boss pose="happy" size={690} />
+    <div style={{ position: "absolute", right: -95, bottom: -130 }}>
+      <Boss pose="happy" size={680} />
     </div>
     {/* 러버블 배지 */}
-    <div style={{ position: "absolute", right: 30, top: 28, transform: "rotate(7deg)" }}>
-      <LovableBadge size={50} />
+    <div style={{ position: "absolute", right: 26, top: 22, transform: "rotate(6deg)" }}>
+      <div style={{ position: "absolute", inset: -30, background: LOVABLE_GRADIENT, filter: "blur(36px)", opacity: 0.7, borderRadius: 999 }} />
+      <LovableBadge size={84} style={{ position: "relative" }} />
     </div>
     {/* 텍스트 */}
     <div style={{ position: "absolute", left: 48, top: 40, transform: "rotate(-3deg)" }}>
       <ExperimentTag no={1} size={30} />
     </div>
     <div style={{ position: "absolute", left: 44, top: 128, fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1.04 }}>
-      <div style={{ fontSize: 92, color: color.white, ...outlineText(14), textShadow: `7px 7px 0 ${color.ink}` }}>신발세탁소</div>
-      <div style={{ display: "inline-block", marginTop: 14, background: color.accent, border: `8px solid ${color.ink}`, borderRadius: 18, padding: "0 22px 6px", transform: "rotate(-4deg)", boxShadow: ui.shadow(10) }}>
-        <span style={{ fontSize: 132, color: color.ink }}>가게 앱</span>
+      <div style={{ fontSize: 80, color: color.white, ...outlineText(13), textShadow: `6px 6px 0 ${color.ink}` }}>
+        <span style={{ color: "#FF6FAE" }}>러버블 AI</span>를 써서
       </div>
-      <div style={{ marginTop: 18, fontSize: 92, color: color.white, ...outlineText(14), textShadow: `7px 7px 0 ${color.ink}` }}>
-        AI로 <span style={{ color: "#FF6FAE" }}>만들었다</span>
+      <div style={{ display: "inline-block", marginTop: 16, background: color.accent, border: `8px solid ${color.ink}`, borderRadius: 18, padding: "0 22px 8px", transform: "rotate(-4deg)", boxShadow: ui.shadow(10) }}>
+        <span style={{ fontSize: 104, color: color.ink }}>내 가게 시스템</span>
+      </div>
+      <div style={{ marginTop: 18, fontSize: 100, color: color.white, ...outlineText(14), textShadow: `7px 7px 0 ${color.ink}` }}>
+        만들었다!
       </div>
     </div>
     {/* 기능 칩 */}
