@@ -7,6 +7,7 @@ import { BossActor, ReactionBubble } from "../../motion/BossActor";
 import { Burst, Camera, clamp01, easeInOut, floatY, impact, KText, lerp, MarkSweep, Pop, Sparkles, SpeedLines, Stamp, useCue } from "../../motion/core";
 import { Confetti, Cursor, PersonIcon, TypeText } from "../../motion/props";
 import { Beat, Flash } from "../../motion/transitions";
+import { BrandBadge, BrandIcon, BRANDS, brandBg } from "../../brands/registry";
 import { color, font, ui } from "../../styles/theme";
 import { CustomerAppScreen } from "../ep001/mockups";
 import { BlogEditor, FeedPost, ParcelSite } from "./mockups";
@@ -33,7 +34,7 @@ const Mug: React.FC<{ size?: number }> = ({ size = 120 }) => {
   );
 };
 /** 섹션 제목 칩: "① 택배 발송" */
-const Section: React.FC<{ f: number; n: string; label: string; emoji: string }> = ({ f, n, label, emoji }) => (
+const Section: React.FC<{ f: number; n: string; label: string; emoji: React.ReactNode }> = ({ f, n, label, emoji }) => (
   <Pop f={f} from={{ x: -300, rotate: -12, scale: 0.4 }}>
     <div style={{ display: "inline-flex", alignItems: "center", gap: 18, background: "#fff", border: `7px solid ${color.ink}`, borderRadius: 999, padding: "10px 40px 10px 12px", boxShadow: ui.shadow(10), fontFamily: font.family, fontWeight: 900, fontSize: 60 }}>
       <div style={{ width: 86, height: 86, borderRadius: "50%", background: ASIDE_GRADIENT, color: "#fff", border: `6px solid ${color.ink}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 50 }}>{n}</div>
@@ -79,7 +80,7 @@ export const E2S01: React.FC = () => {
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.08 }, { f: 120, zoom: 1.0 }]}>
           <GridBg tone="light" cell={60} bleed />
-          {[["택배 접수", "parcel.example.com", 120, 170, -4], ["블로그 글쓰기", "blog.example.com", 860, 140, 3], ["새 게시물", "sns.example.com", 300, 560, 2]].map(([tab, url, x, y, r], i) => (
+          {[["택배 접수", "parcel.example.com", 120, 170, -4], ["블로그 글쓰기", "blog.naver.com", 860, 140, 3], ["새 게시물", "instagram.com", 300, 560, 2]].map(([tab, url, x, y, r], i) => (
             <Abs key={tab as string} x={x as number} y={(y as number) + floatY(frame, 8, 0.08, i * 2)} style={{ transform: `rotate(${r}deg)` }}>
               <Pop f={b2 + 2 - i * 6} from={{ y: 400, scale: 0.4, rotate: (r as number) * 5 }}>
                 <AsideWindow w={760} h={360} url={url as string} tab={tab as string} status={["택배 입력 중…", "글 쓰는 중…", "피드 올리는 중…"][i]}>
@@ -124,7 +125,7 @@ export const E2S02: React.FC = () => {
   const t2 = useCue("네이버 블로그에 글", 12.0);
   const t3 = useCue("인스타 피드까지 올리고", 14.0);
   const b3 = useCue("인터넷 작업만", 16.2);
-  const tabs: Array<[number, string, string]> = [[Math.max(t1, b2 - 20), "📦", "택배 사이트"], [t2, "📝", "블로그"], [t3, "📸", "인스타"]];
+  const tabs: Array<[number, React.ReactNode, string, string]> = [[Math.max(t1, b2 - 20), "📦", "택배 사이트", "#fff"], [t2, <BrandIcon key="n" id="naverBlog" size={84} />, "네이버 블로그", "#E9FBF0"], [t3, <BrandIcon key="i" id="instagram" size={84} />, "인스타그램", "#FFF0F6"]];
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       <Beat f={b1} len={b1 - b2} inT="whip" outT="whip">
@@ -142,10 +143,10 @@ export const E2S02: React.FC = () => {
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }, { f: b2 - b3, zoom: 1.12 }]} shake={2}>
           <GridBg tone="light" cell={60} bleed />
           <Abs x={120} y={110}><KText f={b2} text="그런데 아직 손이 가는 일" size={76} /></Abs>
-          {tabs.map(([f, e, t], i) => (
+          {tabs.map(([f, e, t, bg], i) => (
             <Abs key={t} x={180 + i * 110} y={300 + i * 120}>
               <Pop f={f} from={{ x: 700, rotate: 20, scale: 0.5 }}>
-                <div style={{ width: 900, height: 200, background: "#fff", border: `7px solid ${color.ink}`, borderRadius: 24, boxShadow: ui.shadow(12), display: "flex", alignItems: "center", gap: 24, padding: "0 36px", fontFamily: font.family, fontWeight: 900, fontSize: 60, transform: `rotate(${(i - 1) * 3}deg)` }}>
+                <div style={{ width: 900, height: 200, background: bg, border: `7px solid ${color.ink}`, borderRadius: 24, boxShadow: ui.shadow(12), display: "flex", alignItems: "center", gap: 24, padding: "0 36px", fontFamily: font.family, fontWeight: 900, fontSize: 60, transform: `rotate(${(i - 1) * 3}deg)` }}>
                   <span style={{ fontSize: 80 }}>{e}</span>{t}
                   <span style={{ marginLeft: "auto", fontSize: 36, color: "#FF4D4F" }}>손으로 하나하나 😵</span>
                 </div>
@@ -282,8 +283,8 @@ export const E2S04: React.FC = () => {
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }, { f: b2 - b3 + 10, zoom: 1.06 }]} shake={impact(b3 - 30, 22)}>
           <DarkBg />
           <Abs x={140} y={110}><KText f={b2} text="비용도 부담 없어요" size={84} color={color.white} /></Abs>
-          {[["ChatGPT 구독", 220], ["Claude 구독", 560]].map(([t, y], i) => (
-            <Abs key={t as string} x={170} y={y as number}><Pop f={b2 + 10 + i * 8} from={{ x: -300 }}><Card style={{ padding: "24px 44px", fontSize: 56, fontWeight: 900 }}>🤖 {t}</Card></Pop></Abs>
+          {([["chatgpt", "ChatGPT 구독", 220], ["claude", "Claude 구독", 560]] as const).map(([id, t, y], i) => (
+            <Abs key={t} x={170} y={y}><Pop f={b2 + 10 + i * 8} from={{ x: -300 }}><BrandBadge id={id} size={64} tone="solid" label={t} /></Pop></Abs>
           ))}
           <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
             {[300, 640].map((y, i) => (
@@ -291,7 +292,7 @@ export const E2S04: React.FC = () => {
             ))}
           </svg>
           <Abs x={1060} y={370}><Pop f={b3 + 10} from={{ scale: 0 }}><AsideBadge size={80} /></Pop></Abs>
-          <Abs x={900} y={640}><Stamp f={b3 + 30} bg={color.accent} fg={color.ink} size={110} rot={-6}>추가 비용 0원</Stamp></Abs>
+          <Abs x={700} y={650}><Stamp f={b3 + 30} bg={color.accent} fg={color.ink} size={110} rot={-6}>추가 비용 0원</Stamp></Abs>
           <Confetti f={b3 + 32} x={1350} y={600} />
           <Abs x={1600} y={560}><BossActor size={500} enter="slideR" enterAt={frame - b2} poses={[{ f: 0, pose: "holdMug", expression: "smug", tilt: -6 }, { f: frame - b3 + 30, pose: "cheer", expression: "laugh" }]} hops={[frame - b3 + 32]} /></Abs>
         </Camera>
@@ -302,7 +303,7 @@ export const E2S04: React.FC = () => {
 
 /** 실전 장면 공통: 제목 → 시킨 말 → 화면 작업 → 마무리 */
 const TaskScene: React.FC<{
-  n: string; label: string; emoji: string; url: string; tab: string; prompt: string;
+  n: string; label: string; emoji: React.ReactNode; url: string; brand?: "naverBlog" | "instagram"; tab: string; prompt: string;
   sTitle: string; sPrompt: string; sWork: string; sEnd: string; fb: [number, number, number, number];
   work: (f: number) => React.ReactNode; cursorPts: Array<[number, number]>;
   endPose: React.ComponentProps<typeof BossActor>["poses"][number]["pose"]; endFace: React.ComponentProps<typeof BossActor>["poses"][number]["expression"];
@@ -318,6 +319,7 @@ const TaskScene: React.FC<{
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       <Camera start={0} keys={[{ f: 0, zoom: 1.15 }, { f: 18, zoom: 1.0 }, { f: frame - b3, zoom: 1.0 }, { f: frame - b3 + 20, zoom: 1.08, x: 40, y: 30 }, { f: frame - b4, zoom: 1.08, x: 40, y: 30 }, { f: frame - b4 + 16, zoom: 1.0, x: 0, y: 0 }]} shake={impact(b4 - 12, 14)}>
         <GridBg tone="light" cell={60} bleed />
+        {p.brand && <div style={{ position: "absolute", left: -800, right: -800, top: -800, height: 1160, background: brandBg(p.brand), borderBottom: `10px solid ${color.ink}` }} />}
         <Abs x={110} y={60}><Section f={b1} n={p.n} label={p.label} emoji={p.emoji} /></Abs>
         <Abs x={110} y={220}>
           <Pop f={b1 + 8} from={{ y: 500, rotateX: 40 }}>
@@ -338,7 +340,7 @@ const TaskScene: React.FC<{
 /* ───────── S05 택배 ───────── */
 export const E2S05: React.FC = () => (
   <TaskScene
-    n="1" label="택배 발송" emoji="📦" url="parcel.example.com" tab="택배 발송 접수" prompt="택배 사이트에 로그인해서, 오늘 보낼 물량 접수해줘."
+    n="1" label="택배 발송" emoji="📦" brand={undefined} url="parcel.example.com" tab="택배 발송 접수" prompt="택배 사이트에 로그인해서, 오늘 보낼 물량 접수해줘."
     endPose="cheer" endFace="laugh"
     sTitle="첫 번째" sPrompt="택배 사이트에 로그인" sWork="이렇게 시키면" sEnd="귀찮던" fb={[0, 1.5, 5.5, 9.5]}
     work={(f) => <ParcelSite filled={Math.min(5, Math.floor(Math.max(0, f - 8) / 12))} done={f > 8 + 12 * 5 + 4} count={f > 8 + 12 * 5 + 4 ? Math.min(12, Math.floor((f - 72) / 4) + 1) : 0} />}
@@ -356,7 +358,7 @@ export const E2S05: React.FC = () => (
 const BLOG_BODY = "오늘 맡겨주신 운동화, 얼룩 하나 없이 새것처럼 돌아왔어요. 세탁 전후를 비교해 보세요!";
 export const E2S06: React.FC = () => (
   <TaskScene
-    n="2" label="네이버 블로그" emoji="📝" url="blog.example.com/write" tab="블로그 글쓰기" prompt="오늘 세탁한 신발 사진으로 블로그 글 써서 올려줘."
+    n="2" label="네이버 블로그" emoji={<BrandIcon id="naver" size={64} />} brand="naverBlog" url="blog.naver.com/write" tab="블로그 글쓰기" prompt="오늘 세탁한 신발 사진으로 블로그 글 써서 올려줘."
     endPose="point" endFace="determined"
     sTitle="두 번째" sPrompt="오늘 세탁한 신발" sWork="블로그에 들어가서" sEnd="올리기 전에" fb={[0, 1.5, 5.5, 8.5]}
     work={(f) => <BlogEditor title="운동화 세탁 전후 비교 ✨" titleTyped={Math.floor(Math.max(0, f) * 0.9)} body={BLOG_BODY} typed={Math.floor(Math.max(0, f - 16) * 1.2)} photo={f > 40} />}
@@ -384,10 +386,11 @@ export const E2S07: React.FC = () => {
       <Beat f={b1} len={b1 - b4} inT="whip" outT="zoom">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.15 }, { f: 18, zoom: 1.0 }, { f: b1 - b3, zoom: 1.0 }, { f: b1 - b3 + 20, zoom: 1.06, x: 30 }]}>
           <GridBg tone="light" cell={60} bleed />
-          <Abs x={110} y={60}><Section f={b1} n="3" label="인스타 피드" emoji="📸" /></Abs>
+          <div style={{ position: "absolute", left: -800, right: -800, top: -800, height: 1160, background: onInsta ? brandBg("instagram") : brandBg("naverBlog"), borderBottom: `10px solid ${color.ink}` }} />
+          <Abs x={110} y={60}><Section f={b1} n="3" label="인스타 피드" emoji={<BrandIcon id="instagram" size={64} />} /></Abs>
           <Abs x={110} y={220}>
             <Pop f={b1 + 8} from={{ y: 500, rotateX: 40 }}>
-              <AsideWindow w={1340} h={720} url={onInsta ? "sns.example.com/new" : "blog.example.com"} tab={onInsta ? "새 게시물" : "블로그 (발행 완료)"} prompt={b2 >= 0 ? <TypeText f={b2} text="블로그에 올린 내용으로 인스타 피드도 올려줘." dur={36} /> : undefined} status={b3 >= 0 ? (onInsta ? "인스타로 이동해서 올리는 중…" : "블로그 내용 읽는 중…") : undefined}>
+              <AsideWindow w={1340} h={720} url={onInsta ? "instagram.com/create" : "blog.naver.com"} tab={onInsta ? "새 게시물" : "블로그 (발행 완료)"} prompt={b2 >= 0 ? <TypeText f={b2} text="블로그에 올린 내용으로 인스타 피드도 올려줘." dur={36} /> : undefined} status={b3 >= 0 ? (onInsta ? "인스타로 이동해서 올리는 중…" : "블로그 내용 읽는 중…") : undefined}>
                 <div style={{ position: "absolute", inset: 0, transform: onInsta ? `translateX(${lerp(b3 - 24, 0, 10, 100, 0)}%)` : undefined }}>
                   {onInsta ? (
                     <FeedPost step={b3 > 80 ? 2 : 1} caption="세탁 전후 비교 ✨ 새것처럼 돌아온 운동화! #신발세탁 #운동화세탁" typed={Math.floor(Math.max(0, b3 - 40) * 1.4)} />
@@ -399,7 +402,7 @@ export const E2S07: React.FC = () => {
             </Pop>
           </Abs>
           {b3 >= 0 && <AiCursor x={cur[0]} y={cur[1]} scale={1.15} />}
-          {b3 >= 18 && b3 < 30 && <Abs x={420} y={250}><div style={{ fontSize: 80, fontWeight: 900, color: ASIDE_PURPLE, fontFamily: font.family }}>➜ 📸</div></Abs>}
+          {b3 >= 18 && b3 < 30 && <Abs x={420} y={250}><div style={{ fontSize: 80, fontWeight: 900, color: ASIDE_PURPLE, fontFamily: font.family, display: "flex", alignItems: "center", gap: 16 }}><BrandIcon id="naver" size={80} /> ➜ <BrandIcon id="instagram" size={80} /></div></Abs>}
           <Abs x={1500} y={480}><BossActor size={500} enter="peekR" enterAt={frame - b1} poses={[{ f: 0, pose: "point", expression: "talk" }, { f: frame - b3, pose: "holdMug", expression: "smug", tilt: 8 }]} /></Abs>
         </Camera>
       </Beat>
@@ -435,7 +438,7 @@ export const E2S08: React.FC = () => {
   const b3 = useCue("아쉬운 점이요", 7.0);
   const b4 = useCue("하나만 기억하세요", 8.9);
   const mins = Math.round(lerp(b1 - 10, 0, 30, 120, 5));
-  const sites: Array<[number, number, string]> = [[420, 420, "📦"], [960, 300, "📝"], [1500, 420, "📸"]];
+  const sites: Array<[number, number, React.ReactNode]> = [[420, 420, "📦"], [960, 300, <BrandIcon key="n" id="naver" size={150} />], [1500, 420, <BrandIcon key="i" id="instagram" size={150} />]];
   const hop = Math.floor(Math.max(0, b2) / 14) % 3;
   const nxt = (hop + 1) % 3;
   const p = (Math.max(0, b2) % 14) / 14;
@@ -461,7 +464,7 @@ export const E2S08: React.FC = () => {
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }]}>
           <GridBg tone="light" cell={60} bleed />
           <Abs x={0} y={120} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b2} text="알아서 사이트를 옮겨 다녀요" size={80} /></Abs>
-          {sites.map(([x, y, e], i) => <Abs key={e} x={x - 130} y={y}><Pop f={b2 + 4 + i * 5} from={{ scale: 0 }}><Card style={{ width: 260, height: 220, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 120 }}>{e}</Card></Pop></Abs>)}
+          {sites.map(([x, y, e], i) => <Abs key={i} x={x - 130} y={y}><Pop f={b2 + 4 + i * 5} from={{ scale: 0 }}><Card style={{ width: 260, height: 220, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 120 }}>{e}</Card></Pop></Abs>)}
           {b2 > 10 && <AiCursor x={cx} y={cy + 120} scale={1.3} />}
           <Abs x={1560} y={560}><BossActor size={400} enter="walkR" enterAt={frame - b2} poses={[{ f: 0, pose: "relax", expression: "smug", tilt: -8 }]} /></Abs>
           <Abs x={760} y={700}><Stamp f={b2 + 30} bg={ASIDE_PURPLE} size={80} rot={-4}>귀찮은 일은 맡기기!</Stamp></Abs>

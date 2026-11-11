@@ -1,6 +1,7 @@
 import React from "react";
 import { color, font } from "../../styles/theme";
 import { Shoe } from "../ep001/mockups";
+import { BRANDS, BrandIcon } from "../../brands/registry";
 
 /* 실제 서비스 로고·디자인은 쓰지 않은 일반적인 예시 화면 */
 
@@ -31,10 +32,14 @@ export const ParcelSite: React.FC<{ filled: number; done?: boolean; count?: numb
 
 /** 블로그 글쓰기 화면. typed: 본문 글자 수, photo: 사진 표시 */
 export const BlogEditor: React.FC<{ title: string; body: string; typed: number; photo: boolean; titleTyped?: number }> = ({ title, body, typed, photo, titleTyped = 999 }) => (
-  <div style={{ position: "absolute", inset: 0, padding: "24px 40px", fontFamily: font.family, display: "flex", flexDirection: "column", gap: 16, background: "#fff" }}>
+  <div style={{ position: "absolute", inset: 0, fontFamily: font.family, display: "flex", flexDirection: "column", background: "#fff" }}>
+    <div style={{ height: 64, background: BRANDS.naver.colors.primary, display: "flex", alignItems: "center", gap: 14, padding: "0 30px", color: "#fff", fontWeight: 900, fontSize: 28 }}>
+      <BrandIcon id="naver" size={40} /> 블로그 글쓰기
+    </div>
+    <div style={{ padding: "18px 40px", display: "flex", flexDirection: "column", gap: 16 }}>
     <div style={{ display: "flex", gap: 10, fontSize: 20, fontWeight: 800, color: "#5A6378" }}>
       {["본문", "사진", "인용구", "구분선"].map((t) => <div key={t} style={{ border: "2px solid #E2E6EF", borderRadius: 8, padding: "4px 12px" }}>{t}</div>)}
-      <div style={{ marginLeft: "auto", background: "#16A34A", color: "#fff", borderRadius: 10, padding: "6px 22px", border: `3px solid ${color.ink}` }}>발행</div>
+      <div style={{ marginLeft: "auto", background: BRANDS.naver.colors.primary, color: "#fff", borderRadius: 10, padding: "6px 22px", border: `3px solid ${color.ink}` }}>발행</div>
     </div>
     <div style={{ fontSize: 40, fontWeight: 900, borderBottom: "3px solid #EEF0F5", paddingBottom: 12, minHeight: 60 }}>{title.slice(0, titleTyped)}</div>
     <div style={{ display: "flex", gap: 24 }}>
@@ -44,6 +49,7 @@ export const BlogEditor: React.FC<{ title: string; body: string; typed: number; 
           <Shoe w={190} />
         </div>
       )}
+    </div>
     </div>
   </div>
 );
@@ -56,11 +62,11 @@ export const FeedPost: React.FC<{ step: number; caption: string; typed: number }
       <div style={{ position: "absolute", left: 16, top: 16, background: "#fff", border: `3px solid ${color.ink}`, borderRadius: 999, padding: "4px 14px", fontSize: 20, fontWeight: 800 }}>세탁 후 ✨</div>
     </div>
     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
-      <div style={{ fontSize: 30, fontWeight: 900 }}>새 게시물</div>
+      <div style={{ fontSize: 30, fontWeight: 900, display: "flex", alignItems: "center", gap: 12 }}><BrandIcon id="instagram" size={44} /> 새 게시물</div>
       <div style={{ flex: 1, border: "3px solid #E2E6EF", borderRadius: 16, padding: 18, fontSize: 24, lineHeight: 1.6, fontWeight: 500 }}>
         {step >= 1 ? caption.slice(0, typed) : <span style={{ color: "#9AA3B5" }}>문구 입력…</span>}
       </div>
-      <div style={{ alignSelf: "flex-end", background: step >= 2 ? "#22C55E" : "linear-gradient(90deg,#FF7A59,#E1306C,#7C5CFF)", color: "#fff", borderRadius: 14, padding: "12px 40px", fontSize: 28, fontWeight: 900, border: `4px solid ${color.ink}` }}>{step >= 2 ? "공유 완료 ✓" : "공유하기"}</div>
+      <div style={{ alignSelf: "flex-end", background: step >= 2 ? "#22C55E" : "linear-gradient(90deg,#FD5949,#D6249F,#285AEB)", color: "#fff", borderRadius: 14, padding: "12px 40px", fontSize: 28, fontWeight: 900, border: `4px solid ${color.ink}` }}>{step >= 2 ? "공유 완료 ✓" : "공유하기"}</div>
     </div>
   </div>
 );

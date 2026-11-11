@@ -5,6 +5,7 @@ import { ExperimentTag } from "../../components/brand";
 import { AiCursor, AsideBadge, AsideWindow, ASIDE_GRADIENT } from "../../components/aside";
 import { color, font, ui } from "../../styles/theme";
 import { BlogEditor } from "./mockups";
+import { BrandBadge } from "../../brands/registry";
 
 const outline = (px: number): React.CSSProperties => ({ WebkitTextStroke: `${px}px ${color.ink}`, paintOrder: "stroke fill" });
 
@@ -23,7 +24,7 @@ export const Ep002Thumb: React.FC = () => (
     <div style={{ position: "absolute", left: 600, top: 20, width: 700, height: 640, borderRadius: "50%", background: ASIDE_GRADIENT, filter: "blur(80px)", opacity: 0.5 }} />
     {/* 혼자 일하는 브라우저 */}
     <div style={{ position: "absolute", left: 640, top: 150, transform: "rotate(-7deg)", opacity: 0.97 }}>
-      <AsideWindow w={620} h={420} url="blog.example.com" tab="블로그 글쓰기">
+      <AsideWindow w={620} h={420} url="blog.naver.com" tab="블로그 글쓰기">
         <div style={{ transform: "scale(0.62)", transformOrigin: "0 0", width: "161%", height: "161%", position: "relative" }}>
           <BlogEditor title="운동화 세탁 전후 비교" body="오늘 맡겨주신 운동화, 이렇게 깨끗해졌어요!" typed={22} photo titleTyped={99} />
         </div>
@@ -56,9 +57,9 @@ export const Ep002Thumb: React.FC = () => (
       <div style={{ marginTop: 14, fontSize: 90, color: "#C4B5FD", ...outline(14), textShadow: `7px 7px 0 ${color.ink}` }}>AI 브라우저</div>
     </div>
     <div style={{ position: "absolute", left: 48, bottom: 34, display: "flex", gap: 12 }}>
-      {["📦 택배", "📝 블로그", "📸 인스타"].map((t) => (
-        <div key={t} style={{ background: color.white, border: `5px solid ${color.ink}`, borderRadius: 999, padding: "6px 20px", fontSize: 30, fontWeight: 800, color: color.main, boxShadow: ui.shadow(5) }}>{t}</div>
-      ))}
+      <div style={{ background: color.white, border: `5px solid ${color.ink}`, borderRadius: 999, padding: "6px 20px", fontSize: 30, fontWeight: 800, color: color.main, boxShadow: ui.shadow(5) }}>📦 택배</div>
+      <BrandBadge id="naverBlog" size={34} label="블로그" />
+      <BrandBadge id="instagram" size={34} label="인스타" />
     </div>
   </AbsoluteFill>
 );
