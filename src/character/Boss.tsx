@@ -88,7 +88,7 @@ export const DEFAULT_EXPRESSION: Record<Pose, Expression> = {
 
 type Pt = [number, number];
 type Hand = "fist" | "open" | "point" | "thumb" | "hidden";
-type Arm = { s: Pt; e: Pt; h: Pt; hand: Hand; front?: boolean; flip?: boolean };
+export type Arm = { s: Pt; e: Pt; h: Pt; hand: Hand; front?: boolean; flip?: boolean };
 
 const SHOULDER_L: Pt = [128, 312];
 const SHOULDER_R: Pt = [272, 312];
@@ -166,11 +166,11 @@ const ARMS: Partial<Record<Pose, Arm[]>> = {
 };
 
 const lerp = (a: Pt, b: Pt, t: number): Pt => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
-const line = { stroke: C.line, strokeWidth: C.lineWidth, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };
+export const line = { stroke: C.line, strokeWidth: C.lineWidth, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };
 
 /* ---------------- 팔 ---------------- */
 
-const ArmShape: React.FC<{ arm: Arm }> = ({ arm }) => {
+export const ArmShape: React.FC<{ arm: Arm }> = ({ arm }) => {
   const { s, e, h } = arm;
   const d = `M${s[0]},${s[1]} L${e[0]},${e[1]} L${h[0]},${h[1]}`;
   const sleeveEnd = lerp(s, e, arm.front ? 0.38 : 0.55);
@@ -475,14 +475,15 @@ export type BossProps = {
   blink?: boolean;
   talk?: number;
   size?: number; // 높이(px)
-  crop?: "full" | "head"; // head: 프로필/워터마크용 얼굴 클로즈업 (정사각형)
+  crop?: "full" | "head" | "bust" | "eyes"; // head: 얼굴 / bust: 얼굴+어깨 / eyes: 눈만
   headTilt?: number; // 고개 기울기(도)
   look?: Pt; // 눈동자 방향 [x, y]
   t?: number; // 반복 동작용 프레임 (없으면 현재 프레임)
   style?: React.CSSProperties;
 };
 
-const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288] } as const;
+// full: 상반신 / head: 얼굴 / bust: 얼굴+어깨+손 (2인칭 정면샷) / eyes: 눈만 (익스트림 클로즈업)
+const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288], bust: [-10, 10, 420, 420], eyes: [112, 150, 176, 100] } as const;
 
 /** 영상 모드에서 모든 캐릭터에 깜빡임/말하기를 자동으로 넣기 위한 컨텍스트 */
 export const BossLive = React.createContext<{ blink: boolean; talk: number } | null>(null);
@@ -499,7 +500,7 @@ export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink:
   const back = arms.filter((a) => !a.front);
   const front = arms.filter((a) => a.front);
   return (
-    <svg viewBox={vb.join(" ")} height={size} width={(size * vb[2]) / vb[3]} style={{ overflow: crop === "head" ? "hidden" : "visible", ...style }}>
+    <svg viewBox={vb.join(" ")} height={size} width={(size * vb[2]) / vb[3]} style={{ overflow: crop === "full" ? "visible" : "hidden", ...style }}>
       {back.map((a, i) => (
         <ArmShape key={`b${i}`} arm={a} />
       ))}

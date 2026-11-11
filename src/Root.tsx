@@ -10,6 +10,7 @@ import { calcEp001, Ep001Video } from "./episodes/ep001/Ep001Video";
 import { EP001_SCENES } from "./episodes/ep001/Storyboard";
 import { Ep002Thumb } from "./episodes/ep002/Thumb";
 import { calcEp002, Ep002Video } from "./episodes/ep002/Ep002Video";
+import { CAMERA_ANGLES } from "./compositions/CameraAngles";
 import { loadFonts } from "./styles/fonts";
 
 loadFonts();
@@ -73,6 +74,11 @@ export const RemotionRoot: React.FC = () => (
     {/* 실험 #001 스토리보드 장면 */}
     {Object.entries(EP001_SCENES).map(([k, C]) => (
       <Composition key={k} id={`Ep001-${k}`} component={C} width={1920} height={1080} fps={30} durationInFrames={60} />
+    ))}
+
+    {/* 카메라 시점 샘플 8종 */}
+    {CAMERA_ANGLES.map((C, i) => (
+      <Composition key={i} id={`Angle${i + 1}`} component={C} width={1920} height={1080} fps={30} durationInFrames={90} />
     ))}
 
     {/* 캐릭터 */}
