@@ -1,4 +1,5 @@
 import React from "react";
+import { useCurrentFrame } from "remotion";
 import { boss as C } from "../styles/theme";
 
 /**
@@ -19,7 +20,15 @@ export type Pose =
   | "surprise"
   | "worry"
   | "wave"
-  | "thumbsUp";
+  | "thumbsUp"
+  | "relax"
+  | "cheer"
+  | "shrug"
+  | "facepalm"
+  | "typing"
+  | "holdMug"
+  | "present"
+  | "clap";
 
 export type Expression =
   | "smile"
@@ -28,7 +37,13 @@ export type Expression =
   | "joy"
   | "surprise"
   | "worry"
-  | "wink";
+  | "wink"
+  | "starstruck"
+  | "tired"
+  | "smug"
+  | "laugh"
+  | "shock"
+  | "determined";
 
 export const POSES: Pose[] = [
   "default",
@@ -39,7 +54,17 @@ export const POSES: Pose[] = [
   "worry",
   "wave",
   "thumbsUp",
+  "relax",
+  "cheer",
+  "shrug",
+  "facepalm",
+  "typing",
+  "holdMug",
+  "present",
+  "clap",
 ];
+
+export const EXPRESSIONS: Expression[] = ["smile", "talk", "think", "joy", "surprise", "worry", "wink", "starstruck", "tired", "smug", "laugh", "shock", "determined"];
 
 // 포즈별 기본 표정 (따로 지정하지 않으면 이 표정을 사용)
 export const DEFAULT_EXPRESSION: Record<Pose, Expression> = {
@@ -51,6 +76,14 @@ export const DEFAULT_EXPRESSION: Record<Pose, Expression> = {
   worry: "worry",
   wave: "joy",
   thumbsUp: "wink",
+  relax: "smug",
+  cheer: "laugh",
+  shrug: "smile",
+  facepalm: "tired",
+  typing: "determined",
+  holdMug: "smile",
+  present: "talk",
+  clap: "laugh",
 };
 
 type Pt = [number, number];
@@ -63,7 +96,59 @@ const SHOULDER_R: Pt = [272, 312];
 const ARM_DOWN_L: Arm = { s: SHOULDER_L, e: [100, 392], h: [104, 470], hand: "hidden" };
 const ARM_DOWN_R: Arm = { s: SHOULDER_R, e: [300, 392], h: [296, 470], hand: "hidden" };
 
-const ARMS: Record<Pose, Arm[]> = {
+const S = (t: number, speed: number, amp: number, ph = 0) => Math.sin(t * speed + ph) * amp;
+/** 포즈별 팔 위치. t(프레임)로 손 흔들기·주먹 펌프·타자 같은 반복 동작을 만든다 */
+const armsFor = (pose: Pose, t: number): Arm[] => {
+  switch (pose) {
+    case "wave":
+      return [ARM_DOWN_L, { s: SHOULDER_R, e: [344, 286], h: [356 + S(t, 0.45, 22), 196 + Math.abs(S(t, 0.45, 8))], hand: "open" }];
+    case "point":
+      return [ARM_DOWN_L, { s: SHOULDER_R, e: [338, 270 + S(t, 0.2, 4)], h: [352, 196 + S(t, 0.2, 6)], hand: "point" }];
+    case "happy":
+      return [ARM_DOWN_L, { s: SHOULDER_R, e: [346, 336], h: [342, 238 - Math.abs(S(t, 0.35, 16))], hand: "fist" }];
+    case "relax":
+      return [
+        { s: SHOULDER_L, e: [58, 246], h: [128, 168], hand: "hidden" },
+        { s: SHOULDER_R, e: [342, 246], h: [272, 168], hand: "hidden" },
+      ];
+    case "cheer": {
+      const pump = Math.abs(S(t, 0.4, 22));
+      return [
+        { s: SHOULDER_L, e: [66, 262], h: [78, 150 - pump], hand: "fist" },
+        { s: SHOULDER_R, e: [334, 262], h: [322, 150 - Math.abs(S(t, 0.4, 22, 1.2))], hand: "fist" },
+      ];
+    }
+    case "shrug": {
+      const up = Math.abs(S(t, 0.12, 10));
+      return [
+        { s: SHOULDER_L, e: [74, 392 - up], h: [36, 318 - up], hand: "open", flip: true },
+        { s: SHOULDER_R, e: [326, 392 - up], h: [364, 318 - up], hand: "open" },
+      ];
+    }
+    case "facepalm":
+      return [ARM_DOWN_L, { s: SHOULDER_R, e: [300, 410], h: [214, 214], hand: "open", front: true }];
+    case "typing":
+      return [
+        { s: SHOULDER_L, e: [112, 424], h: [166, 446 + S(t, 1.1, 10)], hand: "fist", front: true },
+        { s: SHOULDER_R, e: [288, 424], h: [234, 446 + S(t, 1.1, 10, Math.PI)], hand: "fist", front: true },
+      ];
+    case "holdMug":
+      return [ARM_DOWN_L, { s: SHOULDER_R, e: [318, 424], h: [252, 392 + S(t, 0.08, 6)], hand: "fist", front: true }];
+    case "present":
+      return [{ s: SHOULDER_L, e: [62, 334], h: [-12, 286 + S(t, 0.15, 6)], hand: "open", flip: true }, ARM_DOWN_R];
+    case "clap": {
+      const gap = Math.abs(S(t, 0.55, 26));
+      return [
+        { s: SHOULDER_L, e: [118, 424], h: [176 - gap, 356], hand: "open", front: true, flip: true },
+        { s: SHOULDER_R, e: [282, 424], h: [224 + gap, 356], hand: "open", front: true },
+      ];
+    }
+    default:
+      return ARMS[pose as keyof typeof ARMS] ?? [ARM_DOWN_L, ARM_DOWN_R];
+  }
+};
+
+const ARMS: Partial<Record<Pose, Arm[]>> = {
   default: [ARM_DOWN_L, ARM_DOWN_R],
   think: [
     { s: SHOULDER_R, e: [262, 402], h: [190, 402], hand: "fist", front: true },
@@ -164,8 +249,8 @@ const Body: React.FC = () => (
 
 /* ---------------- 머리 ---------------- */
 
-const Head: React.FC<{ expression: Expression; blink: boolean; talk: number }> = ({ expression, blink, talk }) => (
-  <g>
+const Head: React.FC<{ expression: Expression; blink: boolean; talk: number; tilt?: number; look?: Pt }> = ({ expression, blink, talk, tilt = 0, look }) => (
+  <g transform={`rotate(${tilt} 200 270)`}>
     {/* 귀 */}
     <circle cx={96} cy={186} r={18} fill={C.skin} {...line} />
     <circle cx={304} cy={186} r={18} fill={C.skin} {...line} />
@@ -176,7 +261,7 @@ const Head: React.FC<{ expression: Expression; blink: boolean; talk: number }> =
     <path d="M302,150 Q308,190 292,212 Q286,190 278,172 Z" fill={C.hair} {...line} strokeWidth={4} />
     {/* 앞머리 (챙 아래로 살짝) */}
     <path d="M120,150 Q140,176 156,158 Q170,180 186,160 Q200,178 214,160 Q230,180 244,158 Q260,176 280,150 Z" fill={C.hair} />
-    <Face expression={expression} blink={blink} talk={talk} />
+    <Face expression={expression} blink={blink} talk={talk} look={look} />
     <Cap />
   </g>
 );
@@ -202,8 +287,25 @@ const Cap: React.FC = () => (
 const EYE_L: Pt = [160, 202];
 const EYE_R: Pt = [240, 202];
 
-const Eye: React.FC<{ at: Pt; kind: "normal" | "closed" | "happy" | "wide"; look?: Pt }> = ({ at, kind, look = [0, 0] }) => {
+const Eye: React.FC<{ at: Pt; kind: "normal" | "closed" | "happy" | "wide" | "star" | "half" | "smug"; look?: Pt }> = ({ at, kind, look = [0, 0] }) => {
   const [x, y] = at;
+  if (kind === "star")
+    return (
+      <path
+        d={`M${x},${y - 18} L${x + 5},${y - 6} L${x + 18},${y - 5} L${x + 8},${y + 4} L${x + 11},${y + 17} L${x},${y + 10} L${x - 11},${y + 17} L${x - 8},${y + 4} L${x - 18},${y - 5} L${x - 5},${y - 6} Z`}
+        fill={C.badge}
+        {...line}
+        strokeWidth={4}
+      />
+    );
+  if (kind === "half")
+    return (
+      <g>
+        <ellipse cx={x + look[0]} cy={y + 5 + look[1]} rx={10} ry={8} fill={C.line} />
+        <path d={`M${x - 15},${y - 1} L${x + 15},${y - 1}`} {...line} strokeWidth={6} />
+      </g>
+    );
+  if (kind === "smug") return <path d={`M${x - 14},${y + 2} Q${x},${y - 8} ${x + 14},${y + 2}`} fill="none" {...line} strokeWidth={6} />;
   if (kind === "closed") return <path d={`M${x - 13},${y + 2} Q${x},${y + 8} ${x + 13},${y + 2}`} fill="none" {...line} />;
   if (kind === "happy") return <path d={`M${x - 14},${y + 4} Q${x},${y - 14} ${x + 14},${y + 4}`} fill="none" {...line} />;
   if (kind === "wide")
@@ -221,7 +323,7 @@ const Eye: React.FC<{ at: Pt; kind: "normal" | "closed" | "happy" | "wide"; look
   );
 };
 
-const Brows: React.FC<{ kind: "normal" | "up" | "worry" | "think" }> = ({ kind }) => {
+const Brows: React.FC<{ kind: "normal" | "up" | "worry" | "think" | "angry" }> = ({ kind }) => {
   const [lx, ly] = EYE_L;
   const [rx, ry] = EYE_R;
   const by = (y: number) => y - 30;
@@ -230,13 +332,33 @@ const Brows: React.FC<{ kind: "normal" | "up" | "worry" | "think" }> = ({ kind }
     up: `M${lx - 14},${by(ly) - 6} Q${lx},${by(ly) - 16} ${lx + 14},${by(ly) - 6} M${rx - 14},${by(ry) - 6} Q${rx},${by(ry) - 16} ${rx + 14},${by(ry) - 6}`,
     worry: `M${lx - 14},${by(ly) + 4} L${lx + 14},${by(ly) - 6} M${rx - 14},${by(ry) - 6} L${rx + 14},${by(ry) + 4}`,
     think: `M${lx - 14},${by(ly) + 2} Q${lx},${by(ly) - 6} ${lx + 14},${by(ly) + 2} M${rx - 14},${by(ry) - 8} Q${rx},${by(ry) - 14} ${rx + 14},${by(ry) - 4}`,
+    angry: `M${lx - 14},${by(ly) - 6} L${lx + 14},${by(ly) + 5} M${rx - 14},${by(ry) + 5} L${rx + 14},${by(ry) - 6}`,
   };
   return <path d={shapes[kind]} fill="none" {...line} strokeWidth={5} />;
 };
 
-const Mouth: React.FC<{ kind: "smile" | "open" | "o" | "wavy" | "hmm" | "grin"; talk: number }> = ({ kind, talk }) => {
+const Mouth: React.FC<{ kind: "smile" | "open" | "o" | "wavy" | "hmm" | "grin" | "smirk" | "scream" | "flat" | "laugh"; talk: number }> = ({ kind, talk }) => {
   const cx = 200;
   const cy = 244;
+  if (kind === "scream")
+    return (
+      <g>
+        <path d={`M${cx - 20},${cy - 6} Q${cx},${cy - 12} ${cx + 20},${cy - 6} Q${cx + 22},${cy + 34} ${cx},${cy + 38} Q${cx - 22},${cy + 34} ${cx - 20},${cy - 6} Z`} fill={C.mouth} {...line} strokeWidth={5} />
+        <ellipse cx={cx} cy={cy + 28} rx={11} ry={6} fill={C.tongue} />
+      </g>
+    );
+  if (kind === "laugh")
+    return (
+      <g>
+        <path d={`M${cx - 28},${cy - 6} Q${cx},${cy - 2} ${cx + 28},${cy - 6} Q${cx + 22},${cy + 32} ${cx},${cy + 32} Q${cx - 22},${cy + 32} ${cx - 28},${cy - 6} Z`} fill={C.mouth} {...line} strokeWidth={5} />
+        <ellipse cx={cx} cy={cy + 22} rx={13} ry={6} fill={C.tongue} />
+        <path d={`M${cx - 20},${cy - 2} L${cx + 20},${cy - 2}`} stroke="#fff" strokeWidth={5} strokeLinecap="round" />
+      </g>
+    );
+  if (talk <= 0.05) {
+    if (kind === "smirk") return <path d={`M${cx - 18},${cy + 6} Q${cx + 4},${cy + 10} ${cx + 20},${cy - 4}`} fill="none" {...line} strokeWidth={5} />;
+    if (kind === "flat") return <path d={`M${cx - 14},${cy + 4} L${cx + 14},${cy + 4}`} fill="none" {...line} strokeWidth={5} />;
+  }
   // talk > 0 이면 어떤 입이든 벌린 입으로 보간
   if (kind === "open" || kind === "grin" || talk > 0.05) {
     const h = kind === "grin" ? 26 : 10 + 20 * Math.max(talk, kind === "open" ? 0.8 : 0);
@@ -260,6 +382,7 @@ type FaceSpec = {
   mouth: React.ComponentProps<typeof Mouth>["kind"];
   sweat?: boolean;
   sparkle?: boolean;
+  shockLines?: boolean;
 };
 
 const FACES: Record<Expression, FaceSpec> = {
@@ -270,10 +393,17 @@ const FACES: Record<Expression, FaceSpec> = {
   surprise: { eyes: ["wide", "wide"], brows: "up", mouth: "o" },
   worry: { eyes: ["normal", "normal"], look: [0, 2], brows: "worry", mouth: "wavy", sweat: true },
   wink: { eyes: ["normal", "happy"], brows: "normal", mouth: "grin" },
+  starstruck: { eyes: ["star", "star"], brows: "up", mouth: "grin", sparkle: true },
+  tired: { eyes: ["half", "half"], brows: "worry", mouth: "flat", sweat: true },
+  smug: { eyes: ["smug", "smug"], brows: "up", mouth: "smirk" },
+  laugh: { eyes: ["happy", "happy"], brows: "up", mouth: "laugh", sparkle: true },
+  shock: { eyes: ["wide", "wide"], brows: "up", mouth: "scream", shockLines: true },
+  determined: { eyes: ["normal", "normal"], brows: "angry", mouth: "smile", look: [2, 0] },
 };
 
-const Face: React.FC<{ expression: Expression; blink: boolean; talk: number }> = ({ expression, blink, talk }) => {
-  const f = FACES[expression];
+const Face: React.FC<{ expression: Expression; blink: boolean; talk: number; look?: Pt }> = ({ expression, blink, talk, look }) => {
+  const f0 = FACES[expression];
+  const f = look ? { ...f0, look } : f0;
   const eyeKind = (k: FaceSpec["eyes"][number]) => (blink && (k === "normal" || k === "wide") ? "closed" : k);
   return (
     <g>
@@ -287,16 +417,36 @@ const Face: React.FC<{ expression: Expression; blink: boolean; talk: number }> =
       <path d="M196,222 Q201,228 206,222" fill="none" stroke={C.skinShade} strokeWidth={4} strokeLinecap="round" />
       <Mouth kind={f.mouth} talk={talk} />
       {f.sweat && <path d="M300,110 Q290,130 300,138 Q310,130 300,110 Z" fill="#8EC9FF" {...line} strokeWidth={4} />}
+      {f.shockLines && <path d="M130,150 L130,190 M150,148 L150,182 M250,148 L250,182 M270,150 L270,190" stroke="#6B8BD6" strokeWidth={5} strokeLinecap="round" opacity={0.8} />}
     </g>
   );
 };
 
 /* ---------------- 효과 (머리 밖) ---------------- */
 
-const Effects: React.FC<{ expression: Expression; pose: Pose }> = ({ expression, pose }) => {
+/** 손에 든 머그컵 (holdMug) */
+const MugProp: React.FC<{ at: Pt }> = ({ at }) => (
+  <g transform={`translate(${at[0] - 40},${at[1] - 70})`}>
+    <path d="M14,0 q-6,10 0,18 M30,-4 q-6,10 0,18" fill="none" stroke="#B8C2D6" strokeWidth={5} strokeLinecap="round" />
+    <path d="M0,24 L60,24 L54,92 Q54,98 48,98 L12,98 Q6,98 6,92 Z" fill="#fff" {...line} />
+    <path d="M60,38 Q80,38 78,56 Q76,72 56,70" fill="none" {...line} strokeWidth={7} />
+    <rect x={14} y={46} width={32} height={18} rx={4} fill={C.badge} {...line} strokeWidth={4} />
+  </g>
+);
+/** 노트북 (typing) */
+const LaptopProp: React.FC = () => (
+  <g>
+    <path d="M90,470 L310,470 L330,500 L70,500 Z" fill="#CBD5E1" {...line} />
+    <path d="M110,330 L290,330 L298,470 L102,470 Z" fill="#E2E8F0" {...line} />
+    <circle cx={200} cy={400} r={16} fill={C.badge} {...line} strokeWidth={4} />
+  </g>
+);
+
+const Effects: React.FC<{ expression: Expression; pose: Pose; arms: Arm[] }> = ({ expression, pose, arms }) => {
   const f = FACES[expression];
   return (
     <g>
+      {pose === "holdMug" && <MugProp at={arms[1].h} />}
       {f.sparkle && (
         <g stroke={C.badge} strokeWidth={8} strokeLinecap="round">
           <path d="M60,96 L40,78 M48,130 L22,128 M84,72 L80,46" />
@@ -326,6 +476,9 @@ export type BossProps = {
   talk?: number;
   size?: number; // 높이(px)
   crop?: "full" | "head"; // head: 프로필/워터마크용 얼굴 클로즈업 (정사각형)
+  headTilt?: number; // 고개 기울기(도)
+  look?: Pt; // 눈동자 방향 [x, y]
+  t?: number; // 반복 동작용 프레임 (없으면 현재 프레임)
   style?: React.CSSProperties;
 };
 
@@ -334,13 +487,15 @@ const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288] } as cons
 /** 영상 모드에서 모든 캐릭터에 깜빡임/말하기를 자동으로 넣기 위한 컨텍스트 */
 export const BossLive = React.createContext<{ blink: boolean; talk: number } | null>(null);
 
-export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink: blinkProp, talk: talkProp, size = 480, crop = "full", style }) => {
+export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink: blinkProp, talk: talkProp, size = 480, crop = "full", headTilt = 0, look, t: tProp, style }) => {
   const live = React.useContext(BossLive);
+  const frame = useCurrentFrame();
+  const t = tProp ?? frame;
   const blink = blinkProp ?? live?.blink ?? false;
   const talk = talkProp ?? live?.talk ?? 0;
   const vb = VIEWBOX[crop];
   const exp = expression ?? DEFAULT_EXPRESSION[pose];
-  const arms = ARMS[pose];
+  const arms = armsFor(pose, t);
   const back = arms.filter((a) => !a.front);
   const front = arms.filter((a) => a.front);
   return (
@@ -349,11 +504,12 @@ export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink:
         <ArmShape key={`b${i}`} arm={a} />
       ))}
       <Body />
-      <Head expression={exp} blink={blink} talk={talk} />
+      <Head expression={exp} blink={blink} talk={talk} tilt={headTilt} look={look} />
+      {pose === "typing" && <LaptopProp />}
       {front.map((a, i) => (
         <ArmShape key={`f${i}`} arm={a} />
       ))}
-      <Effects expression={exp} pose={pose} />
+      <Effects expression={exp} pose={pose} arms={arms} />
     </svg>
   );
 };

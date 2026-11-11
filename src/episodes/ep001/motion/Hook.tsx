@@ -157,7 +157,7 @@ export const HookScene: React.FC = () => {
       {/* B4: 제가 직접 만들었습니다! */}
       <Beat f={b4} len={b4 - b5} inT="cut" outT="cut">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.4 }, { f: 10, zoom: 1.0 }, { f: 45, zoom: 1.08 }]} shake={impact(b4 - 6, 26)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
+          <div style={{ position: "absolute", inset: -600, background: LOVABLE_GRADIENT }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.6}deg at 50% 60%, rgba(255,255,255,0.14) 0deg 8deg, transparent 8deg 16deg)` }} />
           <SpeedLines f={b4} colorLine="#fff" opacity={0.25} cy={620} />
           {[[-560, 40, -16, 0], [520, 20, 14, 1], [-380, -250, -8, 2]].map(([x, y, r, i]) => (

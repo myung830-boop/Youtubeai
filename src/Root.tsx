@@ -4,7 +4,7 @@ import { Banner, ProfileImage, Thumbnail, ThumbProps, Watermark } from "./brand/
 import { StyleBoard } from "./brand/StyleBoard";
 import { Intro, LongformFrame, ShortsFrame, WipeTransition } from "./brand/VideoStyle";
 import { CharacterPreview } from "./compositions/CharacterPreview";
-import { PoseSheet } from "./compositions/PoseSheet";
+import { ExpressionSheet, PoseSheet } from "./compositions/PoseSheet";
 import { Ep001ThumbDynamicA, Ep001ThumbDynamicB } from "./episodes/ep001/Thumbs";
 import { calcEp001, Ep001Video } from "./episodes/ep001/Ep001Video";
 import { EP001_SCENES } from "./episodes/ep001/Storyboard";
@@ -77,6 +77,7 @@ export const RemotionRoot: React.FC = () => (
 
     {/* 캐릭터 */}
     <Still id="PoseSheet" component={PoseSheet} width={1920} height={1080} />
+    <Still id="ExpressionSheet" component={ExpressionSheet} width={1920} height={1080} />
     <Composition id="CharacterPreview" component={CharacterPreview} width={1080} height={1080} fps={30} durationInFrames={270} />
   </>
 );

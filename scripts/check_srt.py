@@ -1,7 +1,7 @@
 """음성인식 기준 단어 시간 vs SRT 자막 시간 비교 → 어긋난 자막 찾기"""
 import json, re, sys, unicodedata as ud
 N = lambda s: ud.normalize("NFC", s)
-w = json.load(open("out/words.json"))
+w = json.load(open(sys.argv[2] if len(sys.argv) > 2 else "out/words.json"))
 words, cur = [], None
 for x in w:
     tok = N(x["tok"]).replace(" ", "▁")

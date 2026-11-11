@@ -163,7 +163,7 @@ export const S11M: React.FC = () => {
       </Beat>
       <Beat f={b6} len={100000} inT="zoom">
         <Camera start={frame - b6} keys={[{ f: 0, zoom: 1.15 }, { f: 100, zoom: 1.0 }]} shake={impact(b6 - 70, 22)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
+          <div style={{ position: "absolute", inset: -600, background: LOVABLE_GRADIENT }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.6}deg at 50% 50%, rgba(255,255,255,0.12) 0deg 8deg, transparent 8deg 16deg)` }} />
           <Abs x={140} y={260}>
             <Pop f={b6} from={{ x: -400, rotate: -20 }}>
@@ -346,7 +346,7 @@ export const S14M: React.FC = () => {
     <AbsoluteFill style={{ background: color.bg, overflow: "hidden" }}>
       <Beat f={b1} len={b1 - b2} inT="zoom" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.3 }, { f: 16, zoom: 1.0 }]} shake={impact(b1 - 6, 18)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
+          <div style={{ position: "absolute", inset: -600, background: LOVABLE_GRADIENT }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.8}deg at 50% 50%, rgba(255,255,255,0.12) 0deg 8deg, transparent 8deg 16deg)` }} />
           <Abs x={0} y={200} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b1} text="제일 뿌듯한 건?" size={140} color={color.white} stroke /></Abs>
           <Abs x={760} y={460}><BossActor size={600} enter="jump" enterAt={frame - b1} poses={[{ f: 0, pose: "happy" }]} hops={[frame - b1 + 20]} /></Abs>
@@ -459,7 +459,7 @@ export const S15M: React.FC = () => {
       </Beat>
       <Beat f={b8} len={100000} inT="whip">
         <Camera start={frame - b8} keys={[{ f: 0, zoom: 1.0 }, { f: b8 - b9, zoom: 1.0 }, { f: b8 - b9 + 10, zoom: 1.12 }, { f: b8 - b9 + 140, zoom: 1.02 }]} shake={impact(b9 - 2, 20)}>
-          <AbsoluteFill style={{ background: LOVABLE_GRADIENT, inset: -600 }} />
+          <div style={{ position: "absolute", inset: -600, background: LOVABLE_GRADIENT }} />
           <AbsoluteFill style={{ background: `repeating-conic-gradient(from ${frame * 0.5}deg at 50% 50%, rgba(255,255,255,0.1) 0deg 8deg, transparent 8deg 16deg)` }} />
           <Abs x={0} y={120} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b8} text="한 줄로 정리하면" size={70} color={color.white} /></Abs>
           <Abs x={160} y={290}>

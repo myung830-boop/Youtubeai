@@ -6,7 +6,7 @@ import { E2S01, E2S02, E2S03, E2S04, E2S05, E2S06, E2S07, E2S08, E2S09 } from ".
 const ep = makeEpisode({
   name: "ep002",
   sceneMap: [
-    { id: "S01", starts: "하루 2시간" },
+    { id: "S01", starts: "컴퓨터 일" },
     { id: "S02", starts: "지난 영상에서" },
     { id: "S03", starts: "인터넷 창을 자동화" },
     { id: "S04", starts: "시작은 간단해요" },
@@ -18,7 +18,7 @@ const ep = makeEpisode({
   ],
   scenes: { S01: E2S01, S02: E2S02, S03: E2S03, S04: E2S04, S05: E2S05, S06: E2S06, S07: E2S07, S08: E2S08, S09: E2S09 },
   intro: IntroDynamic,
-  highlights: ["어사이드", "AI 브라우저", "하루 2시간", "5분", "AI 직원", "추가 비용 없이", "직접 확인", "택배", "블로그", "인스타"],
+  highlights: ["어사이드", "AI 브라우저", "2시간", "5분", "AI 직원", "추가 비용 없이", "직접 확인"],
 });
 
 export type Ep002Props = EpisodeProps;
