@@ -53,6 +53,43 @@ const pathAt = (f: number, pts: Array<[number, number]>, seg = 16): [number, num
   return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * t, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * t];
 };
 
+/** 브라우저 탭 화면: 사이트(탭)를 오가며 일하는 모습. active = 지금 보이는 탭 */
+type TabDef = { label: string; icon: React.ReactNode; color: string; page: (f: number) => React.ReactNode; url: string };
+const BrowserTabs: React.FC<{ tabs: TabDef[]; active: number; extra?: number; done?: boolean[]; f: number; w?: number; h?: number; aside?: boolean }> = ({ tabs, active, extra = 0, done = [], f, w = 1500, h = 820, aside }) => {
+  const all = [...tabs, ...Array.from({ length: extra }, (_, i) => tabs[i % tabs.length])];
+  const tabW = Math.max(110, Math.min(380, (w - 60) / all.length));
+  return (
+    <div style={{ width: w, height: h, background: "#fff", border: `8px solid ${color.ink}`, borderRadius: 26, boxShadow: ui.shadow(14), overflow: "hidden", display: "flex", flexDirection: "column", fontFamily: font.family }}>
+      <div style={{ height: 70, background: "#E4E8F1", display: "flex", alignItems: "flex-end", padding: "0 14px", gap: 4 }}>
+        {all.map((t, i) => {
+          const on = i === active;
+          return (
+            <div key={i} style={{ width: tabW, height: on ? 58 : 52, background: on ? "#fff" : "#EEF1F7", border: `4px solid ${on ? color.ink : "#C9D1E0"}`, borderBottom: "none", borderRadius: "16px 16px 0 0", display: "flex", alignItems: "center", gap: 10, padding: "0 12px", fontWeight: 900, fontSize: 24, overflow: "hidden", whiteSpace: "nowrap", boxShadow: on ? `inset 0 6px 0 ${t.color}` : undefined, flexShrink: 0 }}>
+              <div style={{ flexShrink: 0 }}>{t.icon}</div>
+              {tabW > 160 && <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{t.label}</span>}
+              {done[i] && <span style={{ marginLeft: "auto", color: "#22C55E", fontSize: 30 }}>✓</span>}
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ height: 54, borderBottom: `4px solid ${color.ink}`, display: "flex", alignItems: "center", gap: 12, padding: "0 18px" }}>
+        <div style={{ flex: 1, background: "#F3F5FA", borderRadius: 10, padding: "6px 16px", fontSize: 22, color: "#5A6378" }}>🔒 {tabs[active % tabs.length].url}</div>
+        {aside && <div style={{ width: 36, height: 36, borderRadius: 10, background: ASIDE_GRADIENT, border: `3px solid ${color.ink}` }} />}
+      </div>
+      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+        <div key={active} style={{ position: "absolute", left: 0, top: 0, width: 1600, height: 900, transform: `scale(${(w - 16) / 1600}) translateX(${lerp(f, 0, 6, 40, 0)}px)`, transformOrigin: "0 0", opacity: lerp(f, 0, 5, 0.3, 1) }}>
+          {tabs[active % tabs.length].page(f)}
+        </div>
+      </div>
+    </div>
+  );
+};
+const SHOP_TABS: TabDef[] = [
+  { label: "택배 접수", icon: <span style={{ fontSize: 28 }}>📦</span>, color: "#F59E0B", url: "parcel.example.com/send", page: (f) => <ParcelSite filled={Math.min(5, Math.floor(Math.max(0, f) / 6))} count={2} /> },
+  { label: "네이버 블로그", icon: <BrandIcon id="naver" size={34} />, color: BRANDS.naver.colors.primary, url: "blog.naver.com/write", page: (f) => <BlogEditor title="운동화 세탁 전후 비교 ✨" body="오늘 맡겨주신 운동화, 새것처럼 돌아왔어요." typed={Math.floor(Math.max(0, f) * 1.5)} photo={f > 14} /> },
+  { label: "Instagram", icon: <BrandIcon id="instagram" size={34} />, color: "#D6249F", url: "instagram.com/create", page: (f) => <FeedPost step={1} caption="세탁 전후 비교 ✨ #신발세탁" typed={Math.floor(Math.max(0, f) * 1.2)} /> },
+];
+
 /* ───────── S01 훅 ───────── */
 export const E2S01: React.FC = () => {
   const frame = useCurrentFrame();
@@ -171,39 +208,35 @@ export const E2S02: React.FC = () => {
           <Abs x={1440} y={420}><BossActor size={560} enter="spin" enterAt={frame - b1} poses={[{ f: 0, pose: "present", expression: "smug" }]} /></Abs>
         </Camera>
       </Beat>
-      {/* ⑤ 스카이뷰: 위에서 보면, 사장님이 이 자리 저 자리 뛰어다님 */}
+      {/* ① 1인칭: 사장님이 직접 브라우저 탭을 왔다 갔다 (손이 바쁨) */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.25, rot: -8 }, { f: 40, zoom: 1.0, rot: 0 }, { f: b2 - b3, zoom: 1.05, rot: 2 }]}>
-          <ShopFloorPlan>
-            {(() => {
-              const st: Array<[number, number]> = [[300, 420], [1250, 600], [1590, 330]];
-              const run = Math.max(0, b2 - 10);
-              const seg = Math.floor(run / 22) % 3, nx = (seg + 1) % 3, k = easeInOut(Math.min(1, (run % 22) / 16));
-              const x = st[seg][0] + (st[nx][0] - st[seg][0]) * k, y = st[seg][1] + (st[nx][1] - st[seg][1]) * k;
-              const ang = (Math.atan2(st[nx][1] - st[seg][1], st[nx][0] - st[seg][0]) * 180) / Math.PI - 90;
-              return (
-                <>
-                  <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
-                    <path d={`M${st[0][0]},${st[0][1]} L${st[1][0]},${st[1][1]} L${st[2][0]},${st[2][1]} Z`} fill="none" stroke="#FF4D4F" strokeWidth={10} strokeDasharray="20 14" strokeDashoffset={-frame * 3} />
-                  </svg>
-                  {([[t1, "📦", "택배"], [t2, "naver", "블로그"], [t3, "instagram", "인스타"]] as const).map(([f, ic, t], i) => (
-                    <Abs key={t} x={st[i][0] - 90} y={st[i][1] - 170}>
-                      <Pop f={i === 0 ? Math.max(f, b2 - 6) : f} from={{ scale: 0, y: -80 }}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                          {ic === "📦" ? <div style={{ fontSize: 100 }}>📦</div> : <div style={{ filter: "drop-shadow(6px 6px 0 #1B2541)" }}><BrandIcon id={ic} size={110} /></div>}
-                          <div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "4px 18px", fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>{t}</div>
-                        </div>
-                      </Pop>
-                    </Abs>
-                  ))}
-                  <Abs x={x - 110} y={y - 110}><BossTop size={220} angle={ang} /></Abs>
-                  <Abs x={x + 60} y={y - 150}><div style={{ fontSize: 60, transform: `rotate(${Math.sin(frame * 0.5) * 10}deg)` }}>💦</div></Abs>
-                </>
-              );
-            })()}
-          </ShopFloorPlan>
-          <Abs x={120} y={50}><Card style={{ padding: "10px 30px" }}><KText f={b2} text="사이트마다 왔다 갔다…" size={60} /></Card></Abs>
-        </Camera>
+        {(() => {
+          // 대사에 맞춰 택배 → 블로그 → 인스타, 그 뒤엔 정신없이 탭 전환
+          const frantic = t3 >= 24 ? Math.floor((t3 - 24) / 9) : -1;
+          const active = frantic >= 0 ? [0, 1, 2, 1, 0, 2][frantic % 6] : t3 >= 0 ? 2 : t2 >= 0 ? 1 : 0;
+          const since = frantic >= 0 ? (t3 - 24) % 9 : t3 >= 0 ? t3 : t2 >= 0 ? t2 : Math.max(0, b2);
+          const extra = Math.max(0, Math.min(9, Math.floor((b2 - 40) / 12)));
+          const clicks = Math.max(0, Math.floor(b2 / 4));
+          const tabX = (i: number) => 330 + 14 + i * Math.max(110, Math.min(380, (1440 - 60) / (3 + extra))) + 60;
+          const curX = tabX(active), curY = 218;
+          return (
+            <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.08, rx: 4 }, { f: 30, zoom: 1.0, rx: 0 }]} shake={frantic >= 0 ? 5 : 1.5} handheld={1.6}>
+              <div style={{ position: "absolute", inset: -300, background: "radial-gradient(ellipse at 50% 40%, #3D4A75, #1B2238 75%)" }} />
+              <Abs x={240} y={150}>
+                <div style={{ background: "#11151F", padding: 22, borderRadius: 30, border: `8px solid ${color.ink}` }}>
+                  <BrowserTabs tabs={SHOP_TABS} active={active} extra={extra} f={since} w={1440} h={700} />
+                </div>
+              </Abs>
+              <Cursor f={1} from={[curX + 40, curY + 40]} to={[curX, curY]} moveDur={1} click={since < 6 ? 0 : undefined} />
+              <Abs x={curX + 40} y={curY + 50}><div style={{ background: "#fff", border: `4px solid ${color.ink}`, borderRadius: 999, padding: "2px 14px", fontFamily: font.family, fontWeight: 900, fontSize: 22 }}>사장님</div></Abs>
+              <div style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, transform: "translateY(120px)" }}><PovHands mode="type" /></div>
+              <div style={{ position: "absolute", inset: -300, boxShadow: "inset 0 0 300px 90px rgba(0,0,0,0.5)" }} />
+              <Abs x={240} y={30}><Card style={{ padding: "10px 28px" }}><KText f={b2} text="사이트마다 왔다 갔다…" size={52} /></Card></Abs>
+              <Abs x={1360} y={30}><Card bg="#FFE4E4" style={{ padding: "10px 26px", fontSize: 44, fontWeight: 900, color: "#E5484D" }}>🖱 클릭 {clicks}번</Card></Abs>
+              {frantic >= 0 && <Abs x={1640} y={620}><div style={{ fontSize: 70, transform: `rotate(${Math.sin(frame * 0.6) * 12}deg)` }}>💦</div></Abs>}
+            </Camera>
+          );
+        })()}
       </Beat>
       <Beat f={b3} len={100000} inT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.4 }, { f: 10, zoom: 1.0 }, { f: 90, zoom: 1.08 }]} shake={impact(b3 - 16, 24)}>
@@ -538,36 +571,32 @@ export const E2S08: React.FC = () => {
           <Confetti f={b1 - 42} x={960} y={300} n={50} />
         </Camera>
       </Beat>
-      {/* ⑤ 스카이뷰: 이번엔 사장님은 카운터에서 쉬고, AI 커서가 뛰어다님 */}
+      {/* ⑤ 스카이뷰: 위에서 내려다본 브라우저 — 이번엔 AI가 탭을 옮겨 다님, 사장님은 쉼 */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.2, rot: 6 }, { f: 40, zoom: 1.0, rot: 0 }]}>
-          <ShopFloorPlan>
-            {(() => {
-              const st: Array<[number, number]> = [[300, 420], [1250, 600], [1590, 330]];
-              const run = Math.max(0, b2 - 6);
-              const seg = Math.floor(run / 14) % 3, nx = (seg + 1) % 3, k = easeInOut(Math.min(1, (run % 14) / 10));
-              const x = st[seg][0] + (st[nx][0] - st[seg][0]) * k, y = st[seg][1] + (st[nx][1] - st[seg][1]) * k - Math.sin(k * Math.PI) * 120;
-              return (
-                <>
-                  {([["📦", "택배"], ["naver", "블로그"], ["instagram", "인스타"]] as const).map(([ic, t], i) => (
-                    <Abs key={t} x={st[i][0] - 90} y={st[i][1] - 170}>
-                      <Pop f={b2 + i * 4} from={{ scale: 0 }}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                          {ic === "📦" ? <div style={{ fontSize: 100 }}>📦</div> : <div style={{ filter: "drop-shadow(6px 6px 0 #1B2541)" }}><BrandIcon id={ic} size={110} /></div>}
-                          <div style={{ background: "#22C55E", color: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "4px 18px", fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>{t} ✓</div>
-                        </div>
-                      </Pop>
-                    </Abs>
-                  ))}
-                  <Abs x={850} y={650}><BossTop size={220} angle={180} /></Abs>
-                  <Abs x={980} y={640}><Pop f={b2 + 10} from={{ scale: 0 }}><div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "6px 18px", fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>☕ 쉬는 중</div></Pop></Abs>
-                  <AiCursor x={x} y={y} scale={1.4} />
-                </>
-              );
-            })()}
-          </ShopFloorPlan>
-          <Abs x={120} y={50}><Card style={{ padding: "10px 30px" }}><KText f={b2} text="이제 뛰어다니는 건 AI" size={60} color={ASIDE_PURPLE} /></Card></Abs>
-        </Camera>
+        {(() => {
+          const step = Math.max(0, b2 - 8);
+          const active = Math.floor(step / 16) % 3;
+          const since = step % 16;
+          const done = [step >= 16, step >= 32, step >= 48].map((d, i) => d || (i === active && since > 10));
+          const tabX = (i: number) => 14 + i * ((1240 - 60) / 3) + 120;
+          const nx = tabX(active);
+          const px = tabX((active + 2) % 3);
+          const k = easeInOut(Math.min(1, since / 8));
+          const cx = px + (nx - px) * k, cy = 40 - Math.sin(k * Math.PI) * 90;
+          return (
+            <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.2, rot: 4 }, { f: 40, zoom: 1.0, rot: 0 }]}>
+              <div style={{ position: "absolute", inset: -300, background: "linear-gradient(180deg,#E9E2FF,#DCE6F5)" }} />
+              <GridBg tone="light" cell={70} bleed />
+              <div style={{ position: "absolute", left: 120, top: 170, transform: "perspective(1800px) rotateX(38deg) rotateZ(-4deg)", transformOrigin: "50% 60%" }}>
+                <BrowserTabs tabs={SHOP_TABS} active={active} done={done} f={since} aside w={1240} h={760} />
+                <AiCursor x={cx} y={cy} scale={1.6} />
+              </div>
+              <Abs x={1490} y={560}><BossActor size={420} enter="walkR" enterAt={frame - b2} poses={[{ f: 0, pose: "holdMug", expression: "smug", tilt: -8 }]} /></Abs>
+              <Abs x={1470} y={470}><Pop f={b2 + 14} from={{ scale: 0 }}><div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "6px 18px", fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>☕ 사장님은 쉬는 중</div></Pop></Abs>
+              <Abs x={120} y={50}><Card style={{ padding: "10px 30px" }}><KText f={b2} text="사이트를 옮겨 다니는 건 이제 AI" size={56} color={ASIDE_PURPLE} /></Card></Abs>
+            </Camera>
+          );
+        })()}
       </Beat>
       {/* ⑧ 익스트림 클로즈업: 뿌듯한 눈 */}
       <Beat f={b3} len={b3 - b4} inT="zoom" outT="whip">
