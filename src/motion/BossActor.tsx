@@ -1,6 +1,6 @@
 import React from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { Boss, Expression, Pose } from "../character/Boss";
+import { Boss, BossStyle, Expression, Pose } from "../character/Boss";
 import { floatY } from "./core";
 
 /**
@@ -73,16 +73,25 @@ export const BossActor: React.FC<{
   const spinX = enter === "spin" ? Math.cos((1 - Math.min(1, ep)) * Math.PI * 2) : 1;
   const sway = Math.sin(frame * 0.07) * 1.2;
 
+  const soft = React.useContext(BossStyle) === "soft";
+  const w = (size * 440) / 510;
+  const lift = Math.min(1, Math.max(0, -(ey + hy) / (size * 0.4)));
   return (
-    <div
-      style={{
-        opacity: visible ? 1 : 0,
-        transformOrigin: "50% 100%",
-        transform: `translate(${ex}px, ${ey + hy + floatY(frame, 3, 0.1)}px) rotate(${er + lean + sway}deg) scale(${(flip ? -1 : 1) * sx * spinX}, ${sy})`,
-        ...style,
-      }}
-    >
-      <Boss pose={cur.pose} expression={cur.expression} size={size} headTilt={(cur.tilt ?? 0) + Math.sin(frame * 0.05) * 2} look={cur.look} />
+    <div style={{ position: "relative", ...style }}>
+      {/* 2.5D: 바닥 그림자 (점프하면 작고 흐려짐) */}
+      {soft && visible && (
+        <div style={{ position: "absolute", left: ex + w * 0.16, top: size * 0.93, width: w * 0.68, height: size * 0.07, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(27,37,65,0.38), rgba(27,37,65,0) 70%)", transform: `scale(${1 - lift * 0.5})`, opacity: 1 - lift * 0.6 }} />
+      )}
+      <div
+        style={{
+          opacity: visible ? 1 : 0,
+          transformOrigin: "50% 100%",
+          transform: `translate(${ex}px, ${ey + hy + floatY(frame, 3, 0.1)}px) rotate(${er + lean + sway}deg) scale(${(flip ? -1 : 1) * sx * spinX}, ${sy})`,
+          filter: soft ? "drop-shadow(10px 14px 10px rgba(27,37,65,0.22))" : undefined,
+        }}
+      >
+        <Boss pose={cur.pose} expression={cur.expression} size={size} headTilt={(cur.tilt ?? 0) + Math.sin(frame * 0.05) * 2} look={cur.look} />
+      </div>
     </div>
   );
 };

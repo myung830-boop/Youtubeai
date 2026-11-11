@@ -166,6 +166,13 @@ const ARMS: Partial<Record<Pose, Arm[]>> = {
 };
 
 const lerp = (a: Pt, b: Pt, t: number): Pt => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+/** 2.5D(입체감) 모드에서 그라데이션으로 바뀌는 색들 */
+type Paint = { face: string; shirt: string; apron: string; cap: string; brim: string; soft: boolean };
+const FLAT: Paint = { face: C.skin, shirt: C.shirt, apron: C.apron, cap: C.cap, brim: C.capShade, soft: false };
+const PaintCtx = React.createContext<Paint>(FLAT);
+/** 영상 전체에 입체감 모드를 켜고 끄는 스위치 */
+export const BossStyle = React.createContext<"flat" | "soft">("flat");
+
 export const line = { stroke: C.line, strokeWidth: C.lineWidth, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };
 
 /* ---------------- 팔 ---------------- */
@@ -229,7 +236,7 @@ const HandShape: React.FC<{ at: Pt; angle: number; type: Hand; flip?: boolean }>
 const Body: React.FC = () => (
   <g>
     {/* 셔츠 */}
-    <path d="M100,480 L110,340 Q116,290 168,276 L232,276 Q284,290 290,340 L300,480 Z" fill={C.shirt} {...line} />
+    <path d="M100,480 L110,340 Q116,290 168,276 L232,276 Q284,290 290,340 L300,480 Z" fill={React.useContext(PaintCtx).shirt} {...line} />
     {/* 목 */}
     <path d="M182,262 L182,286 Q200,296 218,286 L218,262 Z" fill={C.skinShade} {...line} strokeWidth={5} />
     {/* 카라 */}
@@ -238,7 +245,14 @@ const Body: React.FC = () => (
     {/* 앞치마 끈 */}
     <path d="M160,282 L150,336 M240,282 L250,336" stroke={C.apronShade} strokeWidth={10} strokeLinecap="round" />
     {/* 앞치마 */}
-    <path d="M140,480 L142,350 Q142,334 158,334 L242,334 Q258,334 258,350 L260,480 Z" fill={C.apron} {...line} />
+    <path d="M140,480 L142,350 Q142,334 158,334 L242,334 Q258,334 258,350 L260,480 Z" fill={React.useContext(PaintCtx).apron} {...line} />
+    {React.useContext(PaintCtx).soft && (
+      <>
+        {/* 목 아래 그림자 + 앞치마 광택 */}
+        <path d="M150,282 Q200,318 250,282 L246,300 Q200,330 154,300 Z" fill="rgba(27,37,65,0.16)" />
+        <path d="M158,346 Q170,340 186,342 L180,470 Q166,470 160,464 Z" fill="rgba(255,255,255,0.14)" />
+      </>
+    )}
     {/* 주머니 */}
     <path d="M168,404 L232,404 L230,452 Q230,460 222,460 L178,460 Q170,460 170,452 Z" fill={C.apronShade} {...line} strokeWidth={4} />
     {/* 앞치마 배지 (채널 로고 자리) */}
@@ -255,7 +269,8 @@ const Head: React.FC<{ expression: Expression; blink: boolean; talk: number; til
     <circle cx={96} cy={186} r={18} fill={C.skin} {...line} />
     <circle cx={304} cy={186} r={18} fill={C.skin} {...line} />
     {/* 얼굴 */}
-    <ellipse cx={200} cy={180} rx={106} ry={96} fill={C.skin} {...line} />
+    <ellipse cx={200} cy={180} rx={106} ry={96} fill={React.useContext(PaintCtx).face} {...line} />
+    {React.useContext(PaintCtx).soft && <path d="M100,160 Q200,196 300,160 L300,176 Q200,214 100,176 Z" fill="rgba(27,37,65,0.13)" />}
     {/* 옆머리 */}
     <path d="M98,150 Q92,190 108,212 Q114,190 122,172 Z" fill={C.hair} {...line} strokeWidth={4} />
     <path d="M302,150 Q308,190 292,212 Q286,190 278,172 Z" fill={C.hair} {...line} strokeWidth={4} />
@@ -269,7 +284,8 @@ const Head: React.FC<{ expression: Expression; blink: boolean; talk: number; til
 const Cap: React.FC = () => (
   <g>
     {/* 모자 몸통 */}
-    <path d="M96,152 C94,82 146,48 200,48 C254,48 306,82 304,152 Z" fill={C.cap} {...line} />
+    <path d="M96,152 C94,82 146,48 200,48 C254,48 306,82 304,152 Z" fill={React.useContext(PaintCtx).cap} {...line} />
+    {React.useContext(PaintCtx).soft && <ellipse cx={156} cy={84} rx={34} ry={16} transform="rotate(-28 156 84)" fill="rgba(255,255,255,0.35)" />}
     {/* 패널 라인 */}
     <path d="M200,52 L200,100 M150,62 Q138,100 140,140 M250,62 Q262,100 260,140" fill="none" stroke={C.capShade} strokeWidth={4} strokeLinecap="round" />
     {/* 꼭지 단추 */}
@@ -278,7 +294,7 @@ const Cap: React.FC = () => (
     <rect x={172} y={92} width={56} height={34} rx={10} fill={C.badge} {...line} strokeWidth={4} />
     <text x={200} y={117} textAnchor="middle" fontFamily="Pretendard, sans-serif" fontWeight={800} fontSize={22} fill={C.cap}>AI</text>
     {/* 챙 */}
-    <path d="M84,156 Q200,118 316,156 Q326,176 304,178 Q200,148 96,178 Q74,176 84,156 Z" fill={C.capShade} {...line} />
+    <path d="M84,156 Q200,118 316,156 Q326,176 304,178 Q200,148 96,178 Q74,176 84,156 Z" fill={React.useContext(PaintCtx).brim} {...line} />
   </g>
 );
 
@@ -479,6 +495,7 @@ export type BossProps = {
   headTilt?: number; // 고개 기울기(도)
   look?: Pt; // 눈동자 방향 [x, y]
   t?: number; // 반복 동작용 프레임 (없으면 현재 프레임)
+  soft?: boolean; // 2.5D 입체감 (없으면 BossStyle 컨텍스트를 따름)
   style?: React.CSSProperties;
 };
 
@@ -488,8 +505,13 @@ const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288], bust: [-
 /** 영상 모드에서 모든 캐릭터에 깜빡임/말하기를 자동으로 넣기 위한 컨텍스트 */
 export const BossLive = React.createContext<{ blink: boolean; talk: number } | null>(null);
 
-export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink: blinkProp, talk: talkProp, size = 480, crop = "full", headTilt = 0, look, t: tProp, style }) => {
+export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink: blinkProp, talk: talkProp, size = 480, crop = "full", headTilt = 0, look, t: tProp, soft: softProp, style }) => {
   const live = React.useContext(BossLive);
+  const soft = softProp ?? React.useContext(BossStyle) === "soft";
+  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, "");
+  const paint: Paint = soft
+    ? { face: `url(#f${uid})`, shirt: `url(#s${uid})`, apron: `url(#a${uid})`, cap: `url(#c${uid})`, brim: `url(#b${uid})`, soft: true }
+    : FLAT;
   const frame = useCurrentFrame();
   const t = tProp ?? frame;
   const blink = blinkProp ?? live?.blink ?? false;
@@ -501,6 +523,35 @@ export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink:
   const front = arms.filter((a) => a.front);
   return (
     <svg viewBox={vb.join(" ")} height={size} width={(size * vb[2]) / vb[3]} style={{ overflow: crop === "full" ? "visible" : "hidden", ...style }}>
+      {soft && (
+        <defs>
+          <radialGradient id={`f${uid}`} cx="0.38" cy="0.32" r="0.8">
+            <stop offset="0" stopColor="#FFF1E6" />
+            <stop offset="0.55" stopColor={C.skin} />
+            <stop offset="1" stopColor="#EFB28F" />
+          </radialGradient>
+          <linearGradient id={`s${uid}`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#FFFFFF" />
+            <stop offset="0.6" stopColor="#F1F4FA" />
+            <stop offset="1" stopColor="#C9D3E6" />
+          </linearGradient>
+          <linearGradient id={`a${uid}`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#2D5DB8" />
+            <stop offset="0.5" stopColor={C.apron} />
+            <stop offset="1" stopColor="#071F48" />
+          </linearGradient>
+          <radialGradient id={`c${uid}`} cx="0.35" cy="0.25" r="0.9">
+            <stop offset="0" stopColor="#3C6FD0" />
+            <stop offset="0.5" stopColor={C.cap} />
+            <stop offset="1" stopColor="#061A40" />
+          </radialGradient>
+          <linearGradient id={`b${uid}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#1A4A9C" />
+            <stop offset="1" stopColor="#061A40" />
+          </linearGradient>
+        </defs>
+      )}
+      <PaintCtx.Provider value={paint}>
       {back.map((a, i) => (
         <ArmShape key={`b${i}`} arm={a} />
       ))}
@@ -511,6 +562,7 @@ export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink:
         <ArmShape key={`f${i}`} arm={a} />
       ))}
       <Effects expression={exp} pose={pose} arms={arms} />
+      </PaintCtx.Provider>
     </svg>
   );
 };

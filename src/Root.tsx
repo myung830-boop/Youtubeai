@@ -11,6 +11,7 @@ import { EP001_SCENES } from "./episodes/ep001/Storyboard";
 import { Ep002Thumb } from "./episodes/ep002/Thumb";
 import { calcEp002, Ep002Video } from "./episodes/ep002/Ep002Video";
 import { CAMERA_ANGLES } from "./compositions/CameraAngles";
+import { Boss3DHero, Ep002Thumb3D, FlatVsSoft, ParallaxDemo } from "./compositions/DepthSamples";
 import { loadFonts } from "./styles/fonts";
 
 loadFonts();
@@ -80,6 +81,12 @@ export const RemotionRoot: React.FC = () => (
     {CAMERA_ANGLES.map((C, i) => (
       <Composition key={i} id={`Angle${i + 1}`} component={C} width={1920} height={1080} fps={30} durationInFrames={90} />
     ))}
+
+    {/* 입체감 샘플: 1단계 2.5D / 2단계 3D */}
+    <Still id="FlatVsSoft" component={FlatVsSoft} width={1920} height={1080} />
+    <Composition id="ParallaxDemo" component={ParallaxDemo} width={1920} height={1080} fps={30} durationInFrames={150} />
+    <Composition id="Boss3DHero" component={Boss3DHero} width={1920} height={1080} fps={30} durationInFrames={30} />
+    <Composition id="Ep002Thumb3D" component={Ep002Thumb3D} width={1280} height={720} fps={30} durationInFrames={30} />
 
     {/* 캐릭터 */}
     <Still id="PoseSheet" component={PoseSheet} width={1920} height={1080} />

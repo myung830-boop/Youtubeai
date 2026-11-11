@@ -18,7 +18,7 @@ const Mug: React.FC<{ size?: number }> = ({ size = 130 }) => (
   </svg>
 );
 
-export const Ep002Thumb: React.FC = () => (
+export const Ep002Thumb: React.FC<{ character?: React.ReactNode }> = ({ character }) => (
   <AbsoluteFill style={{ fontFamily: font.family, overflow: "hidden", background: "#14123A" }}>
     <div style={{ position: "absolute", inset: -200, background: "repeating-conic-gradient(from 0deg at 70% 45%, #17154A 0deg 9deg, #1C1A57 9deg 18deg)" }} />
     <div style={{ position: "absolute", left: 600, top: 20, width: 700, height: 640, borderRadius: "50%", background: ASIDE_GRADIENT, filter: "blur(80px)", opacity: 0.5 }} />
@@ -36,9 +36,13 @@ export const Ep002Thumb: React.FC = () => (
       <AiCursor x={150} y={150} scale={1.3} label="AI 직원" />
     </div>
     {/* 캐릭터 + 커피 */}
+    {character ? (
+      <div style={{ position: "absolute", right: -50, bottom: -40 }}>{character}</div>
+    ) : (
     <div style={{ position: "absolute", right: -95, bottom: -130 }}>
       <Boss pose="thumbsUp" expression="wink" size={660} />
     </div>
+    )}
     <div style={{ position: "absolute", right: 360, bottom: 40, transform: "rotate(-8deg)" }}><Mug size={120} /></div>
     {/* 어사이드 배지 */}
     <div style={{ position: "absolute", right: 30, top: 24, transform: "rotate(5deg)" }}>
