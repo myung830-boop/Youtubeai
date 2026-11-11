@@ -8,6 +8,8 @@ import { PoseSheet } from "./compositions/PoseSheet";
 import { Ep001ThumbDynamicA, Ep001ThumbDynamicB } from "./episodes/ep001/Thumbs";
 import { calcEp001, Ep001Video } from "./episodes/ep001/Ep001Video";
 import { EP001_SCENES } from "./episodes/ep001/Storyboard";
+import { Ep002Thumb } from "./episodes/ep002/Thumb";
+import { calcEp002, Ep002Video } from "./episodes/ep002/Ep002Video";
 import { loadFonts } from "./styles/fonts";
 
 loadFonts();
@@ -52,6 +54,7 @@ export const RemotionRoot: React.FC = () => (
     <Still id="Ep001ThumbAlt" component={Thumbnail} width={1280} height={720} defaultProps={thumbEp001Alt} />
     <Still id="Ep001ThumbDynamicA" component={Ep001ThumbDynamicA} width={1280} height={720} />
     <Still id="Ep001ThumbDynamicB" component={Ep001ThumbDynamicB} width={1280} height={720} />
+    <Still id="Ep002Thumb" component={Ep002Thumb} width={1280} height={720} />
     <Still id="StyleBoard" component={StyleBoard} width={1920} height={1080} />
 
     {/* 영상 스타일 */}
@@ -63,6 +66,9 @@ export const RemotionRoot: React.FC = () => (
 
     {/* 실험 #001 완성 영상: public/ep001/voice.mp3 + voice.srt */}
     <Composition id="Ep001" component={Ep001Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep001/voice.mp3", srt: "ep001/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp001} />
+
+    {/* 실험 #002: public/ep002/voice.mp3 + voice.srt */}
+    <Composition id="Ep002" component={Ep002Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep002/voice.mp3", srt: "ep002/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp002} />
 
     {/* 실험 #001 스토리보드 장면 */}
     {Object.entries(EP001_SCENES).map(([k, C]) => (
