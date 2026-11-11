@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Audio, CalculateMetadataFunction, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { BossLive } from "../character/Boss";
+import { BossLive, BossStyle } from "../character/Boss";
 import { Caption, Mark } from "../components/brand";
 import { CueClock } from "../motion/core";
 import { Cue, norm, parseSrt } from "./srt";
@@ -19,6 +19,8 @@ export type EpisodeConfig = {
   intro: React.FC;
   highlights: string[]; // 자막에서 노란 형광펜으로 강조할 말
   introSec?: number;
+  /** 캐릭터 스타일. 기본은 2.5D 입체감("soft"). 1·2편은 완성 당시 그대로 "flat" */
+  characterStyle?: "flat" | "soft";
 };
 
 export type EpisodeProps = { audio: string; srt: string; bgm?: string; cues?: Cue[]; plan?: Array<{ id: string; from: number }>; introAt?: number; audioGap?: number };
@@ -92,6 +94,7 @@ export const makeEpisode = (cfg: EpisodeConfig) => {
     const capPop = spring({ frame: capF, fps, config: { damping: 12, stiffness: 260, mass: 0.5 } }) * 0.12 + 0.88;
     const Intro = cfg.intro;
     return (
+      <BossStyle.Provider value={cfg.characterStyle ?? "soft"}>
       <BossLive.Provider value={{ blink, talk }}>
         <AbsoluteFill style={{ background: "#F8FAFF" }}>
           {plan.map((p, i) => {
@@ -126,6 +129,7 @@ export const makeEpisode = (cfg: EpisodeConfig) => {
           {bgm && <Audio src={staticFile(bgm)} loop volume={(f) => bgmVolume(f / fps, cues, introAt, durationInFrames / fps)} />}
         </AbsoluteFill>
       </BossLive.Provider>
+      </BossStyle.Provider>
     );
   };
 

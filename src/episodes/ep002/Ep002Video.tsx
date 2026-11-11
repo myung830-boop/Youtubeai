@@ -5,6 +5,7 @@ import { E2S01, E2S02, E2S03, E2S04, E2S05, E2S06, E2S07, E2S08, E2S09 } from ".
 /** 실험 #002 영상. public/ep002/voice.mp3 + voice.srt */
 const ep = makeEpisode({
   name: "ep002",
+  characterStyle: "flat", // 완성 당시 스타일 유지 (2.5D는 3편부터)
   sceneMap: [
     { id: "S01", starts: "컴퓨터 일" },
     { id: "S02", starts: "지난 영상에서" },

@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { Boss, BossStyle } from "../character/Boss";
 import { Boss3D, Pose3D } from "../character/Boss3D";
@@ -8,6 +8,7 @@ import { ShopInterior } from "../sets/Shop";
 import { Shoe } from "../episodes/ep001/mockups";
 import { color, font, ui } from "../styles/theme";
 import { Ep002Thumb } from "../episodes/ep002/Thumb";
+import { Layer, Parallax } from "../motion/depth";
 
 const Tag: React.FC<{ children: React.ReactNode; x: number; y: number; bg?: string }> = ({ children, x, y, bg = "#fff" }) => (
   <div style={{ position: "absolute", left: x, top: y, background: bg, border: `6px solid ${color.ink}`, borderRadius: 999, padding: "8px 30px", fontFamily: font.family, fontWeight: 900, fontSize: 44, boxShadow: ui.shadow(7) }}>{children}</div>
@@ -42,24 +43,18 @@ export const FlatVsSoft: React.FC = () => {
 
 /** 1단계 데모: 깊이(패럴랙스) — 카메라가 옆으로 움직이면 앞·중간·뒤가 다른 속도로 움직임 */
 export const ParallaxDemo: React.FC = () => {
-  const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
-  const cam = interpolate(frame, [0, durationInFrames], [-1, 1]);
-  const layer = (depth: number): React.CSSProperties => ({ position: "absolute", inset: -260, transform: `translateX(${-cam * 260 * depth}px) scale(${1 + depth * 0.06})` });
   return (
     <BossStyle.Provider value="soft">
       <AbsoluteFill style={{ background: "#EAF2FF", overflow: "hidden" }}>
-        {/* 뒤: 가게 (느리게, 살짝 흐림) */}
-        <div style={{ ...layer(0.25), filter: "blur(3px)" }}><div style={{ position: "absolute", inset: 260 }}><ShopInterior /></div></div>
-        {/* 중간: 사장님 */}
-        <div style={layer(0.6)}>
-          <div style={{ position: "absolute", left: 260 + 700, top: 260 + 300 }}><BossActor size={640} enter="none" poses={[{ f: 0, pose: "wave", expression: "joy" }]} /></div>
-        </div>
-        {/* 앞: 소품 (빠르게, 크게, 흐림) */}
-        <div style={{ ...layer(1.4), filter: "blur(5px)" }}>
-          <div style={{ position: "absolute", left: 260 + 80, top: 260 + 640 }}><Shoe w={520} /></div>
-          <div style={{ position: "absolute", left: 260 + 1500, top: 260 + 700, width: 300, height: 340, background: "#C9A27A", border: `10px solid ${color.ink}`, borderRadius: 18 }} />
-        </div>
+        <Parallax keys={[{ f: 0, x: -1 }, { f: durationInFrames, x: 1 }]}>
+          <Layer depth={0.25} blur={3}><ShopInterior /></Layer>
+          <Layer depth={0.6}><div style={{ position: "absolute", left: 700, top: 300 }}><BossActor size={640} enter="none" poses={[{ f: 0, pose: "wave", expression: "joy" }]} /></div></Layer>
+          <Layer depth={1.4} blur={5}>
+            <div style={{ position: "absolute", left: 80, top: 640 }}><Shoe w={520} /></div>
+            <div style={{ position: "absolute", left: 1500, top: 700, width: 300, height: 340, background: "#C9A27A", border: `10px solid ${color.ink}`, borderRadius: 18 }} />
+          </Layer>
+        </Parallax>
         <Tag x={50} y={40} bg={color.accent}>1단계 · 깊이 효과 (패럴랙스)</Tag>
         <div style={{ position: "absolute", left: 50, top: 130, fontFamily: font.family, fontWeight: 800, fontSize: 32, color: color.ink, background: "rgba(255,255,255,0.85)", borderRadius: 16, padding: "8px 18px" }}>뒤(가게) 느리게 · 가운데(사장님) 보통 · 앞(소품) 빠르게</div>
       </AbsoluteFill>

@@ -10,6 +10,7 @@ import { S10M, S11M, S12M, S13M, S14M, S15M, S16M } from "./motion/Main2";
  */
 const ep = makeEpisode({
   name: "ep001",
+  characterStyle: "flat", // 완성 당시 스타일 유지 (2.5D는 3편부터)
   sceneMap: [
     { id: "S01", starts: "저는 신발세탁소" },
     { id: "S03", starts: "생각보다 손이" },
