@@ -8,6 +8,9 @@ import { Burst, Camera, clamp01, easeInOut, floatY, impact, KText, lerp, MarkSwe
 import { Confetti, Cursor, PersonIcon, TypeText } from "../../motion/props";
 import { Beat, Flash } from "../../motion/transitions";
 import { BrandBadge, BrandIcon, BRANDS, brandBg } from "../../brands/registry";
+import { Boss } from "../../character/Boss";
+import { BossBack, BossTop, PovHands } from "../../character/BossViews";
+import { ShopFloorPlan, ShopInterior } from "../../sets/Shop";
 import { color, font, ui } from "../../styles/theme";
 import { CustomerAppScreen } from "../ep001/mockups";
 import { BlogEditor, FeedPost, ParcelSite } from "./mockups";
@@ -60,55 +63,84 @@ export const E2S01: React.FC = () => {
   const cur = pathAt(b2 - 4, [[300, 300], [1050, 330], [480, 650], [1180, 640], [700, 380]], 18);
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
-      <Beat f={b1} len={b1 - b2} inT="cut" outT="whip">
-        <Camera start={0} keys={[{ f: 0, zoom: 1.3 }, { f: 20, zoom: 1.0 }, { f: frame - five, zoom: 1.0 }, { f: frame - five + 6, zoom: 1.15 }]} shake={impact(five - 2, 30)}>
-          <DarkBg />
-          <SpeedLines f={five} colorLine="#C4B5FD" opacity={five >= 0 ? 0.18 : 0} />
-          <Abs x={0} y={150} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b1} text="하루 2시간 걸리던 일이" size={84} color={color.white} /></Abs>
-          <Abs x={0} y={300} style={{ width: 1920, display: "flex", justifyContent: "center" }}>
-            <Pop f={five} from={{ scale: 4 }}>
-              <div style={{ background: color.accent, border: `10px solid ${color.ink}`, borderRadius: 30, padding: "0 50px 16px", fontFamily: font.family, fontWeight: 900, fontSize: 260, letterSpacing: "-0.05em", boxShadow: ui.shadow(16), transform: "rotate(-3deg)" }}>5분 컷!</div>
+      {/* ⑦ 하이앵글: 일에 파묻힌 작은 사장님 */}
+      <Beat f={b1} len={b1 - five} inT="cut" outT="cut">
+        <Camera start={0} keys={[{ f: 0, zoom: 1.25, rx: -6 }, { f: 50, zoom: 1.05, rx: 0 }]} handheld={0.6}>
+          <div style={{ position: "absolute", inset: -300, background: "#DCE3F0" }} />
+          <div style={{ position: "absolute", inset: -300, transform: "perspective(1200px) rotateX(-26deg)", transformOrigin: "50% 30%" }}>
+            <GridBg tone="light" cell={90} bleed />
+            {Array.from({ length: 16 }, (_, i) => (
+              <Abs key={i} x={380 + ((i * 197) % 1480)} y={640 + ((i * 113) % 520)}>
+                <Pop f={b1 - i * 2} from={{ y: -500, rotate: 40, scale: 1.4 }}>
+                  <div style={{ width: 220, height: 140, background: "#fff", border: `6px solid ${color.ink}`, borderRadius: 14, boxShadow: ui.shadow(6), transform: `rotate(${(i % 5) * 9 - 18}deg)`, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>
+                    {i % 3 === 0 ? <>📦 택배</> : i % 3 === 1 ? <><BrandIcon id="naver" size={44} /> 블로그</> : <><BrandIcon id="instagram" size={44} /> 피드</>}
+                  </div>
+                </Pop>
+              </Abs>
+            ))}
+            <Abs x={1000} y={760}><BossActor size={520} enter="none" poses={[{ f: 0, pose: "facepalm", expression: "tired" }]} /></Abs>
+          </div>
+          <div style={{ position: "absolute", inset: -300, boxShadow: "inset 0 0 360px 120px rgba(27,37,65,0.55)" }} />
+          <Abs x={0} y={120} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b1} text="하루 2시간 걸리던 일이" size={90} color={color.ink} /></Abs>
+        </Camera>
+      </Beat>
+      {/* ⑥ 로우앵글: 올려다본 큰 사장님 + 5분 컷 */}
+      <Beat f={five} len={five - b2} inT="whipUp" outT="whip">
+        <Camera start={frame - five} keys={[{ f: 0, zoom: 1.2, rx: 12 }, { f: 10, zoom: 1.0, rx: 0 }]} shake={impact(five - 4, 26)}>
+          <div style={{ position: "absolute", inset: -300, background: "linear-gradient(180deg,#4F7BFF 0%,#9CC3FF 70%,#E0EDFF 100%)" }} />
+          <SpeedLines f={five} colorLine="#fff" opacity={0.35} cy={1300} />
+          <Abs x={760} y={120} style={{ transform: "perspective(1000px) rotateX(16deg) scale(1.1)", transformOrigin: "50% 100%" }}>
+            <BossActor size={1050} enter="popUp" enterAt={frame - five} poses={[{ f: 0, pose: "cheer", expression: "starstruck" }]} hops={[frame - five + 16]} />
+          </Abs>
+          <Abs x={90} y={300}>
+            <Pop f={five + 2} from={{ scale: 4 }}>
+              <div style={{ background: color.accent, border: `10px solid ${color.ink}`, borderRadius: 30, padding: "0 46px 16px", fontFamily: font.family, fontWeight: 900, fontSize: 210, letterSpacing: "-0.05em", boxShadow: ui.shadow(16), transform: "rotate(-5deg)" }}>5분 컷!</div>
             </Pop>
           </Abs>
-          <Burst f={five} x={960} y={470} r={300} />
-          <Sparkles f={five + 4} x={960} y={470} spread={640} />
-          {five < 0 && <Abs x={70} y={520}><ReactionBubble f={b1 - 4} expression="tired" size={440} bg="#C4B5FD" tilt={-6} /></Abs>}
-          <Abs x={1420} y={480}><BossActor size={620} enter="popUp" enterAt={frame - five} poses={[{ f: 0, pose: "cheer", expression: "starstruck" }]} hops={[frame - five + 14]} /></Abs>
+          <Burst f={five + 2} x={500} y={440} r={300} c="#fff" />
+          <Sparkles f={five + 6} x={1200} y={400} spread={600} />
         </Camera>
         <Flash f={five} />
       </Beat>
+      {/* ③ 3인칭 와이드: 가게 안, 커피 들고 여유로운 사장님 + 혼자 일하는 노트북 */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.08 }, { f: 120, zoom: 1.0 }]}>
-          <GridBg tone="light" cell={60} bleed />
-          {[["택배 접수", "parcel.example.com", 120, 170, -4], ["블로그 글쓰기", "blog.naver.com", 860, 140, 3], ["새 게시물", "instagram.com", 300, 560, 2]].map(([tab, url, x, y, r], i) => (
-            <Abs key={tab as string} x={x as number} y={(y as number) + floatY(frame, 8, 0.08, i * 2)} style={{ transform: `rotate(${r}deg)` }}>
-              <Pop f={b2 + 2 - i * 6} from={{ y: 400, scale: 0.4, rotate: (r as number) * 5 }}>
-                <AsideWindow w={760} h={360} url={url as string} tab={tab as string} status={["택배 입력 중…", "글 쓰는 중…", "피드 올리는 중…"][i]}>
-                  <div style={{ transform: "scale(0.6)", transformOrigin: "0 0", width: "166%", height: "166%", position: "relative" }}>
-                    {i === 0 ? <ParcelSite filled={Math.min(5, Math.floor(Math.max(0, b2) / 10))} count={3} /> : i === 1 ? <BlogEditor title="운동화 세탁 후기" body="오늘 맡겨주신 운동화가 새것처럼 깨끗해졌어요." typed={Math.floor(Math.max(0, b2 - 10) * 0.8)} photo={b2 > 30} /> : <FeedPost step={b2 > 40 ? 1 : 0} caption="세탁 전후 비교 ✨ #신발세탁" typed={Math.floor(Math.max(0, b2 - 40) * 0.6)} />}
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0, y: -40 }, { f: 150, zoom: 1.1, x: 60, y: 20 }]} handheld={0.5}>
+          <ShopInterior
+            counterFront={
+              <>
+                <Abs x={1180} y={560}>
+                  <div style={{ width: 300, height: 170, background: "#E2E8F0", border: `6px solid ${color.ink}`, borderRadius: 12, overflow: "hidden", position: "relative" }}>
+                    <div style={{ position: "absolute", left: 0, top: 0, width: 1000, height: 560, transform: "scale(0.29)", transformOrigin: "0 0", background: "#fff" }}><ParcelSite filled={Math.min(5, Math.floor(Math.max(0, b2) / 12))} count={3} /></div>
                   </div>
-                </AsideWindow>
+                </Abs>
+                <AiCursor x={1260 + Math.sin(frame * 0.18) * 60} y={600 + Math.cos(frame * 0.13) * 30} scale={0.9} label="AI" />
+              </>
+            }
+          >
+            <Abs x={790} y={300}><BossActor size={520} enter="walkL" enterAt={frame - b2} poses={[{ f: 0, pose: "holdMug", expression: "smug", tilt: -8 }, { f: frame - b2 + 70, pose: "relax", expression: "smug", tilt: 6 }]} /></Abs>
+          </ShopInterior>
+          {[["택배", "📦", 110, 240], ["블로그", "naver", 110, 350], ["피드", "instagram", 110, 460]].map(([t, ic, x, y], i) => (
+            <Abs key={t as string} x={x as number} y={(y as number) + floatY(frame, 10, 0.1, i * 2)}>
+              <Pop f={b2 + 20 + i * 14} from={{ scale: 0, y: 100 }}>
+                <div style={{ background: "#fff", border: `6px solid ${color.ink}`, borderRadius: 999, padding: "10px 26px", display: "flex", alignItems: "center", gap: 12, fontFamily: font.family, fontWeight: 900, fontSize: 38, boxShadow: ui.shadow(7) }}>
+                  {ic === "📦" ? "📦" : <BrandIcon id={ic as "naver" | "instagram"} size={50} />} {t} 자동 ✓
+                </div>
               </Pop>
             </Abs>
           ))}
-          <AiCursor x={cur[0]} y={cur[1]} scale={1.2} />
-          <Abs x={1360} y={520}>
-            <div style={{ position: "relative" }}>
-              <BossActor size={600} enter="walkR" enterAt={frame - b2} poses={[{ f: 0, pose: "holdMug", expression: "smug", tilt: -8 }, { f: frame - b2 + 70, pose: "relax", expression: "smug", tilt: 6 }]} />
-            </div>
-          </Abs>
-          <Abs x={1180} y={90}><Pop f={b2 + 30} from={{ scale: 0, rotate: 20 }}><Card bg={color.accent} style={{ padding: "16px 34px", fontSize: 50, fontWeight: 900, transform: "rotate(5deg)" }}>저는 말만 했어요 ☕</Card></Pop></Abs>
+          <Abs x={1150} y={330}><Pop f={b2 + 60} from={{ scale: 0, rotate: 20 }}><Card bg={color.accent} style={{ padding: "14px 30px", fontSize: 44, fontWeight: 900, transform: "rotate(5deg)" }}>저는 말만 했어요 ☕</Card></Pop></Abs>
         </Camera>
       </Beat>
       <Beat f={b3} len={100000} inT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.3 }, { f: 14, zoom: 1.0 }, { f: 90, zoom: 1.06 }]} shake={impact(b3 - 8, 22)}>
           <DarkBg />
-          <Abs x={0} y={280} style={{ width: 1920, display: "flex", justifyContent: "center" }}><Pop f={b3} from={{ scale: 0, rotate: -30 }}><AsideBadge size={150} /></Pop></Abs>
-          <Abs x={0} y={560} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b3 + 10} text="AI 브라우저" size={110} color="#C4B5FD" stroke /></Abs>
-          <Abs x={140} y={110}><Pop f={b3 + 18} from={{ x: -200 }}><ExperimentTag no={2} size={44} /></Pop></Abs>
-          <Burst f={b3 + 2} x={960} y={360} r={320} c={ASIDE_PURPLE} />
-          <Abs x={1420} y={560}><BossActor size={560} enter="peekR" enterAt={frame - b3 + 6} poses={[{ f: 0, pose: "present", expression: "talk", look: [-6, 0] }]} /></Abs>
-          <Sparkles f={b3 + 4} x={960} y={360} spread={700} />
+          {/* ② 2인칭: 시청자를 보며 소개 */}
+          <Abs x={20} y={200}><Pop f={b3 - 2} from={{ y: 400, scale: 0.8 }} bouncy><div style={{ filter: "drop-shadow(14px 14px 0 #1B2541)" }}><Boss pose="point" expression="talk" crop="bust" size={900} /></div></Pop></Abs>
+          <Abs x={1000} y={300}><Pop f={b3} from={{ scale: 0, rotate: -30 }}><AsideBadge size={130} /></Pop></Abs>
+          <Abs x={1040} y={540}><KText f={b3 + 10} text="AI 브라우저" size={110} color="#C4B5FD" stroke /></Abs>
+          <Abs x={1040} y={130}><Pop f={b3 + 18} from={{ x: 200 }}><ExperimentTag no={2} size={44} /></Pop></Abs>
+          <Burst f={b3 + 2} x={1400} y={380} r={320} c={ASIDE_PURPLE} />
+          <Sparkles f={b3 + 4} x={1400} y={380} spread={600} />
         </Camera>
         <Flash f={b3} c="#C4B5FD" />
       </Beat>
@@ -139,42 +171,60 @@ export const E2S02: React.FC = () => {
           <Abs x={1440} y={420}><BossActor size={560} enter="spin" enterAt={frame - b1} poses={[{ f: 0, pose: "present", expression: "smug" }]} /></Abs>
         </Camera>
       </Beat>
+      {/* ⑤ 스카이뷰: 위에서 보면, 사장님이 이 자리 저 자리 뛰어다님 */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }, { f: b2 - b3, zoom: 1.12 }]} shake={2}>
-          <GridBg tone="light" cell={60} bleed />
-          <Abs x={120} y={110}><KText f={b2} text="그런데 아직 손이 가는 일" size={76} /></Abs>
-          {tabs.map(([f, e, t, bg], i) => (
-            <Abs key={t} x={180 + i * 110} y={300 + i * 120}>
-              <Pop f={f} from={{ x: 700, rotate: 20, scale: 0.5 }}>
-                <div style={{ width: 900, height: 200, background: bg, border: `7px solid ${color.ink}`, borderRadius: 24, boxShadow: ui.shadow(12), display: "flex", alignItems: "center", gap: 24, padding: "0 36px", fontFamily: font.family, fontWeight: 900, fontSize: 60, transform: `rotate(${(i - 1) * 3}deg)` }}>
-                  <span style={{ fontSize: 80 }}>{e}</span>{t}
-                  <span style={{ marginLeft: "auto", fontSize: 36, color: "#FF4D4F" }}>손으로 하나하나 😵</span>
-                </div>
-              </Pop>
-            </Abs>
-          ))}
-          <Abs x={1380} y={430}><BossActor size={600} enter="walkR" enterAt={frame - b2} poses={[{ f: 0, pose: "typing", expression: "determined" }, { f: frame - t2, pose: "typing", expression: "worry" }, { f: frame - t3, pose: "facepalm", expression: "tired" }]} /></Abs>
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.25, rot: -8 }, { f: 40, zoom: 1.0, rot: 0 }, { f: b2 - b3, zoom: 1.05, rot: 2 }]}>
+          <ShopFloorPlan>
+            {(() => {
+              const st: Array<[number, number]> = [[300, 420], [1250, 600], [1590, 330]];
+              const run = Math.max(0, b2 - 10);
+              const seg = Math.floor(run / 22) % 3, nx = (seg + 1) % 3, k = easeInOut(Math.min(1, (run % 22) / 16));
+              const x = st[seg][0] + (st[nx][0] - st[seg][0]) * k, y = st[seg][1] + (st[nx][1] - st[seg][1]) * k;
+              const ang = (Math.atan2(st[nx][1] - st[seg][1], st[nx][0] - st[seg][0]) * 180) / Math.PI - 90;
+              return (
+                <>
+                  <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
+                    <path d={`M${st[0][0]},${st[0][1]} L${st[1][0]},${st[1][1]} L${st[2][0]},${st[2][1]} Z`} fill="none" stroke="#FF4D4F" strokeWidth={10} strokeDasharray="20 14" strokeDashoffset={-frame * 3} />
+                  </svg>
+                  {([[t1, "📦", "택배"], [t2, "naver", "블로그"], [t3, "instagram", "인스타"]] as const).map(([f, ic, t], i) => (
+                    <Abs key={t} x={st[i][0] - 90} y={st[i][1] - 170}>
+                      <Pop f={i === 0 ? Math.max(f, b2 - 6) : f} from={{ scale: 0, y: -80 }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                          {ic === "📦" ? <div style={{ fontSize: 100 }}>📦</div> : <div style={{ filter: "drop-shadow(6px 6px 0 #1B2541)" }}><BrandIcon id={ic} size={110} /></div>}
+                          <div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "4px 18px", fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>{t}</div>
+                        </div>
+                      </Pop>
+                    </Abs>
+                  ))}
+                  <Abs x={x - 110} y={y - 110}><BossTop size={220} angle={ang} /></Abs>
+                  <Abs x={x + 60} y={y - 150}><div style={{ fontSize: 60, transform: `rotate(${Math.sin(frame * 0.5) * 10}deg)` }}>💦</div></Abs>
+                </>
+              );
+            })()}
+          </ShopFloorPlan>
+          <Abs x={120} y={50}><Card style={{ padding: "10px 30px" }}><KText f={b2} text="사이트마다 왔다 갔다…" size={60} /></Card></Abs>
         </Camera>
       </Beat>
       <Beat f={b3} len={100000} inT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.4 }, { f: 10, zoom: 1.0 }, { f: 90, zoom: 1.08 }]} shake={impact(b3 - 16, 24)}>
           <DarkBg />
-          <Abs x={330} y={240}>
+          <Abs x={250} y={90}>
             <Pop f={b3} from={{ scale: 0, rotate: -90 }}>
-              <svg viewBox="-110 -110 220 220" width={440} height={440}>
+              <svg viewBox="-110 -110 220 220" width={400} height={400}>
                 <circle r={100} fill="#fff" stroke={color.ink} strokeWidth={12} />
                 <line x1={0} y1={0} x2={Math.sin(frame * 0.5) * 70} y2={-Math.cos(frame * 0.5) * 70} stroke={color.ink} strokeWidth={10} strokeLinecap="round" />
                 <line x1={0} y1={0} x2={Math.sin(frame * 0.04) * 45} y2={-Math.cos(frame * 0.04) * 45} stroke="#FF4D4F" strokeWidth={12} strokeLinecap="round" />
               </svg>
             </Pop>
           </Abs>
-          <Abs x={860} y={300}>
+          <Abs x={720} y={110}>
             <Pop f={b3 + 14} from={{ scale: 3 }}>
               <div style={{ fontFamily: font.family, fontWeight: 900, fontSize: 220, color: color.accent, WebkitTextStroke: `12px ${color.ink}`, paintOrder: "stroke fill", textShadow: `12px 12px 0 ${color.ink}`, letterSpacing: "-0.05em" }}>하루 2시간</div>
             </Pop>
             <KText f={b3 + 28} text="인터넷 창 일만" size={70} color={color.white} />
           </Abs>
-          <Abs x={40} y={600}><ReactionBubble f={b3 + 20} expression="shock" size={400} bg="#FF8A8A" tilt={8} /></Abs>
+          {/* ⑧ 익스트림 클로즈업: 지친 눈 */}
+          <Abs x={-40} y={560} style={{ opacity: lerp(b3, 0, 8, 0, 1) }}><div style={{ transform: `translateY(${Math.sin(frame * 0.5) * 3}px)` }}><Boss pose="default" expression="tired" crop="eyes" size={620} /></div></Abs>
         </Camera>
       </Beat>
     </AbsoluteFill>
@@ -204,16 +254,17 @@ export const E2S03: React.FC = () => {
       </Beat>
       <Beat f={b2} len={b2 - b3} inT="whip" outT="flip">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }, { f: 90, zoom: 1.06, x: 30 }]}>
+          {/* ④ 어깨 너머: 사장님 뒤에서 같은 화면을 봄 */}
           <GridBg tone="light" cell={60} bleed />
-          <Abs x={110} y={150}>
+          <Abs x={560} y={120} style={{ transform: "perspective(1600px) rotateY(-10deg)", transformOrigin: "100% 50%" }}>
             <Pop f={b2} from={{ y: 400, rotateX: 50 }}>
               <AsideWindow w={1300} h={700} url="parcel.example.com" tab="택배 접수" prompt={<TypeText f={b2 + 4} text="오늘 보낼 물량 접수해줘" dur={20} />} status={b2 > 26 ? "알아서 클릭하고 입력 중…" : undefined}>
                 <ParcelSite filled={Math.min(5, Math.floor(Math.max(0, b2 - 24) / 14))} done={b2 > 24 + 14 * 5 + 6} count={b2 > 24 + 14 * 5 + 6 ? 1 : 0} />
               </AsideWindow>
             </Pop>
           </Abs>
-          {b2 > 14 && <AiCursor x={cur[0]} y={cur[1]} scale={1.2} />}
-          <Abs x={1450} y={520}><BossActor size={480} enter="peekR" enterAt={frame - b2} poses={[{ f: 0, pose: "default", expression: "starstruck", look: [-6, 2] }, { f: frame - b2 + 50, pose: "clap", expression: "laugh" }]} /></Abs>
+          {b2 > 14 && <AiCursor x={cur[0] + 450} y={cur[1] - 30} scale={1.2} />}
+          <Abs x={-170} y={330} style={{ filter: "blur(1.5px)" }}><Pop f={b2 - 4} from={{ x: -300 }} bouncy={false}><BossBack size={1050} turn={b2 > 50 ? 10 : 4} /></Pop></Abs>
         </Camera>
       </Beat>
       <Beat f={b3} len={100000} inT="flip">
@@ -294,7 +345,8 @@ export const E2S04: React.FC = () => {
           <Abs x={1060} y={370}><Pop f={b3 + 10} from={{ scale: 0 }}><AsideBadge size={80} /></Pop></Abs>
           <Abs x={700} y={650}><Stamp f={b3 + 30} bg={color.accent} fg={color.ink} size={110} rot={-6}>추가 비용 0원</Stamp></Abs>
           <Confetti f={b3 + 32} x={1350} y={600} />
-          <Abs x={1600} y={560}><BossActor size={500} enter="slideR" enterAt={frame - b2} poses={[{ f: 0, pose: "holdMug", expression: "smug", tilt: -6 }, { f: frame - b3 + 30, pose: "cheer", expression: "laugh" }]} hops={[frame - b3 + 32]} /></Abs>
+          {/* ② 2인칭: 커피 들고 시청자에게 "부담 없어요" */}
+          <Abs x={1230} y={330}><Pop f={b2 + 4} from={{ x: 400, scale: 0.8 }} bouncy><div style={{ filter: "drop-shadow(14px 14px 0 #1B2541)" }}><Boss pose={b3 > 30 ? "thumbsUp" : "holdMug"} expression={b3 > 30 ? "wink" : "smug"} crop="bust" size={760} /></div></Pop></Abs>
         </Camera>
       </Beat>
     </AbsoluteFill>
@@ -307,6 +359,7 @@ const TaskScene: React.FC<{
   sTitle: string; sPrompt: string; sWork: string; sEnd: string; fb: [number, number, number, number];
   work: (f: number) => React.ReactNode; cursorPts: Array<[number, number]>;
   endPose: React.ComponentProps<typeof BossActor>["poses"][number]["pose"]; endFace: React.ComponentProps<typeof BossActor>["poses"][number]["expression"];
+  view?: "pov" | "ots";
   end: (f: number) => React.ReactNode;
 }> = (p) => {
   const frame = useCurrentFrame();
@@ -314,23 +367,48 @@ const TaskScene: React.FC<{
   const b2 = useCue(p.sPrompt, p.fb[1]);
   const b3 = useCue(p.sWork, p.fb[2]);
   const b4 = useCue(p.sEnd, p.fb[3]);
-  const cur = pathAt(b3 - 6, p.cursorPts, 16);
+  const pov = p.view === "pov";
+  const [dx, dy] = pov ? [180, -110] : [410, -60];
+  const cur = pathAt(b3 - 6, p.cursorPts.map(([x, y]) => [x + dx, y + dy] as [number, number]), 16);
+  // 1인칭 손: 시킬 때 타자 → AI가 일할 때 아래로 내려감 → 끝나면 다시 올라와 박수
+  const handsY = b3 < 0 ? lerp(b1, 0, 14, 500, 0) : b4 < 0 ? lerp(b3, 0, 16, 0, 560) : lerp(b4, 0, 12, 560, 0);
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
-      <Camera start={0} keys={[{ f: 0, zoom: 1.15 }, { f: 18, zoom: 1.0 }, { f: frame - b3, zoom: 1.0 }, { f: frame - b3 + 20, zoom: 1.08, x: 40, y: 30 }, { f: frame - b4, zoom: 1.08, x: 40, y: 30 }, { f: frame - b4 + 16, zoom: 1.0, x: 0, y: 0 }]} shake={impact(b4 - 12, 14)}>
-        <GridBg tone="light" cell={60} bleed />
-        {p.brand && <div style={{ position: "absolute", left: -800, right: -800, top: -800, height: 1160, background: brandBg(p.brand), borderBottom: `10px solid ${color.ink}` }} />}
-        <Abs x={110} y={60}><Section f={b1} n={p.n} label={p.label} emoji={p.emoji} /></Abs>
-        <Abs x={110} y={220}>
+      <Camera start={0} keys={pov ? [{ f: 0, zoom: 1.12, rx: 6 }, { f: 18, zoom: 1.0, rx: 0 }, { f: frame - b3, zoom: 1.0 }, { f: frame - b3 + 30, zoom: 1.06, y: -20 }] : [{ f: 0, zoom: 1.15 }, { f: 18, zoom: 1.0 }, { f: frame - b3, zoom: 1.0 }, { f: frame - b3 + 20, zoom: 1.06, x: 60 }]} shake={impact(b4 - 12, 14)} handheld={pov ? 1.6 : 1}>
+        {pov ? (
+          <div style={{ position: "absolute", inset: -300, background: "radial-gradient(ellipse at 50% 40%, #3D4A75, #1B2238 75%)" }} />
+        ) : (
+          <>
+            <GridBg tone="light" cell={60} bleed />
+            {p.brand && <div style={{ position: "absolute", left: -800, right: -800, top: -800, height: 1160, background: brandBg(p.brand), borderBottom: `10px solid ${color.ink}` }} />}
+          </>
+        )}
+        <Abs x={110 + dx} y={220 + dy} style={pov ? undefined : { transform: "perspective(1600px) rotateY(-9deg)", transformOrigin: "100% 50%" }}>
           <Pop f={b1 + 8} from={{ y: 500, rotateX: 40 }}>
-            <AsideWindow w={1340} h={720} url={p.url} tab={p.tab} prompt={b2 >= 0 ? <TypeText f={b2} text={p.prompt} dur={Math.min(40, p.prompt.length * 1.3)} /> : undefined} status={b3 >= 0 && b4 < 0 ? "알아서 작업 중…" : b4 >= 0 ? "완료! 확인해 주세요 ✓" : undefined}>
-              {p.work(b3)}
-            </AsideWindow>
+            <div style={pov ? { background: "#11151F", padding: 24, borderRadius: 30, border: `8px solid ${color.ink}` } : undefined}>
+              <AsideWindow w={pov ? 1300 : 1340} h={pov ? 700 : 720} url={p.url} tab={p.tab} prompt={b2 >= 0 ? <TypeText f={b2} text={p.prompt} dur={Math.min(40, p.prompt.length * 1.3)} /> : undefined} status={b3 >= 0 && b4 < 0 ? "알아서 작업 중…" : b4 >= 0 ? "완료! 확인해 주세요 ✓" : undefined}>
+                {p.work(b3)}
+              </AsideWindow>
+            </div>
           </Pop>
         </Abs>
         {b3 >= 0 && b4 < 10 && <AiCursor x={cur[0]} y={cur[1]} scale={1.15} />}
-        <Abs x={1500} y={480}><BossActor size={500} enter={p.n === "1" ? "walkR" : "spin"} enterAt={frame - b1} poses={[{ f: 0, pose: "present", expression: "talk", look: [-6, 0] }, { f: frame - b3, pose: "relax", expression: "smug", tilt: -6 }, { f: frame - b4, pose: p.endPose, expression: p.endFace }]} hops={[frame - b4 + 4]} /></Abs>
-        {b3 >= 20 && b4 < 0 && <Abs x={1560} y={300}><Pop f={b3 - 20} from={{ scale: 0 }}><div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 24, padding: "10px 22px", fontFamily: font.family, fontWeight: 900, fontSize: 34, boxShadow: ui.shadow(6) }}>전 쉬는 중 ☕</div></Pop></Abs>}
+        {pov ? (
+          <>
+            <div style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, transform: `translateY(${handsY}px)` }}><PovHands mode={b4 >= 0 ? "hold" : "type"} /></div>
+            <div style={{ position: "absolute", inset: -300, boxShadow: "inset 0 0 300px 90px rgba(0,0,0,0.5)" }} />
+            <Abs x={60} y={40}><Section f={b1} n={p.n} label={p.label} emoji={p.emoji} /></Abs>
+            <Abs x={1480} y={70}><Pop f={b1 + 6} from={{ scale: 0 }}><div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "8px 24px", fontFamily: font.family, fontWeight: 900, fontSize: 30, boxShadow: ui.shadow(6) }}>👀 사장님 시점</div></Pop></Abs>
+            {b3 >= 20 && b4 < 0 && <Abs x={1480} y={760}><Pop f={b3 - 20} from={{ scale: 0 }}><div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 24, padding: "10px 22px", fontFamily: font.family, fontWeight: 900, fontSize: 34, boxShadow: ui.shadow(6) }}>손 놓고 구경 중 ☕</div></Pop></Abs>}
+          </>
+        ) : (
+          <>
+            <Abs x={110} y={60}><Section f={b1} n={p.n} label={p.label} emoji={p.emoji} /></Abs>
+            <Abs x={-190} y={360} style={{ filter: "blur(1.5px)" }}><Pop f={b1} from={{ x: -300 }} bouncy={false}><BossBack size={1000} turn={b3 >= 0 && b4 < 0 ? 6 : 0} /></Pop></Abs>
+            {b3 >= 20 && b4 < 0 && <Abs x={180} y={330}><Pop f={b3 - 20} from={{ scale: 0 }}><div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 24, padding: "10px 22px", fontFamily: font.family, fontWeight: 900, fontSize: 34, boxShadow: ui.shadow(6) }}>전 지켜보는 중 👀</div></Pop></Abs>}
+          </>
+        )}
+        {b4 >= 0 && <Abs x={pov ? 1420 : 60} y={pov ? 600 : 560}><ReactionBubble f={b4} expression={p.endFace ?? "laugh"} size={380} tilt={pov ? 6 : -6} /></Abs>}
         {p.end(b4)}
       </Camera>
     </AbsoluteFill>
@@ -341,7 +419,7 @@ const TaskScene: React.FC<{
 export const E2S05: React.FC = () => (
   <TaskScene
     n="1" label="택배 발송" emoji="📦" brand={undefined} url="parcel.example.com" tab="택배 발송 접수" prompt="택배 사이트에 로그인해서, 오늘 보낼 물량 접수해줘."
-    endPose="cheer" endFace="laugh"
+    endPose="cheer" endFace="laugh" view="pov"
     sTitle="첫 번째" sPrompt="택배 사이트에 로그인" sWork="이렇게 시키면" sEnd="귀찮던" fb={[0, 1.5, 5.5, 9.5]}
     work={(f) => <ParcelSite filled={Math.min(5, Math.floor(Math.max(0, f - 8) / 12))} done={f > 8 + 12 * 5 + 4} count={f > 8 + 12 * 5 + 4 ? Math.min(12, Math.floor((f - 72) / 4) + 1) : 0} />}
     cursorPts={[[1400, 900], [540, 420], [540, 490], [540, 560], [540, 630], [540, 700], [960, 780]]}
@@ -359,7 +437,7 @@ const BLOG_BODY = "오늘 맡겨주신 운동화, 얼룩 하나 없이 새것처
 export const E2S06: React.FC = () => (
   <TaskScene
     n="2" label="네이버 블로그" emoji={<BrandIcon id="naver" size={64} />} brand="naverBlog" url="blog.naver.com/write" tab="블로그 글쓰기" prompt="오늘 세탁한 신발 사진으로 블로그 글 써서 올려줘."
-    endPose="point" endFace="determined"
+    endPose="point" endFace="determined" view="ots"
     sTitle="두 번째" sPrompt="오늘 세탁한 신발" sWork="블로그에 들어가서" sEnd="올리기 전에" fb={[0, 1.5, 5.5, 8.5]}
     work={(f) => <BlogEditor title="운동화 세탁 전후 비교 ✨" titleTyped={Math.floor(Math.max(0, f) * 0.9)} body={BLOG_BODY} typed={Math.floor(Math.max(0, f - 16) * 1.2)} photo={f > 40} />}
     cursorPts={[[1400, 900], [400, 400], [600, 520], [880, 560], [980, 360]]}
@@ -460,22 +538,44 @@ export const E2S08: React.FC = () => {
           <Confetti f={b1 - 42} x={960} y={300} n={50} />
         </Camera>
       </Beat>
+      {/* ⑤ 스카이뷰: 이번엔 사장님은 카운터에서 쉬고, AI 커서가 뛰어다님 */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }]}>
-          <GridBg tone="light" cell={60} bleed />
-          <Abs x={0} y={120} style={{ width: 1920, display: "flex", justifyContent: "center" }}><KText f={b2} text="알아서 사이트를 옮겨 다녀요" size={80} /></Abs>
-          {sites.map(([x, y, e], i) => <Abs key={i} x={x - 130} y={y}><Pop f={b2 + 4 + i * 5} from={{ scale: 0 }}><Card style={{ width: 260, height: 220, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 120 }}>{e}</Card></Pop></Abs>)}
-          {b2 > 10 && <AiCursor x={cx} y={cy + 120} scale={1.3} />}
-          <Abs x={1560} y={560}><BossActor size={400} enter="walkR" enterAt={frame - b2} poses={[{ f: 0, pose: "relax", expression: "smug", tilt: -8 }]} /></Abs>
-          <Abs x={760} y={700}><Stamp f={b2 + 30} bg={ASIDE_PURPLE} size={80} rot={-4}>귀찮은 일은 맡기기!</Stamp></Abs>
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.2, rot: 6 }, { f: 40, zoom: 1.0, rot: 0 }]}>
+          <ShopFloorPlan>
+            {(() => {
+              const st: Array<[number, number]> = [[300, 420], [1250, 600], [1590, 330]];
+              const run = Math.max(0, b2 - 6);
+              const seg = Math.floor(run / 14) % 3, nx = (seg + 1) % 3, k = easeInOut(Math.min(1, (run % 14) / 10));
+              const x = st[seg][0] + (st[nx][0] - st[seg][0]) * k, y = st[seg][1] + (st[nx][1] - st[seg][1]) * k - Math.sin(k * Math.PI) * 120;
+              return (
+                <>
+                  {([["📦", "택배"], ["naver", "블로그"], ["instagram", "인스타"]] as const).map(([ic, t], i) => (
+                    <Abs key={t} x={st[i][0] - 90} y={st[i][1] - 170}>
+                      <Pop f={b2 + i * 4} from={{ scale: 0 }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                          {ic === "📦" ? <div style={{ fontSize: 100 }}>📦</div> : <div style={{ filter: "drop-shadow(6px 6px 0 #1B2541)" }}><BrandIcon id={ic} size={110} /></div>}
+                          <div style={{ background: "#22C55E", color: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "4px 18px", fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>{t} ✓</div>
+                        </div>
+                      </Pop>
+                    </Abs>
+                  ))}
+                  <Abs x={850} y={650}><BossTop size={220} angle={180} /></Abs>
+                  <Abs x={980} y={640}><Pop f={b2 + 10} from={{ scale: 0 }}><div style={{ background: "#fff", border: `5px solid ${color.ink}`, borderRadius: 999, padding: "6px 18px", fontFamily: font.family, fontWeight: 900, fontSize: 30 }}>☕ 쉬는 중</div></Pop></Abs>
+                  <AiCursor x={x} y={y} scale={1.4} />
+                </>
+              );
+            })()}
+          </ShopFloorPlan>
+          <Abs x={120} y={50}><Card style={{ padding: "10px 30px" }}><KText f={b2} text="이제 뛰어다니는 건 AI" size={60} color={ASIDE_PURPLE} /></Card></Abs>
         </Camera>
       </Beat>
+      {/* ⑧ 익스트림 클로즈업: 뿌듯한 눈 */}
       <Beat f={b3} len={b3 - b4} inT="zoom" outT="whip">
-        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.1 }, { f: 40, zoom: 1.0 }]} shake={impact(b3 - 16, 20)}>
-          <GridBg tone="light" cell={60} bleed />
-          <Abs x={160} y={200}><KText f={b3} text="아쉬운 점?" size={130} /></Abs>
-          <Abs x={760} y={430}><Stamp f={b3 + 16} bg={color.accent} fg={color.ink} size={140} rot={-6}>아직 없어요!</Stamp></Abs>
-          <Abs x={1440} y={300}><BossActor size={640} enter="slideR" enterAt={frame - b3} poses={[{ f: 0, pose: "think", tilt: 10, look: [5, -5] }, { f: frame - b3 + 16, pose: "shrug", expression: "laugh" }]} hops={[frame - b3 + 16]} /></Abs>
+        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0 }, { f: 16, zoom: 1.0 }, { f: 18, zoom: 1.12 }, { f: 60, zoom: 1.06 }]} shake={impact(b3 - 16, 20)}>
+          <DarkBg />
+          <Abs x={250} y={240}><Boss pose="default" expression={b3 < 16 ? "think" : "smug"} crop="eyes" size={800} look={b3 < 16 ? [5, -5] : undefined} /></Abs>
+          <Abs x={120} y={70}><KText f={b3} text="아쉬운 점?" size={110} color={color.white} /></Abs>
+          <Abs x={1180} y={760}><Stamp f={b3 + 16} bg={color.accent} fg={color.ink} size={110} rot={-6}>아직 없어요!</Stamp></Abs>
         </Camera>
       </Beat>
       <Beat f={b4} len={100000} inT="whip">
@@ -492,8 +592,9 @@ export const E2S08: React.FC = () => {
               </Card>
             </Pop>
           </Abs>
-          <Cursor f={b4 + 40} from={[1500, 950]} to={[1160, 560]} click={18} />
-          <Abs x={1400} y={420}><BossActor size={560} enter="popUp" enterAt={frame - b4} poses={[{ f: 0, pose: "point", expression: "determined" }]} /></Abs>
+          <Cursor f={b4 + 40} from={[900, 1000]} to={[1160, 560]} click={18} />
+          {/* ② 2인칭: 시청자에게 직접 당부 */}
+          <Abs x={1250} y={260}><Pop f={b4 + 2} from={{ y: 400, scale: 0.8 }} bouncy><div style={{ filter: "drop-shadow(14px 14px 0 #1B2541)" }}><Boss pose="point" expression="determined" crop="bust" size={820} /></div></Pop></Abs>
         </Camera>
       </Beat>
     </AbsoluteFill>
@@ -524,30 +625,31 @@ export const E2S09: React.FC = () => {
           <Abs x={40} y={330}><BossActor size={460} enter="peekL" enterAt={frame - b1} poses={[{ f: 0, pose: "think", expression: "think", tilt: 12 }]} /></Abs>
         </Camera>
       </Beat>
+      {/* ③ 3인칭 와이드 + 크레인 다운: 천장에서 내려오며 가게 속 사장님이 손 흔듦 */}
       <Beat f={b2} len={100000} inT="flip">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.1 }, { f: 120, zoom: 1.0 }]} shake={impact(b3 - 10, 14)}>
-          <GridBg tone="navy" cell={60} bleed />
-          <Abs x={110} y={110}><KText f={b2} text="다음 실험 예고" size={70} color={color.white} /></Abs>
-          <Abs x={110} y={240}>
-            <Pop f={b2 + 8} from={{ rotateY: 180, scale: 0.6 }}>
-              <Card style={{ width: 1060, padding: "44px 56px" }}>
-                <div style={{ fontSize: 46, fontWeight: 900, color: color.point }}>🧪 실험 #003</div>
-                <div style={{ fontSize: 92, fontWeight: 900, letterSpacing: "-0.05em", marginTop: 8, lineHeight: 1.15 }}>가게 사장님이 <MarkSweep f={b2 + 30}>AI를 쓰면</MarkSweep><br />달라지는 점</div>
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.5, rx: 48, y: -260 }, { f: 34, zoom: 1.0, rx: 0, y: 0 }, { f: 160, zoom: 1.06 }]} shake={impact(b3 - 10, 12)}>
+          <ShopInterior>
+            <Abs x={820} y={300}><BossActor size={520} enter="none" poses={[{ f: 0, pose: "present", expression: "talk", look: [-6, 0] }, { f: frame - b3, pose: "wave", expression: "joy" }]} hops={[frame - b3 + 22]} /></Abs>
+          </ShopInterior>
+          <Abs x={60} y={170}>
+            <Pop f={b2 + 30} from={{ rotateY: 180, scale: 0.6 }}>
+              <Card style={{ width: 760, padding: "30px 40px", transform: "rotate(-3deg)" }}>
+                <div style={{ fontSize: 38, fontWeight: 900, color: color.point }}>🧪 다음 실험 #003</div>
+                <div style={{ fontSize: 66, fontWeight: 900, letterSpacing: "-0.05em", marginTop: 6, lineHeight: 1.15 }}>가게 사장님이 <MarkSweep f={b2 + 50}>AI를 쓰면</MarkSweep><br />달라지는 점</div>
               </Card>
             </Pop>
           </Abs>
-          <Abs x={140} y={760}>
+          <Abs x={100} y={780}>
             <div style={{ display: "flex", gap: 30, alignItems: "center" }}>
               <Pop f={b3} from={{ scale: 0 }}>
-                <div style={{ background: b3 > 22 ? "#606060" : "#FF0033", color: "#fff", border: `7px solid ${color.ink}`, borderRadius: 999, padding: "22px 60px", fontFamily: font.family, fontWeight: 900, fontSize: 64, boxShadow: ui.shadow(9), transform: `scale(${b3 > 18 && b3 < 24 ? 0.9 : 1})` }}>{b3 > 22 ? "구독중 ✓" : "구독"}</div>
+                <div style={{ background: b3 > 22 ? "#606060" : "#FF0033", color: "#fff", border: `7px solid ${color.ink}`, borderRadius: 999, padding: "20px 56px", fontFamily: font.family, fontWeight: 900, fontSize: 60, boxShadow: ui.shadow(9), transform: `scale(${b3 > 18 && b3 < 24 ? 0.9 : 1})` }}>{b3 > 22 ? "구독중 ✓" : "구독"}</div>
               </Pop>
-              <Pop f={b3 + 26} from={{ scale: 0, rotate: -40 }}><div style={{ fontSize: 110, transform: `rotate(${b3 > 26 ? Math.sin(b3 * 1.2) * 20 * Math.exp(-(b3 - 26) / 20) : 0}deg)` }}>🔔</div></Pop>
+              <Pop f={b3 + 26} from={{ scale: 0, rotate: -40 }}><div style={{ fontSize: 100, transform: `rotate(${b3 > 26 ? Math.sin(b3 * 1.2) * 20 * Math.exp(-(b3 - 26) / 20) : 0}deg)` }}>🔔</div></Pop>
             </div>
           </Abs>
-          <Cursor f={b3 - 4} from={[900, 1050]} to={[330, 830]} click={20} />
-          <Confetti f={b3 + 24} x={400} y={760} />
-          <Abs x={1260} y={260}><BossActor size={760} enter="jump" enterAt={frame - b2 + 6} poses={[{ f: 0, pose: "present", expression: "talk", look: [-6, 0] }, { f: frame - b3, pose: "wave", expression: "joy" }]} hops={[frame - b3 + 22]} /></Abs>
-          <Abs x={1300} y={90}><Pop f={b3 + 30} from={{ y: -100, scale: 0.4 }}><Wordmark size={46} tone="navy" /></Pop></Abs>
+          <Cursor f={b3 - 4} from={[900, 1050]} to={[290, 850]} click={20} />
+          <Confetti f={b3 + 24} x={360} y={780} />
+          <Abs x={1440} y={60}><Pop f={b3 + 30} from={{ y: -100, scale: 0.4 }}><Wordmark size={44} /></Pop></Abs>
         </Camera>
       </Beat>
     </AbsoluteFill>
