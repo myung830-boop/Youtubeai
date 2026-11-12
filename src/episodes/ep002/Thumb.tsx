@@ -95,13 +95,16 @@ export const Ep002ThumbV2A: React.FC = () => (
     </svg>
     <AiCursor x={700} y={480} scale={2.2} label="AI가 알아서" />
     {/* 주인공: 어사이드 로고 */}
-    <div style={{ position: "absolute", left: 0, right: 0, top: 70, display: "flex", justifyContent: "center" }}>
+    <div style={{ position: "absolute", left: 0, right: 0, top: 36, display: "flex", justifyContent: "center" }}>
       <div style={{ position: "relative", transform: "rotate(-3deg)" }}>
         <div style={{ position: "absolute", inset: -40, background: ASIDE_GRADIENT, filter: "blur(40px)", opacity: 0.8, borderRadius: 999 }} />
-        <AsideBadge size={150} style={{ position: "relative" }} />
+        <AsideBadge size={116} style={{ position: "relative" }} />
       </div>
     </div>
-    <div style={{ position: "absolute", left: 0, right: 0, top: 300, textAlign: "center", fontWeight: 900, fontSize: 112, letterSpacing: "-0.05em", color: "#fff", ...outline(14), textShadow: `8px 8px 0 ${color.ink}` }}>
+    <div style={{ position: "absolute", left: 0, right: 0, top: 226, textAlign: "center", fontWeight: 900, fontSize: 50, letterSpacing: "-0.03em", color: "#fff", ...outline(9), textShadow: `5px 5px 0 ${color.ink}` }}>
+      <span style={{ background: color.accent, color: color.ink, border: `5px solid ${color.ink}`, borderRadius: 14, padding: "0 16px 4px", boxShadow: ui.shadow(6), display: "inline-block", WebkitTextStroke: "0px transparent", textShadow: "none", marginRight: 4 }}>사장님 컴퓨터 일</span>, 대신 해주는
+    </div>
+    <div style={{ position: "absolute", left: 0, right: 0, top: 308, textAlign: "center", fontWeight: 900, fontSize: 108, letterSpacing: "-0.05em", color: "#fff", ...outline(14), textShadow: `8px 8px 0 ${color.ink}` }}>
       AI 브라우저
     </div>
     {/* 보조 정보 */}
@@ -129,18 +132,21 @@ export const Ep002ThumbV2B: React.FC = () => (
     </svg>
     <AiCursor x={810} y={420} scale={2.4} label="AI가 알아서" />
     {/* 왼쪽: 주인공 로고 + 문구 */}
-    <div style={{ position: "absolute", left: 40, top: 100, transform: "rotate(-4deg)" }}>
+    <div style={{ position: "absolute", left: 40, top: 86, transform: "rotate(-4deg)" }}>
       <div style={{ position: "relative" }}>
         <div style={{ position: "absolute", inset: -30, background: ASIDE_GRADIENT, filter: "blur(36px)", opacity: 0.8, borderRadius: 999 }} />
-        <AsideBadge size={112} style={{ position: "relative" }} />
+        <AsideBadge size={100} style={{ position: "relative" }} />
       </div>
     </div>
-    <div style={{ position: "absolute", left: 44, top: 310, fontWeight: 900, fontSize: 108, lineHeight: 1.04, letterSpacing: "-0.05em", color: "#fff", ...outline(13), textShadow: `7px 7px 0 ${color.ink}` }}>
+    <div style={{ position: "absolute", left: 44, top: 262, fontWeight: 900, fontSize: 40, lineHeight: 1.5, letterSpacing: "-0.03em", color: "#fff", ...outline(8), textShadow: `4px 4px 0 ${color.ink}`, transform: "rotate(-2deg)" }}>
+      <span style={{ background: color.accent, color: color.ink, border: `5px solid ${color.ink}`, borderRadius: 14, padding: "0 16px 4px", boxShadow: ui.shadow(6), display: "inline-block", WebkitTextStroke: "0px transparent", textShadow: "none", marginRight: 4 }}>사장님 컴퓨터 일</span>, 대신 해주는
+    </div>
+    <div style={{ position: "absolute", left: 44, top: 330, fontWeight: 900, fontSize: 100, lineHeight: 1.04, letterSpacing: "-0.05em", color: "#fff", ...outline(13), textShadow: `7px 7px 0 ${color.ink}` }}>
       AI<br />브라우저
     </div>
     {/* 보조 */}
     <div style={{ position: "absolute", left: 36, top: 30, transform: "rotate(-3deg)" }}><ExperimentTag no={2} size={26} /></div>
-    <div style={{ position: "absolute", left: 48, top: 560, background: color.accent, border: `5px solid ${color.ink}`, borderRadius: 16, padding: "4px 18px", fontWeight: 900, fontSize: 34, transform: "rotate(-3deg)", boxShadow: ui.shadow(6) }}>하루 2시간 → 5분</div>
+    <div style={{ position: "absolute", left: 360, top: 600, background: color.accent, border: `5px solid ${color.ink}`, borderRadius: 16, padding: "4px 18px", fontWeight: 900, fontSize: 34, transform: "rotate(-3deg)", boxShadow: ui.shadow(6) }}>하루 2시간 → 5분</div>
     <SmallChips x={36} y={650} />
   </AbsoluteFill>
 );
