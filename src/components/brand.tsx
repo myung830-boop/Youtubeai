@@ -87,12 +87,12 @@ export const Flask: React.FC<{ size?: number; fill?: string }> = ({ size = 40, f
   </svg>
 );
 
-/** 워드마크: 사장님 [AI] 실험실 */
+/** 워드마크: 오늘부터 [AI] 사장님 */
 export const Wordmark: React.FC<{ size?: number; tone?: "light" | "navy"; style?: React.CSSProperties }> = ({ size = 80, tone = "light", style }) => {
   const fg = tone === "light" ? color.main : color.white;
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: size * 0.18, fontFamily: font.family, fontWeight: 800, fontSize: size, color: fg, letterSpacing: "-0.03em", lineHeight: 1, ...style }}>
-      <span>사장님</span>
+      <span>오늘부터</span>
       <span
         style={{
           background: color.accent,
@@ -107,7 +107,7 @@ export const Wordmark: React.FC<{ size?: number; tone?: "light" | "navy"; style?
       >
         AI
       </span>
-      <span>실험실</span>
+      <span>사장님</span>
     </div>
   );
 };
@@ -188,5 +188,13 @@ export const CheckItem: React.FC<{ children: React.ReactNode; fontSize?: number 
       </svg>
     </div>
     {children}
+  </div>
+);
+
+/** 달력 한 장 스티커: 위 빨간 띠 + 큰 글자 (채널 '오늘부터' 모티프) */
+export const TodayCalendar: React.FC<{ size?: number; top?: string; label?: string; style?: React.CSSProperties }> = ({ size = 200, top = "TODAY", label = "오늘", style }) => (
+  <div style={{ width: size, height: size * 1.05, background: color.white, border: `${size * 0.05}px solid ${color.ink}`, borderRadius: size * 0.12, boxShadow: ui.shadow(size * 0.06), overflow: "hidden", fontFamily: font.family, display: "flex", flexDirection: "column", ...style }}>
+    <div style={{ height: size * 0.3, background: "#FF4D4F", borderBottom: `${size * 0.04}px solid ${color.ink}`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: size * 0.15, letterSpacing: "0.05em" }}>{top}</div>
+    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: size * 0.34, color: color.ink, letterSpacing: "-0.04em" }}>{label}</div>
   </div>
 );

@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { Boss } from "../character/Boss";
-import { ExperimentTag, Flask, GridBg, Wordmark } from "../components/brand";
+import { ExperimentTag, GridBg, TodayCalendar, Wordmark } from "../components/brand";
 import { color, font, ui } from "../styles/theme";
 
 /** 프로필 사진 800x800 — 유튜브에서 원형으로 잘림. 얼굴만, 단순하게. */
@@ -30,41 +30,40 @@ export const Watermark: React.FC = () => (
  * 모든 기기 안전영역 = 가운데 1546x423 (x 507~2053, y 508~931). 중요한 건 전부 이 안에.
  */
 export const Banner: React.FC<{ showSafeArea?: boolean }> = ({ showSafeArea = false }) => (
-  <AbsoluteFill>
+  <AbsoluteFill style={{ fontFamily: font.family }}>
     <GridBg tone="navy" cell={64} />
-    {/* 장식: 안전영역 밖 (TV/데스크톱에서만 보임) */}
-    <div style={{ position: "absolute", left: 140, top: 300, transform: "rotate(-12deg)", opacity: 0.9 }}>
-      <Flask size={220} fill={color.sub} />
-    </div>
-    <div style={{ position: "absolute", right: 160, top: 980, transform: "rotate(10deg)" }}>
-      <Flask size={180} fill={color.accent} />
-    </div>
-    {[
-      [300, 1060, 26],
-      [2260, 320, 34],
-      [2380, 640, 18],
-      [420, 760, 16],
-    ].map(([x, y, r], i) => (
+    <div style={{ position: "absolute", left: 700, top: 300, width: 1300, height: 840, borderRadius: "50%", background: "radial-gradient(circle, rgba(59,130,246,0.45), transparent 65%)" }} />
+    {/* 장식: 안전영역 밖 (TV·데스크톱에서만 보임) */}
+    <div style={{ position: "absolute", left: 130, top: 250, transform: "rotate(-12deg)" }}><TodayCalendar size={230} top="D-DAY" label="시작" /></div>
+    <div style={{ position: "absolute", left: 300, top: 960, transform: "rotate(8deg)" }}><TodayCalendar size={160} top="MON" label="✓" /></div>
+    <div style={{ position: "absolute", right: 170, top: 260, transform: "rotate(10deg)" }}><TodayCalendar size={190} top="TUE" label="✓" /></div>
+    <div style={{ position: "absolute", right: 300, top: 980, transform: "rotate(-8deg)" }}><TodayCalendar size={170} top="WED" label="✓" /></div>
+    {[[560, 300, 22], [2050, 1100, 30], [2330, 640, 18], [160, 760, 16], [1980, 230, 14]].map(([x, y, r], i) => (
       <div key={i} style={{ position: "absolute", left: x, top: y, width: r * 2, height: r * 2, borderRadius: "50%", border: `6px solid ${color.accent}` }} />
     ))}
 
-    {/* 안전영역 콘텐츠 */}
-    <div style={{ position: "absolute", left: 507, top: 508, width: 1546, height: 423, display: "flex", alignItems: "center", fontFamily: font.family }}>
-      <div style={{ width: 400, height: 423, position: "relative", flexShrink: 0 }}>
-        <div style={{ position: "absolute", bottom: -10, left: 10 }}>
-          <Boss pose="wave" size={430} />
-        </div>
+    {/* 안전영역 콘텐츠 (모든 기기에서 보임) */}
+    <div style={{ position: "absolute", left: 507, top: 508, width: 1546, height: 423, display: "flex", alignItems: "center" }}>
+      <div style={{ width: 380, height: 423, position: "relative", flexShrink: 0 }}>
+        <div style={{ position: "absolute", bottom: -10, left: 0 }}><Boss pose="wave" expression="joy" size={430} soft /></div>
       </div>
-      <div style={{ marginLeft: 50, display: "flex", flexDirection: "column", gap: 26 }}>
-        <Wordmark size={118} tone="navy" />
-        <div style={{ color: color.white, fontSize: 46, fontWeight: 600, letterSpacing: "-0.02em" }}>
-          가게 사장님이 <span style={{ color: color.accent, fontWeight: 800 }}>AI를 직접 써보고</span> 알려드립니다
-        </div>
-        <div style={{ display: "flex", gap: 18 }}>
-          {["AI 실험", "업종별 활용법", "솔직 후기"].map((t) => (
-            <div key={t} style={{ background: color.white, color: color.main, border: `5px solid ${color.ink}`, borderRadius: 999, padding: "8px 28px", fontSize: 34, fontWeight: 800, boxShadow: ui.shadow(6) }}>
-              {t}
+      <div style={{ marginLeft: 40, display: "flex", flexDirection: "column", gap: 22 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 26 }}>
+          <TodayCalendar size={112} top="TODAY" label="오늘" style={{ transform: "rotate(-6deg)" }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ color: color.accent, fontSize: 58, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1 }}>오늘부터</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 22, color: color.white, fontSize: 124, fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1 }}>
+              <span style={{ background: color.accent, color: color.main, border: `9px solid ${color.ink}`, borderRadius: 26, padding: "0 22px 8px", boxShadow: ui.shadow(9), transform: "rotate(-4deg)", display: "inline-block" }}>AI</span>
+              사장님
             </div>
+          </div>
+        </div>
+        <div style={{ color: color.white, fontSize: 42, fontWeight: 600, letterSpacing: "-0.02em" }}>
+          6년 차 신발세탁소 사장이 <span style={{ color: color.accent, fontWeight: 800 }}>AI로 가게 일</span>을 바꿔갑니다
+        </div>
+        <div style={{ display: "flex", gap: 16 }}>
+          {["AI 실험", "가게 자동화", "솔직 후기"].map((t) => (
+            <div key={t} style={{ background: color.white, color: color.main, border: `5px solid ${color.ink}`, borderRadius: 999, padding: "6px 26px", fontSize: 32, fontWeight: 800, boxShadow: ui.shadow(6) }}>{t}</div>
           ))}
         </div>
       </div>
