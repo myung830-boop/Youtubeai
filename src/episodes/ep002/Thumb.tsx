@@ -6,6 +6,7 @@ import { AiCursor, AsideBadge, AsideWindow, ASIDE_GRADIENT } from "../../compone
 import { color, font, ui } from "../../styles/theme";
 import { BlogEditor } from "./mockups";
 import { BrandBadge } from "../../brands/registry";
+import { BrowserTabs, SHOP_TABS } from "./Scenes";
 
 const outline = (px: number): React.CSSProperties => ({ WebkitTextStroke: `${px}px ${color.ink}`, paintOrder: "stroke fill" });
 
@@ -65,5 +66,81 @@ export const Ep002Thumb: React.FC<{ character?: React.ReactNode }> = ({ characte
       <BrandBadge id="naverBlog" size={34} label="블로그" />
       <BrandBadge id="instagram" size={34} label="인스타" />
     </div>
+  </AbsoluteFill>
+);
+
+/* ───────── 썸네일 v2: 어사이드가 주인공 (캐릭터 없음) ───────── */
+const SpeedRays: React.FC<{ cx: string; cy: string }> = ({ cx, cy }) => (
+  <div style={{ position: "absolute", inset: -300, background: `repeating-conic-gradient(from 0deg at ${cx} ${cy}, rgba(124,92,255,0.0) 0deg 7deg, rgba(124,92,255,0.16) 7deg 14deg)` }} />
+);
+const SmallChips: React.FC<{ x: number; y: number }> = ({ x, y }) => (
+  <div style={{ position: "absolute", left: x, top: y, display: "flex", gap: 10, transform: "scale(0.9)", transformOrigin: "0 0" }}>
+    <div style={{ background: color.white, border: `4px solid ${color.ink}`, borderRadius: 999, padding: "4px 16px", fontSize: 26, fontWeight: 800, color: color.main }}>📦 택배</div>
+    <BrandBadge id="naverBlog" size={28} label="블로그" />
+    <BrandBadge id="instagram" size={28} label="인스타" />
+  </div>
+);
+
+/** A안: 어사이드 로고 정면 + 아래에 혼자 일하는 브라우저 */
+export const Ep002ThumbV2A: React.FC = () => (
+  <AbsoluteFill style={{ fontFamily: font.family, overflow: "hidden", background: "#100E2E" }}>
+    <SpeedRays cx="50%" cy="34%" />
+    <div style={{ position: "absolute", left: 240, top: -120, width: 800, height: 620, borderRadius: "50%", background: ASIDE_GRADIENT, filter: "blur(90px)", opacity: 0.55 }} />
+    {/* 아래: 누워 있는 브라우저 + AI 커서 */}
+    <div style={{ position: "absolute", left: 150, top: 460, transform: "perspective(1400px) rotateX(42deg)", transformOrigin: "50% 0%" }}>
+      <BrowserTabs tabs={SHOP_TABS} active={1} done={[true, true, false]} f={30} w={980} h={420} aside />
+    </div>
+    <svg width={1280} height={720} style={{ position: "absolute", inset: 0 }}>
+      {[0, 1, 2, 3].map((i) => <line key={i} x1={780 + i * 22} y1={455 + i * 20} x2={900 + i * 30} y2={495 + i * 26} stroke="#C4B5FD" strokeWidth={10} strokeLinecap="round" opacity={0.8} />)}
+    </svg>
+    <AiCursor x={700} y={480} scale={2.2} label="AI가 알아서" />
+    {/* 주인공: 어사이드 로고 */}
+    <div style={{ position: "absolute", left: 0, right: 0, top: 70, display: "flex", justifyContent: "center" }}>
+      <div style={{ position: "relative", transform: "rotate(-3deg)" }}>
+        <div style={{ position: "absolute", inset: -40, background: ASIDE_GRADIENT, filter: "blur(40px)", opacity: 0.8, borderRadius: 999 }} />
+        <AsideBadge size={150} style={{ position: "relative" }} />
+      </div>
+    </div>
+    <div style={{ position: "absolute", left: 0, right: 0, top: 300, textAlign: "center", fontWeight: 900, fontSize: 112, letterSpacing: "-0.05em", color: "#fff", ...outline(14), textShadow: `8px 8px 0 ${color.ink}` }}>
+      AI 브라우저
+    </div>
+    {/* 보조 정보 */}
+    <div style={{ position: "absolute", left: 36, top: 30, transform: "rotate(-3deg)" }}><ExperimentTag no={2} size={26} /></div>
+    <div style={{ position: "absolute", right: 36, top: 34, background: color.accent, border: `5px solid ${color.ink}`, borderRadius: 16, padding: "4px 18px", fontWeight: 900, fontSize: 34, transform: "rotate(4deg)", boxShadow: ui.shadow(6) }}>하루 2시간 → 5분</div>
+    <SmallChips x={36} y={650} />
+  </AbsoluteFill>
+);
+
+/** B안: 왼쪽 로고+문구, 오른쪽 크게 기울어진 어사이드 브라우저 창 */
+export const Ep002ThumbV2B: React.FC = () => (
+  <AbsoluteFill style={{ fontFamily: font.family, overflow: "hidden", background: "#100E2E" }}>
+    <SpeedRays cx="72%" cy="50%" />
+    <div style={{ position: "absolute", left: 560, top: 40, width: 760, height: 640, borderRadius: "50%", background: ASIDE_GRADIENT, filter: "blur(90px)", opacity: 0.55 }} />
+    {/* 오른쪽: 어사이드 브라우저 창 */}
+    <div style={{ position: "absolute", left: 600, top: 120, transform: "perspective(1600px) rotateY(-16deg) rotateZ(3deg)", transformOrigin: "0% 50%" }}>
+      <AsideWindow w={760} h={500} url="blog.naver.com/write" tab="블로그 글쓰기" prompt="블로그 글 써서 올려줘" status="알아서 작업 중…">
+        <div style={{ transform: "scale(0.62)", transformOrigin: "0 0", width: "161%", height: "161%", position: "relative" }}>
+          <BlogEditor title="운동화 세탁 전후 비교 ✨" body="오늘 맡겨주신 운동화, 새것처럼 돌아왔어요." typed={20} photo />
+        </div>
+      </AsideWindow>
+    </div>
+    <svg width={1280} height={720} style={{ position: "absolute", inset: 0 }}>
+      {[0, 1, 2].map((i) => <line key={i} x1={640 + i * 24} y1={410 + i * 24} x2={770 + i * 30} y2={440 + i * 28} stroke="#C4B5FD" strokeWidth={10} strokeLinecap="round" opacity={0.8} />)}
+    </svg>
+    <AiCursor x={810} y={420} scale={2.4} label="AI가 알아서" />
+    {/* 왼쪽: 주인공 로고 + 문구 */}
+    <div style={{ position: "absolute", left: 40, top: 100, transform: "rotate(-4deg)" }}>
+      <div style={{ position: "relative" }}>
+        <div style={{ position: "absolute", inset: -30, background: ASIDE_GRADIENT, filter: "blur(36px)", opacity: 0.8, borderRadius: 999 }} />
+        <AsideBadge size={112} style={{ position: "relative" }} />
+      </div>
+    </div>
+    <div style={{ position: "absolute", left: 44, top: 310, fontWeight: 900, fontSize: 108, lineHeight: 1.04, letterSpacing: "-0.05em", color: "#fff", ...outline(13), textShadow: `7px 7px 0 ${color.ink}` }}>
+      AI<br />브라우저
+    </div>
+    {/* 보조 */}
+    <div style={{ position: "absolute", left: 36, top: 30, transform: "rotate(-3deg)" }}><ExperimentTag no={2} size={26} /></div>
+    <div style={{ position: "absolute", left: 48, top: 560, background: color.accent, border: `5px solid ${color.ink}`, borderRadius: 16, padding: "4px 18px", fontWeight: 900, fontSize: 34, transform: "rotate(-3deg)", boxShadow: ui.shadow(6) }}>하루 2시간 → 5분</div>
+    <SmallChips x={36} y={650} />
   </AbsoluteFill>
 );

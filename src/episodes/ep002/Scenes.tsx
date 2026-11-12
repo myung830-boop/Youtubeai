@@ -54,8 +54,8 @@ const pathAt = (f: number, pts: Array<[number, number]>, seg = 16): [number, num
 };
 
 /** 브라우저 탭 화면: 사이트(탭)를 오가며 일하는 모습. active = 지금 보이는 탭 */
-type TabDef = { label: string; icon: React.ReactNode; color: string; page: (f: number) => React.ReactNode; url: string };
-const BrowserTabs: React.FC<{ tabs: TabDef[]; active: number; extra?: number; done?: boolean[]; f: number; w?: number; h?: number; aside?: boolean }> = ({ tabs, active, extra = 0, done = [], f, w = 1500, h = 820, aside }) => {
+export type TabDef = { label: string; icon: React.ReactNode; color: string; page: (f: number) => React.ReactNode; url: string };
+export const BrowserTabs: React.FC<{ tabs: TabDef[]; active: number; extra?: number; done?: boolean[]; f: number; w?: number; h?: number; aside?: boolean }> = ({ tabs, active, extra = 0, done = [], f, w = 1500, h = 820, aside }) => {
   const all = [...tabs, ...Array.from({ length: extra }, (_, i) => tabs[i % tabs.length])];
   const tabW = Math.max(110, Math.min(380, (w - 60) / all.length));
   return (
@@ -84,7 +84,7 @@ const BrowserTabs: React.FC<{ tabs: TabDef[]; active: number; extra?: number; do
     </div>
   );
 };
-const SHOP_TABS: TabDef[] = [
+export const SHOP_TABS: TabDef[] = [
   { label: "택배 접수", icon: <span style={{ fontSize: 28 }}>📦</span>, color: "#F59E0B", url: "parcel.example.com/send", page: (f) => <ParcelSite filled={Math.min(5, Math.floor(Math.max(0, f) / 6))} count={2} /> },
   { label: "네이버 블로그", icon: <BrandIcon id="naver" size={34} />, color: BRANDS.naver.colors.primary, url: "blog.naver.com/write", page: (f) => <BlogEditor title="운동화 세탁 전후 비교 ✨" body="오늘 맡겨주신 운동화, 새것처럼 돌아왔어요." typed={Math.floor(Math.max(0, f) * 1.5)} photo={f > 14} /> },
   { label: "Instagram", icon: <BrandIcon id="instagram" size={34} />, color: "#D6249F", url: "instagram.com/create", page: (f) => <FeedPost step={1} caption="세탁 전후 비교 ✨ #신발세탁" typed={Math.floor(Math.max(0, f) * 1.2)} /> },

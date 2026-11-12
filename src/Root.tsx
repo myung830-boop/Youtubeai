@@ -8,7 +8,7 @@ import { ExpressionSheet, PoseSheet } from "./compositions/PoseSheet";
 import { Ep001ThumbDynamicA, Ep001ThumbDynamicB } from "./episodes/ep001/Thumbs";
 import { calcEp001, Ep001Video } from "./episodes/ep001/Ep001Video";
 import { EP001_SCENES } from "./episodes/ep001/Storyboard";
-import { Ep002Thumb } from "./episodes/ep002/Thumb";
+import { Ep002Thumb, Ep002ThumbV2A, Ep002ThumbV2B } from "./episodes/ep002/Thumb";
 import { calcEp002, Ep002Video } from "./episodes/ep002/Ep002Video";
 import { CAMERA_ANGLES } from "./compositions/CameraAngles";
 import { Boss3DHero, Ep002Thumb3D, FlatVsSoft, ParallaxDemo } from "./compositions/DepthSamples";
@@ -57,6 +57,8 @@ export const RemotionRoot: React.FC = () => (
     <Still id="Ep001ThumbDynamicA" component={Ep001ThumbDynamicA} width={1280} height={720} />
     <Still id="Ep001ThumbDynamicB" component={Ep001ThumbDynamicB} width={1280} height={720} />
     <Still id="Ep002Thumb" component={Ep002Thumb} width={1280} height={720} />
+    <Still id="Ep002ThumbV2A" component={Ep002ThumbV2A} width={1280} height={720} />
+    <Still id="Ep002ThumbV2B" component={Ep002ThumbV2B} width={1280} height={720} />
     <Still id="StyleBoard" component={StyleBoard} width={1920} height={1080} />
 
     {/* 영상 스타일 */}
