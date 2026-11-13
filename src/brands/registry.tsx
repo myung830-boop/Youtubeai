@@ -130,6 +130,21 @@ export const BRANDS = {
         </svg>,
       ),
   },
+  remotion: {
+    id: "remotion",
+    name: "Remotion",
+    ko: "리모션",
+    colors: { primary: "#0B84F3", text: "#FFFFFF" },
+    verified: false,
+    Glyph: ({ size }) =>
+      tile(
+        size,
+        "#0B84F3",
+        <svg viewBox="0 0 40 40" width={size * 0.62} height={size * 0.62}>
+          <path d="M12,8 L32,20 L12,32 Z" fill="#fff" stroke={color.ink} strokeWidth={3} strokeLinejoin="round" />
+        </svg>,
+      ),
+  },
 } satisfies Record<string, Brand>;
 
 export type BrandId = keyof typeof BRANDS;

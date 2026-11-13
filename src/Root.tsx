@@ -12,6 +12,8 @@ import { Ep002Thumb, Ep002ThumbV2A, Ep002ThumbV2B } from "./episodes/ep002/Thumb
 import { calcEp002, Ep002Video } from "./episodes/ep002/Ep002Video";
 import { CAMERA_ANGLES } from "./compositions/CameraAngles";
 import { Boss3DHero, Ep002Thumb3D, FlatVsSoft, ParallaxDemo } from "./compositions/DepthSamples";
+import { Ep003ThumbA, Ep003ThumbB } from "./episodes/ep003/Thumb";
+import { calcEp003, Ep003Video } from "./episodes/ep003/Ep003Video";
 import { loadFonts } from "./styles/fonts";
 
 loadFonts();
@@ -56,6 +58,8 @@ export const RemotionRoot: React.FC = () => (
     <Still id="Ep001ThumbAlt" component={Thumbnail} width={1280} height={720} defaultProps={thumbEp001Alt} />
     <Still id="Ep001ThumbDynamicA" component={Ep001ThumbDynamicA} width={1280} height={720} />
     <Still id="Ep001ThumbDynamicB" component={Ep001ThumbDynamicB} width={1280} height={720} />
+    <Still id="Ep003ThumbA" component={Ep003ThumbA} width={1280} height={720} />
+    <Still id="Ep003ThumbB" component={Ep003ThumbB} width={1280} height={720} />
     <Still id="Ep002Thumb" component={Ep002Thumb} width={1280} height={720} />
     <Still id="Ep002ThumbV2A" component={Ep002ThumbV2A} width={1280} height={720} />
     <Still id="Ep002ThumbV2B" component={Ep002ThumbV2B} width={1280} height={720} />
@@ -73,6 +77,9 @@ export const RemotionRoot: React.FC = () => (
 
     {/* 실험 #002: public/ep002/voice.mp3 + voice.srt */}
     <Composition id="Ep002" component={Ep002Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep002/voice.mp3", srt: "ep002/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp002} />
+
+    {/* 실험 #003: public/ep003/voice.mp3 + voice.srt */}
+    <Composition id="Ep003" component={Ep003Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep003/voice.mp3", srt: "ep003/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp003} />
 
     {/* 실험 #001 스토리보드 장면 */}
     {Object.entries(EP001_SCENES).map(([k, C]) => (
