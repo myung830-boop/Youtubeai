@@ -19,7 +19,7 @@ export type EpisodeConfig = {
   intro: React.FC;
   highlights: string[]; // 자막에서 노란 형광펜으로 강조할 말
   introSec?: number;
-  /** 캐릭터 스타일. 기본은 2.5D 입체감("soft"). 1·2편은 완성 당시 그대로 "flat" */
+  /** 캐릭터 스타일. 기본은 2D 플랫("flat") — 사장님 결정. "soft"(2.5D)는 쓰지 않음 */
   characterStyle?: "flat" | "soft";
 };
 
@@ -94,7 +94,7 @@ export const makeEpisode = (cfg: EpisodeConfig) => {
     const capPop = spring({ frame: capF, fps, config: { damping: 12, stiffness: 260, mass: 0.5 } }) * 0.12 + 0.88;
     const Intro = cfg.intro;
     return (
-      <BossStyle.Provider value={cfg.characterStyle ?? "soft"}>
+      <BossStyle.Provider value={cfg.characterStyle ?? "flat"}>
       <BossLive.Provider value={{ blink, talk }}>
         <AbsoluteFill style={{ background: "#F8FAFF" }}>
           {plan.map((p, i) => {
