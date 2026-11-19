@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { ExperimentTag, GridBg, TodayCalendar, Wordmark } from "../../components/brand";
 import { Boss } from "../../character/Boss";
 import { BossBack, BossTop, PovHands } from "../../character/BossViews";
@@ -86,7 +86,7 @@ export const E3S01: React.FC = () => {
       {/* ② 2인칭 */}
       <Beat f={b3} len={100000} inT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.1 }, { f: 200, zoom: 1.0 }]}>
-          <Light />
+          <PhotoBg src="stock/owner.jpg" blur={6} tint="rgba(246,248,252,0.72)" />
           <Abs x={120} y={180}><Bust f={b3} pose="point" expression="talk" size={860} /></Abs>
           <Abs x={1020} y={200}><Pop f={b3 + 10} from={{ x: 200 }}><ExperimentTag no={3} size={48} /></Pop></Abs>
           <Abs x={1020} y={340}><KText f={b3 + 18} text="실제 매장을 운영하며" size={66} /></Abs>
@@ -123,7 +123,7 @@ export const E3S02: React.FC = () => {
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       <Beat f={b1} len={b1 - b3} inT="whip" outT="zoom">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.06 }, { f: b1 - b2, zoom: 1.0 }]}>
-          <Light />
+          <PhotoBg src="stock/planning.jpg" blur={7} tint="rgba(246,248,252,0.55)" />
           <Abs x={90} y={200}><Panel side="gpt" on={b1} title="ChatGPT" role="기획실장" items={[["📋 무엇을 만들지 정리", g[0]], ["🧩 기능 기획", g[1]], ["🎨 홍보 이미지 · 영상 콘티", g[2]]]} /></Abs>
           <Abs x={990} y={200}><Panel side="claude" on={b2} title="Claude Code" role="제작실장" items={[["🌐 웹사이트", c[0]], ["🗂 관리 프로그램", c[1]], ["🎬 영상 모션그래픽", c[2]]]} /></Abs>
           <Center y={70}><Pop f={b1} from={{ y: -100 }}><Card style={{ padding: "8px 34px", fontSize: 48, fontWeight: 900 }}>제가 써보니 👀</Card></Pop></Center>
@@ -164,11 +164,17 @@ export const E3S03: React.FC = () => {
       {/* ⑦ 하이앵글: 쌓이는 일 */}
       <Beat f={b1} len={b1 - b2} inT="whip" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.25 }, { f: 80, zoom: 1.08 }]} handheld={0.6}>
+          <PhotoBg src="stock/busytop.jpg" blur={1} tint="rgba(27,37,65,0.25)" tag={false} />
           <div style={{ position: "absolute", inset: -200, transform: "perspective(1400px) rotateX(-18deg)", transformOrigin: "50% 20%" }}>
-            <RestaurantInterior busy={Math.min(1, Math.max(0, busyF + 10) / 120)} />
+            {Array.from({ length: Math.round(Math.min(1, Math.max(0, busyF + 10) / 120) * 8) }, (_, i) => (
+              <div key={i} style={{ position: "absolute", left: 520 + ((i * 167) % 900), top: 220 + ((i * 97) % 300), width: 170, height: 120, background: ["#FFF59D", "#FFCDD2", "#C8E6C9", "#BBDEFB"][i % 4], border: `5px solid ${color.ink}`, transform: `rotate(${((i * 37) % 30) - 15}deg)`, fontFamily: font.family, fontWeight: 900, fontSize: 30, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: ui.shadow(5) }}>
+                {["단골?", "예약", "재료!", "전화", "쿠폰", "휴무", "발주", "메뉴"][i % 8]}
+              </div>
+            ))}
             <Abs x={840} y={360}><BossActor size={430} enter="none" poses={[{ f: 0, pose: "worry" }, { f: frame - busyF - 60, pose: "facepalm", expression: "tired" }]} /></Abs>
           </div>
           <div style={{ position: "absolute", inset: -300, boxShadow: "inset 0 0 340px 100px rgba(27,37,65,0.5)" }} />
+          <StockTag style={{ left: 30, bottom: 30 }} />
           <Abs x={90} y={80}><Section f={b1} n="1" label="단골 회원 · 쿠폰" /></Abs>
           <Abs x={1180} y={70}><Pop f={busyF + 20} from={{ scale: 0 }}><Card bg="#FFE4E4" style={{ padding: "10px 26px", fontSize: 42, fontWeight: 900 }}>누가 단골이더라? 🤔</Card></Pop></Abs>
         </Camera>
@@ -188,7 +194,7 @@ export const E3S03: React.FC = () => {
       {/* ④ 어깨 너머: 쿠폰·소식 준비 */}
       <Beat f={b3} len={b3 - b4} inT="whipUp" outT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0, x: 80 }, { f: 200, zoom: 1.06, x: 40 }]}>
-          <Light />
+          <PhotoBg src="stock/laptopphone.jpg" blur={6} tint="rgba(246,248,252,0.5)" />
           <Abs x={600} y={140} style={{ transform: "perspective(1600px) rotateY(-10deg)", transformOrigin: "100% 50%" }}><Pop f={b3} from={{ x: 300, rotateY: -40 }}><CouponCampaign f={b3} /></Pop></Abs>
           <Abs x={-200} y={380} style={{ filter: "blur(1.5px)" }}><Pop f={b3} from={{ x: -300 }} bouncy={false}><BossBack size={1000} turn={6} /></Pop></Abs>
         </Camera>
@@ -221,7 +227,7 @@ export const E3S04: React.FC = () => {
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       <Beat f={b1} len={b1 - b4} inT="whip" outT="whip">
         <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.12, ry: 8 }, { f: 30, zoom: 1.0, ry: 0 }, { f: b1 - b2, zoom: 1.0, x: 0 }, { f: b1 - b2 + 20, zoom: 1.05, x: 40 }]}>
-          <Light />
+          <PhotoBg src="stock/cafeinterior.jpg" blur={6} tint="rgba(246,248,252,0.6)" />
           <Abs x={90} y={70}><Section f={b1} n="2" label="우리 식당 홈페이지" /></Abs>
           <Abs x={340} y={230}><Pop f={b1 + 6} from={{ y: 400, rotateX: 40 }}><RestaurantSite f={tf} tab={tab} w={1240} h={720} /></Pop></Abs>
           <Abs x={20} y={560}><BossActor size={420} enter="peekL" enterAt={frame - b1} poses={[{ f: 0, pose: "point", expression: "talk" }, { f: frame - b2, pose: "holdMug", expression: "smile" }, { f: frame - b3, pose: "point", expression: "determined" }]} /></Abs>
@@ -235,6 +241,15 @@ export const E3S04: React.FC = () => {
           <Abs x={920} y={70}><Pop f={b2 + 8} from={{ y: -120 }}><BrandBadge id="claude" size={52} tone="solid" label="Claude Code로 만든 신청 페이지" /></Pop></Abs>
           <Abs x={920} y={190} style={{ transform: "scale(0.78)", transformOrigin: "0 0" }}><Pop f={b2 + 14} from={{ x: 400, rotateY: -30 }}><RestaurantSite f={b2} tab={1} w={1200} h={720} /></Pop></Abs>
           <Abs x={1520} y={640}><BossActor size={400} enter="popUp" enterAt={frame - b2 - 20} poses={[{ f: 0, pose: "point", expression: "smile" }]} /></Abs>
+        </Camera>
+      </Beat>
+      <Beat f={b3} len={b3 - b4} inT="whip" outT="whip">
+        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.06 }, { f: 280, zoom: 1.0 }]}>
+          <div style={{ position: "absolute", inset: -300, background: "linear-gradient(135deg,#2D5DB8,#0F3B82)" }} />
+          <Pop f={b3} from={{ x: -500 }} bouncy={false}><PhotoPanel src="stock/handshake.jpg" w={860} label="교육 · 가맹 상담" /></Pop>
+          <Abs x={920} y={70}><Pop f={b3 + 8} from={{ y: -120 }}><BrandBadge id="claude" size={52} tone="solid" label="Claude Code로 만든 상담 접수" /></Pop></Abs>
+          <Abs x={920} y={190} style={{ transform: "scale(0.78)", transformOrigin: "0 0" }}><Pop f={b3 + 14} from={{ x: 400, rotateY: -30 }}><RestaurantSite f={b3} tab={2} w={1200} h={720} /></Pop></Abs>
+          <Abs x={1520} y={640}><BossActor size={400} enter="peekR" enterAt={frame - b3 - 20} poses={[{ f: 0, pose: "present", expression: "determined" }]} /></Abs>
         </Camera>
       </Beat>
       {/* 바통 터치: ChatGPT 기획 → Claude Code 제작 */}
@@ -253,7 +268,8 @@ export const E3S04: React.FC = () => {
             </Pop>
           </Abs>
           <Abs x={1440} y={70}><Pop f={b4 + 140} from={{ scale: 0 }}><Card bg="#22C55E" style={{ padding: "8px 26px", color: "#fff", fontSize: 40, fontWeight: 900 }}>사이트 완성 ✓</Card></Pop></Abs>
-          <Abs x={540} y={820}><Stamp f={b5} bg="#FF4D4F" size={64} rot={-5}>가맹사업 = 별도 법적 절차 필요</Stamp></Abs>
+          <Abs x={760} y={330}><Pop f={b5} from={{ y: 600, rotate: 25 }}><Polaroid src="stock/justice.jpg" w={380} h={420} rot={5} /></Pop></Abs>
+          <Abs x={540} y={820}><Stamp f={b5 + 8} bg="#FF4D4F" size={64} rot={-5}>가맹사업 = 별도 법적 절차 필요</Stamp></Abs>
         </Camera>
       </Beat>
     </AbsoluteFill>
@@ -304,7 +320,7 @@ export const E3S05: React.FC = () => {
       {/* 비용 체크 (2인칭) */}
       <Beat f={b6} len={100000} inT="whip">
         <Camera start={frame - b6} keys={[{ f: 0, zoom: 1.08 }, { f: 200, zoom: 1.0 }]}>
-          <Light />
+          <PhotoBg src="stock/calcdesk.jpg" blur={3} tint="rgba(246,248,252,0.45)" />
           <Abs x={110} y={110}><KText f={b6} text="직접 만들어도 0원은 아니에요" size={70} /></Abs>
           {[["🖥", "서버"], ["🔗", "도메인"], ["🔧", "유지보수"]].map(([e, t], i) => (
             <Abs key={t} x={110 + i * 360} y={330}><Pop f={b6 + 14 + i * 10} from={{ y: 200, scale: 0.4 }}><Card style={{ width: 320, height: 300, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}><div style={{ fontSize: 100 }}>{e}</div><div style={{ fontWeight: 900, fontSize: 48 }}>{t} 비용</div></Card></Pop></Abs>
@@ -349,7 +365,7 @@ export const E3S06: React.FC = () => {
       </Beat>
       <Beat f={b3} len={b3 - b5} inT="whip" outT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0 }, { f: b3 - b4, zoom: 1.0, y: 0 }, { f: b3 - b4 + 20, zoom: 1.08, y: 80 }]}>
-          <Light />
+          <PhotoBg src="stock/aisle.jpg" blur={7} tint="rgba(27,37,65,0.4)" />
           <Abs x={340} y={180}><Pop f={b3} from={{ x: 400 }}><SupplierCompare f={b3} cart={b4 >= 0} /></Pop></Abs>
           <Abs x={40} y={600}><BossActor size={400} enter="none" poses={[{ f: 0, pose: "think", expression: "think" }, { f: frame - b4, pose: "thumbsUp", expression: "wink" }]} /></Abs>
         </Camera>
@@ -357,12 +373,13 @@ export const E3S06: React.FC = () => {
       <Beat f={b5} len={100000} inT="zoom">
         <Camera start={frame - b5} keys={[{ f: 0, zoom: 1.08 }, { f: 160, zoom: 1.0 }]} shake={impact(b6 - 4, 18)}>
           <div style={{ position: "absolute", inset: -600, background: "#FFF7D6" }} />
-          <Abs x={110} y={150}><Pop f={b5} from={{ x: -300 }}><Card style={{ width: 980, padding: "34px 40px" }}>
+          <Abs x={110} y={110}><Pop f={b5} from={{ x: -300 }}><Card style={{ width: 980, padding: "34px 40px" }}>
             <div style={{ fontSize: 44, fontWeight: 900 }}>⚠ 이건 알고 쓰세요</div>
             <div style={{ fontSize: 40, fontWeight: 800, marginTop: 18 }}>· 모든 사이트가 자동 연결되진 않아요</div>
             <div style={{ fontSize: 40, fontWeight: 800, marginTop: 10, opacity: b5 > 40 ? 1 : 0.2 }}>· 항상 최저가를 보장하진 않아요</div>
           </Card></Pop></Abs>
-          <Abs x={160} y={640}><Stamp f={b6} bg={color.accent} fg={color.ink} size={92} rot={-5}>최종 구매는 사장님이 ✓</Stamp></Abs>
+          <Abs x={600} y={450}><Pop f={b6 - 6} from={{ y: 500, rotate: -20 }}><Polaroid src="stock/cardpay.jpg" w={460} h={300} rot={4} /></Pop></Abs>
+          <Abs x={110} y={800}><Stamp f={b6} bg={color.accent} fg={color.ink} size={86} rot={-5}>최종 구매는 사장님이 ✓</Stamp></Abs>
           <Abs x={1260} y={260}><Bust f={b5 + 4} pose="point" expression="determined" size={740} /></Abs>
         </Camera>
       </Beat>
@@ -407,7 +424,7 @@ export const E3S07: React.FC = () => {
       {/* 바통: 기능 설명서 → Claude Code */}
       <Beat f={b4} len={b4 - b5} inT="whip" outT="zoom">
         <Camera start={frame - b4} keys={[{ f: 0, zoom: 1.0 }, { f: 200, zoom: 1.04 }]}>
-          <Light />
+          <PhotoBg src="stock/codedesk.jpg" blur={6} tint="rgba(246,248,252,0.5)" />
           <Abs x={110 + lerp(b4, 0, 30, 0, 260) * 0} y={200}>
             <Pop f={b4} from={{ scale: 0.3, rotate: -20 }}>
               <div style={{ width: 420, height: 540, background: "#fff", border: `7px solid ${color.ink}`, borderRadius: 20, boxShadow: ui.shadow(12), padding: 26, fontFamily: font.family, transform: `translate(${lerp(b4 - 20, 0, 24, 0, 320, easeInOut)}px, 0) rotate(${lerp(b4 - 20, 0, 24, -6, 4)}deg)` }}>
@@ -422,7 +439,7 @@ export const E3S07: React.FC = () => {
       {/* 이미지 시안 → 콘티 → Remotion 모션 */}
       <Beat f={b5} len={100000} inT="zoom">
         <Camera start={frame - b5} keys={[{ f: 0, zoom: 1.06 }, { f: b5 - b7, zoom: 1.02 }, { f: b5 - b7 + 30, zoom: 1.0 }]}>
-          <Light />
+          <PhotoBg src="stock/videoedit.jpg" blur={5} tint="rgba(27,37,65,0.55)" />
           <Abs x={70} y={150}><Pop f={b5} from={{ y: 300 }}><Card style={{ width: 860, padding: 26 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 34, fontWeight: 900 }}><BrandIcon id="chatgpt" size={50} /> 홍보 이미지 시안 · 영상 콘티</div>
             <div style={{ display: "flex", gap: 16, marginTop: 18 }}>
@@ -452,7 +469,7 @@ export const E3S08: React.FC = () => {
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       <Camera start={0} keys={[{ f: 0, zoom: 1.1 }, { f: 300, zoom: 1.0 }]}>
-        <Light />
+        <PhotoBg src="stock/laptopwindow.jpg" blur={5} tint="rgba(246,248,252,0.6)" />
         <Abs x={110} y={140}><KText f={b1} text="물론, 현실적으로 보면" size={76} /></Abs>
         <Abs x={110} y={270}>
           <Card style={{ width: 1050, padding: "30px 40px" }}>
@@ -518,7 +535,7 @@ export const E3S10: React.FC = () => {
   const g2 = useCue("QR 메뉴 하나", 4.9);
   const b2 = useCue("여러분 가게라면", 7.5);
   const b3 = useCue("오늘부터 AI 사장님이었습니다", 15.0);
-  const jobs = ["🍽 식당", "☕ 카페", "💇 미용실", "👟 세탁소", "📚 학원", "🌸 꽃집"];
+  const jobs: Array<[string, string]> = [["식당", "food"], ["카페", "cafe"], ["미용실", "salon"], ["세탁소", "laundry"], ["학원", "books"], ["꽃집", "flowers"]];
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       <Beat f={b1} len={b1 - b2} inT="whip" outT="whip">
@@ -531,10 +548,10 @@ export const E3S10: React.FC = () => {
       </Beat>
       <Beat f={b2} len={b2 - b3} inT="whip" outT="zoom">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.08 }, { f: 200, zoom: 1.0 }]}>
-          <Light />
+          <PhotoBg src="stock/cafe.jpg" blur={8} tint="rgba(246,248,252,0.7)" />
           <Abs x={110} y={110}><KText f={b2} text="여러분 가게는 무엇부터?" size={80} /></Abs>
-          {jobs.map((j, i) => <Abs key={j} x={110 + (i % 3) * 340} y={290 + Math.floor(i / 3) * 160}><Pop f={b2 + 10 + i * 5} from={{ y: 100, scale: 0.4 }}><Card style={{ padding: "16px 34px", fontSize: 46, fontWeight: 900 }}>{j}</Card></Pop></Abs>)}
-          <Abs x={110} y={640}><Pop f={b2 + 50} from={{ x: -200 }}><Card bg={color.sub} style={{ padding: "18px 30px", fontSize: 40, fontWeight: 800 }}>💬 댓글로 업종과 고민을 알려주세요</Card></Pop></Abs>
+          {jobs.map(([j, img], i) => <Abs key={j} x={100 + (i % 3) * 350} y={240 + Math.floor(i / 3) * 200}><Pop f={b2 + 10 + i * 5} from={{ y: 100, scale: 0.4, rotate: (i % 2 ? 8 : -8) }}><div style={{ position: "relative", width: 320, height: 180, border: `6px solid ${color.ink}`, borderRadius: 20, overflow: "hidden", boxShadow: ui.shadow(8), transform: `rotate(${(i % 2 ? 2 : -2)}deg)` }}><Img src={staticFile(`stock/${img}.jpg`)} style={{ width: "100%", height: "100%", objectFit: "cover" }} /><div style={{ position: "absolute", left: 10, bottom: 10, background: "#fff", border: `4px solid ${color.ink}`, borderRadius: 12, padding: "2px 16px", fontFamily: font.family, fontWeight: 900, fontSize: 38 }}>{j}</div></div></Pop></Abs>)}
+          <Abs x={110} y={680}><Pop f={b2 + 50} from={{ x: -200 }}><Card bg={color.sub} style={{ padding: "18px 30px", fontSize: 40, fontWeight: 800 }}>💬 댓글로 업종과 고민을 알려주세요</Card></Pop></Abs>
           <Abs x={1220} y={280}><Bust f={b2 + 4} pose="point" expression="talk" size={760} /></Abs>
         </Camera>
       </Beat>
