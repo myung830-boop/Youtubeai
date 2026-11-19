@@ -122,3 +122,54 @@ export const Ep003ThumbD: React.FC = () => (
     <ThumbStockTag style={{ right: 14, bottom: 12 }} />
   </AbsoluteFill>
 );
+
+/* ───────── D안 강화: 더 눈에 띄게 ───────── */
+const PolaroidThumb: React.FC<{ x: number; y: number; w: number; h: number; rot: number; glow?: string }> = ({ x, y, w, h, rot, glow = "rgba(250,204,21,0.9)" }) => (
+  <div style={{ position: "absolute", left: x, top: y, transform: `rotate(${rot}deg)` }}>
+    <div style={{ position: "absolute", inset: -40, background: glow, filter: "blur(50px)", borderRadius: 60 }} />
+    <div style={{ position: "relative", background: "#fff", border: `7px solid ${color.ink}`, padding: "14px 14px 54px", boxShadow: ui.shadow(14) }}>
+      <Img src={staticFile("stock/koreantable.jpg")} style={{ width: w, height: h, objectFit: "cover", display: "block", border: `4px solid ${color.ink}`, filter: "saturate(1.25) contrast(1.08) brightness(1.05)" }} />
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 10, textAlign: "center", fontWeight: 900, fontSize: 30 }}>테이블에 QR 하나면 📱</div>
+      <div style={{ position: "absolute", left: w / 2 - 70, top: -20, width: 150, height: 40, background: "rgba(250,204,21,0.9)", border: `3px solid ${color.ink}`, transform: "rotate(3deg)" }} />
+    </div>
+  </div>
+);
+
+/** D2: 어두운 배경 → 남색·주황 빛줄기, 큰 노란 글자, 사진에 노란 후광 */
+export const Ep003ThumbD2: React.FC = () => (
+  <AbsoluteFill style={{ fontFamily: font.family, overflow: "hidden", background: "linear-gradient(120deg, #0B1530 0%, #1D2F6B 48%, #D97757 100%)" }}>
+    <div style={{ position: "absolute", inset: -300, background: "repeating-conic-gradient(from 0deg at 72% 46%, rgba(255,255,255,0) 0deg 7deg, rgba(255,255,255,0.08) 7deg 14deg)" }} />
+    <PolaroidThumb x={640} y={64} w={540} h={370} rot={6} />
+    <div style={{ position: "absolute", left: 1015, top: 228, transform: "rotate(-7deg) scale(0.54)", transformOrigin: "0 0", filter: "drop-shadow(10px 10px 0 rgba(27,37,65,0.9))" }}><QRMenuPhone soldOut pick={false} w={380} /></div>
+    <div style={{ position: "absolute", left: 30, top: 66, transform: "rotate(-4deg)", display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}><BrandBadge id="chatgpt" size={66} tone="solid" label="ChatGPT" /><Role t="기획" rot={-3} /></div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}><BrandBadge id="claude" size={66} tone="solid" label="Claude Code" /><Role t="제작" rot={3} /></div>
+    </div>
+    <div style={{ position: "absolute", left: 40, top: 326, fontWeight: 900, fontSize: 46, color: "#fff", ...outline(8), transform: "rotate(-2deg)" }}><YellowBox size={46}>사장님 혼자서도</YellowBox></div>
+    <div style={{ position: "absolute", left: 36, top: 398, fontWeight: 900, fontSize: 118, lineHeight: 1.0, letterSpacing: "-0.05em", color: "#fff", ...outline(16), textShadow: `9px 9px 0 ${color.ink}` }}>
+      AI 잘 쓰는<br /><span style={{ color: color.accent }}>1인 식당</span>
+    </div>
+    <div style={{ position: "absolute", left: 30, top: 14, transform: "rotate(-3deg)" }}><ExperimentTag no={3} size={22} /></div>
+    <ThumbStockTag style={{ right: 14, bottom: 12 }} />
+  </AbsoluteFill>
+);
+
+/** D3: 노란 배경(채널 색) + 남색 글자, 가장 밝고 대비 강함 */
+export const Ep003ThumbD3: React.FC = () => (
+  <AbsoluteFill style={{ fontFamily: font.family, overflow: "hidden", background: color.accent }}>
+    <div style={{ position: "absolute", inset: -300, background: "repeating-conic-gradient(from 0deg at 72% 46%, rgba(255,255,255,0) 0deg 7deg, rgba(255,255,255,0.35) 7deg 14deg)" }} />
+    <div style={{ position: "absolute", left: 600, top: -40, width: 760, height: 800, background: "#1B2541", clipPath: "polygon(14% 0, 100% 0, 100% 100%, 0 100%)" }} />
+    <PolaroidThumb x={650} y={64} w={540} h={370} rot={6} glow="rgba(217,119,87,0.85)" />
+    <div style={{ position: "absolute", left: 1015, top: 228, transform: "rotate(-7deg) scale(0.54)", transformOrigin: "0 0", filter: "drop-shadow(10px 10px 0 rgba(0,0,0,0.6))" }}><QRMenuPhone soldOut pick={false} w={380} /></div>
+    <div style={{ position: "absolute", left: 30, top: 66, transform: "rotate(-4deg)", display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}><BrandBadge id="chatgpt" size={66} tone="solid" label="ChatGPT" /><Role t="기획" rot={-3} /></div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}><BrandBadge id="claude" size={66} tone="solid" label="Claude Code" /><Role t="제작" rot={3} /></div>
+    </div>
+    <div style={{ position: "absolute", left: 40, top: 326, transform: "rotate(-2deg)" }}><span style={{ background: color.ink, color: "#fff", border: `5px solid ${color.ink}`, borderRadius: 14, padding: "0 16px 4px", fontWeight: 900, fontSize: 46, display: "inline-block", boxShadow: "6px 6px 0 rgba(0,0,0,0.25)" }}>사장님 혼자서도</span></div>
+    <div style={{ position: "absolute", left: 36, top: 398, fontWeight: 900, fontSize: 118, lineHeight: 1.0, letterSpacing: "-0.05em", color: color.ink, textShadow: "6px 6px 0 #fff" }}>
+      AI 잘 쓰는<br /><span style={{ color: "#fff", ...outline(16), textShadow: `9px 9px 0 ${color.ink}` }}>1인 식당</span>
+    </div>
+    <div style={{ position: "absolute", left: 30, top: 14, transform: "rotate(-3deg)" }}><ExperimentTag no={3} size={22} /></div>
+    <ThumbStockTag style={{ right: 14, bottom: 12 }} />
+  </AbsoluteFill>
+);
