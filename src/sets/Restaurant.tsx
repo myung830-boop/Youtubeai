@@ -57,21 +57,26 @@ export const TableTopDown: React.FC<{ qrGlow?: number; children?: React.ReactNod
     ))}
     {/* QR 스탠드 */}
     <div style={{ position: "absolute", left: 1290, top: 640, width: 190, height: 220, background: "#fff", border: `8px solid ${color.ink}`, borderRadius: 18, boxShadow: `0 0 ${qrGlow * 60}px ${qrGlow * 20}px rgba(250,204,21,0.8)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6 }}>
-      <svg viewBox="0 0 21 21" width={120} height={120} shapeRendering="crispEdges">
-        {Array.from({ length: 21 * 21 }, (_, k) => {
-          const x = k % 21, y = Math.floor(k / 21);
-          const inF = (fx: number, fy: number) => x >= fx && x < fx + 7 && y >= fy && y < fy + 7;
-          const f = inF(0, 0) ? [0, 0] : inF(14, 0) ? [14, 0] : inF(0, 14) ? [0, 14] : null;
-          let on: boolean;
-          if (f) {
-            const dx = x - f[0], dy = y - f[1];
-            on = dx === 0 || dy === 0 || dx === 6 || dy === 6 || (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4);
-          } else on = (x * 7 + y * 13 + x * y) % 3 === 0;
-          return on ? <rect key={k} x={x} y={y} width={1} height={1} fill={color.ink} /> : null;
-        })}
-      </svg>
+      <QRGlyph size={120} />
       <div style={{ fontWeight: 900, fontSize: 24 }}>TABLE 03</div>
     </div>
     {children}
   </div>
+);
+
+/** QR 코드 모양 (가짜 패턴 — 스캔되지 않음) */
+export const QRGlyph: React.FC<{ size: number }> = ({ size }) => (
+  <svg viewBox="0 0 21 21" width={size} height={size} shapeRendering="crispEdges">
+    {Array.from({ length: 21 * 21 }, (_, k) => {
+      const x = k % 21, y = Math.floor(k / 21);
+      const inF = (fx: number, fy: number) => x >= fx && x < fx + 7 && y >= fy && y < fy + 7;
+      const f = inF(0, 0) ? [0, 0] : inF(14, 0) ? [14, 0] : inF(0, 14) ? [0, 14] : null;
+      let on: boolean;
+      if (f) {
+        const dx = x - f[0], dy = y - f[1];
+        on = dx === 0 || dy === 0 || dx === 6 || dy === 6 || (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4);
+      } else on = (x * 7 + y * 13 + x * y) % 3 === 0;
+      return on ? <rect key={k} x={x} y={y} width={1} height={1} fill={color.ink} /> : null;
+    })}
+  </svg>
 );

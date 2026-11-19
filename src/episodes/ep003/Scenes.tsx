@@ -9,7 +9,8 @@ import { Confetti, PaperPlane, TypeText } from "../../motion/props";
 import { Beat, Flash } from "../../motion/transitions";
 import { Layer, Parallax } from "../../motion/depth";
 import { BrandBadge, BrandIcon, BRANDS, brandBg } from "../../brands/registry";
-import { RestaurantInterior, TableTopDown } from "../../sets/Restaurant";
+import { QRGlyph, RestaurantInterior } from "../../sets/Restaurant";
+import { PhotoBg, PhotoPanel, Polaroid, StockTag } from "../../components/photo";
 import { color, font, ui } from "../../styles/theme";
 import { ChatGPTChat, ClaudeTerminal, ConsentForm, CouponCampaign, FourSystems, MenuAdmin, QRMenuPhone, RenderPreview, RestaurantSite, StockBoard, Storyboard3, SupplierCompare, TabletSignup } from "./mockups";
 
@@ -74,11 +75,12 @@ export const E3S01: React.FC = () => {
       {/* ③ 와이드: 식당 + 4가지 변화 (깊이 효과) */}
       <Beat f={c1} len={c1 - b3} inT="whip" outT="zoom">
         <Parallax start={frame - c1} keys={[{ f: 0, x: -1 }, { f: 380, x: 1 }]}>
-          <Layer depth={0.25} blur={2}><RestaurantInterior /></Layer>
+          <Layer depth={0.25} blur={0}><PhotoBg src="stock/interior.jpg" tag={false} /></Layer>
           <Layer depth={0.7}>
             {[c1, c2, c3, c4].map((f, i) => <Abs key={i} x={110 + i * 440} y={330 + floatY(frame, 10, 0.08, i * 1.4)}><ChangeCard i={i} f={f} /></Abs>)}
           </Layer>
         </Parallax>
+        <StockTag style={{ right: 30, top: 30 }} />
         <Abs x={1560} y={760}><BossActor size={360} enter="peekR" enterAt={frame - c1} poses={[{ f: 0, pose: "present", expression: "talk", look: [-6, 0] }]} /></Abs>
       </Beat>
       {/* ② 2인칭 */}
@@ -174,13 +176,14 @@ export const E3S03: React.FC = () => {
       {/* ① 1인칭(손님 손): 태블릿 회원 등록 */}
       <Beat f={b2} len={b2 - b3} inT="whip" outT="whipUp">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.1, rx: 8 }, { f: 30, zoom: 1.0, rx: 0 }]} handheld={1.4}>
-          <div style={{ position: "absolute", inset: -300, background: "linear-gradient(180deg,#FFF4E6,#E9CDA8)" }} />
+          <PhotoBg src="stock/counter.jpg" blur={7} tint="rgba(255,244,230,0.35)" tag={false} />
           <Abs x={460} y={80}><Pop f={b2} from={{ y: 400, rotateX: 40 }}><TabletSignup f={tap} /></Pop></Abs>
           {b2 > 26 && tap < 36 && <PovHands mode="point" target={[keyX, keyY]} />}
           <Abs x={90} y={60}><Pop f={b2 + 6} from={{ x: -200 }}><Card style={{ padding: "8px 26px", fontSize: 40, fontWeight: 900 }}>🙋 손님 시점</Card></Pop></Abs>
           <Abs x={1480} y={120}><Pop f={b2 + 60} from={{ scale: 0 }}><Card bg="#EAF2FF" style={{ padding: "14px 22px", fontSize: 30, fontWeight: 800 }}>🗂 사장님 관리 화면<br />회원 128명 (가상)</Card></Pop></Abs>
           <Confetti f={tap - 48} x={960} y={500} />
         </Camera>
+        <StockTag style={{ left: 30, bottom: 30 }} />
       </Beat>
       {/* ④ 어깨 너머: 쿠폰·소식 준비 */}
       <Beat f={b3} len={b3 - b4} inT="whipUp" outT="zoom">
@@ -217,11 +220,21 @@ export const E3S04: React.FC = () => {
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       <Beat f={b1} len={b1 - b4} inT="whip" outT="whip">
-        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.12, ry: 8 }, { f: 30, zoom: 1.0, ry: 0 }, { f: b1 - b2, zoom: 1.0 }, { f: b1 - b2 + 20, zoom: 1.05, x: 40 }]}>
+        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.12, ry: 8 }, { f: 30, zoom: 1.0, ry: 0 }, { f: b1 - b2, zoom: 1.0, x: 0 }, { f: b1 - b2 + 20, zoom: 1.05, x: 40 }]}>
           <Light />
           <Abs x={90} y={70}><Section f={b1} n="2" label="우리 식당 홈페이지" /></Abs>
           <Abs x={340} y={230}><Pop f={b1 + 6} from={{ y: 400, rotateX: 40 }}><RestaurantSite f={tf} tab={tab} w={1240} h={720} /></Pop></Abs>
           <Abs x={20} y={560}><BossActor size={420} enter="peekL" enterAt={frame - b1} poses={[{ f: 0, pose: "point", expression: "talk" }, { f: frame - b2, pose: "holdMug", expression: "smile" }, { f: frame - b3, pose: "point", expression: "determined" }]} /></Abs>
+        </Camera>
+      </Beat>
+      {/* D. 반반: 실제 클래스 사진 | 우리 홈페이지 신청 화면 */}
+      <Beat f={b2} len={b2 - b3} inT="whip" outT="whip">
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.06 }, { f: 170, zoom: 1.0 }]}>
+          <div style={{ position: "absolute", inset: -300, background: "linear-gradient(135deg,#2D5DB8,#0F3B82)" }} />
+          <Pop f={b2} from={{ x: -500 }} bouncy={false}><PhotoPanel src="stock/cookingclass.jpg" w={860} label="퇴근 후 집밥 클래스" /></Pop>
+          <Abs x={920} y={70}><Pop f={b2 + 8} from={{ y: -120 }}><BrandBadge id="claude" size={52} tone="solid" label="Claude Code로 만든 신청 페이지" /></Pop></Abs>
+          <Abs x={920} y={190} style={{ transform: "scale(0.78)", transformOrigin: "0 0" }}><Pop f={b2 + 14} from={{ x: 400, rotateY: -30 }}><RestaurantSite f={b2} tab={1} w={1200} h={720} /></Pop></Abs>
+          <Abs x={1520} y={640}><BossActor size={400} enter="popUp" enterAt={frame - b2 - 20} poses={[{ f: 0, pose: "point", expression: "smile" }]} /></Abs>
         </Camera>
       </Beat>
       {/* 바통 터치: ChatGPT 기획 → Claude Code 제작 */}
@@ -262,16 +275,23 @@ export const E3S05: React.FC = () => {
     <AbsoluteFill style={{ overflow: "hidden", background: color.bg }}>
       {/* ⑤ 위에서 본 식탁 */}
       <Beat f={b1} len={b1 - b3} inT="whipUp" outT="zoom">
-        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0 }, { f: b1 - b2, zoom: 1.0 }, { f: b1 - b2 + 60, zoom: 1.5, x: 400, y: 230 }]}>
-          <TableTopDown qrGlow={b2 >= 0 ? 0.5 + 0.5 * Math.sin(frame * 0.3) : 0} />
-          <Abs x={160} y={760}><BossTop size={220} angle={-30} /></Abs>
+        <Camera start={frame - b1} keys={[{ f: 0, zoom: 1.0, x: 0, y: 0 }, { f: b1 - b2, zoom: 1.0, x: 0, y: 0 }, { f: b1 - b2 + 50, zoom: 1.35, x: 300, y: 150 }]}>
+          <GridBg tone="light" cell={60} bleed />
+          <Abs x={300} y={110}><Pop f={b1} from={{ y: 500, rotate: -20 }}>
+            <Polaroid src="stock/koreantable.jpg" w={1100} h={700} rot={-3} caption="테이블에 QR 하나면 📱">
+              <div style={{ position: "absolute", left: 860, top: 470, width: 170, height: 200, background: "#fff", border: `7px solid ${color.ink}`, borderRadius: 16, boxShadow: `0 0 ${b2 >= 0 ? 40 + 20 * Math.sin(frame * 0.3) : 0}px ${b2 >= 0 ? 16 : 0}px rgba(250,204,21,0.9)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, transform: `scale(${b2 >= 0 ? lerp(b2, 0, 12, 0, 1) : 0})`, fontFamily: font.family, fontWeight: 900, fontSize: 22 }}>
+                <QRGlyph size={120} />TABLE 03
+              </div>
+            </Polaroid>
+          </Pop></Abs>
+          <Abs x={40} y={720}><BossActor size={340} enter="peekL" enterAt={frame - b1 - 10} poses={[{ f: 0, pose: "point", expression: "talk" }]} /></Abs>
           <Abs x={90} y={70}><Section f={b1} n="3" label="테이블 QR 메뉴" /></Abs>
         </Camera>
       </Beat>
       {/* 휴대폰 클로즈업 + 사장님 관리 */}
       <Beat f={b3} len={b3 - b6} inT="zoom" outT="whip">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.1 }, { f: 40, zoom: 1.0 }]} shake={impact(b4 - 32, 10)}>
-          <Light />
+          <PhotoBg src="stock/koreantable.jpg" blur={10} tint="rgba(246,248,252,0.62)" tag={false} />
           <Abs x={b4 >= 0 ? 1180 : 760} y={70} style={{ transition: "none" }}><Pop f={b3} from={{ y: 600, rotate: 12 }}><QRMenuPhone soldOut={soldOut} pick={pick} w={410} /></Pop></Abs>
           {b4 >= 0 && <Abs x={180} y={250}><Pop f={b4} from={{ x: -400 }}><MenuAdmin soldOut={soldOut} pick={pick} /></Pop></Abs>}
           {b4 >= 0 && <Abs x={950} y={430}><Pop f={b4 + 24} from={{ scale: 0 }}><div style={{ fontSize: 120, fontWeight: 900, color: color.accent, fontFamily: font.family, WebkitTextStroke: `8px ${color.ink}`, paintOrder: "stroke fill" }}>→</div></Pop></Abs>}
@@ -311,23 +331,24 @@ export const E3S06: React.FC = () => {
       {/* ③ 와이드: 기억에 의존하는 장보기 */}
       <Beat f={b1} len={b1 - b2} inT="whip" outT="whip">
         <Parallax start={frame - b1} keys={[{ f: 0, x: 1 }, { f: 140, x: -0.4 }]}>
-          <Layer depth={0.25} blur={2}><RestaurantInterior /></Layer>
+          <Layer depth={0.25} blur={0}><PhotoBg src="stock/market.jpg" blur={1} tint="linear-gradient(180deg, rgba(27,37,65,0.15) 30%, rgba(27,37,65,0.7) 100%)" tag={false} /></Layer>
           <Layer depth={0.6}><Abs x={780} y={300}><BossActor size={460} enter="walkR" enterAt={frame - b1} poses={[{ f: 0, pose: "think", expression: "think", tilt: 8, look: [5, -5] }]} /></Abs></Layer>
           <Layer depth={1.3} blur={0}>
             {["🍚 쌀?", "🥩 고기?", "🥬 야채?", "🧂 양념?"].map((t, i) => <Abs key={t} x={[330, 540, 1270, 1490][i]} y={[560, 480, 480, 560][i] + floatY(frame, 10, 0.12, i)}><Pop f={b1 + 8 + i * 6} from={{ scale: 0 }}><Card style={{ padding: "10px 22px", fontSize: 40, fontWeight: 900 }}>{t}</Card></Pop></Abs>)}
           </Layer>
         </Parallax>
         <Abs x={90} y={70}><Section f={b1} n="4" label="식재료 발주" /></Abs>
+        <StockTag style={{ right: 30, top: 30 }} />
       </Beat>
       <Beat f={b2} len={b2 - b3} inT="whip" outT="whip">
         <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.05 }, { f: 200, zoom: 1.0 }]}>
-          <Light />
+          <PhotoBg src="stock/market.jpg" blur={9} tint="rgba(27,37,65,0.45)" tag={false} />
           <Abs x={340} y={180}><Pop f={b2} from={{ y: 400, rotateX: 40 }}><StockBoard f={b2 - 10} /></Pop></Abs>
           <Abs x={40} y={600}><BossActor size={400} enter="slideL" enterAt={frame - b2} poses={[{ f: 0, pose: "point", expression: "talk" }]} /></Abs>
         </Camera>
       </Beat>
       <Beat f={b3} len={b3 - b5} inT="whip" outT="zoom">
-        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0 }, { f: b3 - b4, zoom: 1.0 }, { f: b3 - b4 + 20, zoom: 1.08, y: 80 }]}>
+        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0 }, { f: b3 - b4, zoom: 1.0, y: 0 }, { f: b3 - b4 + 20, zoom: 1.08, y: 80 }]}>
           <Light />
           <Abs x={340} y={180}><Pop f={b3} from={{ x: 400 }}><SupplierCompare f={b3} cart={b4 >= 0} /></Pop></Abs>
           <Abs x={40} y={600}><BossActor size={400} enter="none" poses={[{ f: 0, pose: "think", expression: "think" }, { f: frame - b4, pose: "thumbsUp", expression: "wink" }]} /></Abs>
@@ -520,9 +541,8 @@ export const E3S10: React.FC = () => {
       {/* ③ 와이드 → 크레인 업 */}
       <Beat f={b3} len={100000} inT="zoom">
         <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.0, rx: 0, y: 0 }, { f: 40, zoom: 1.0 }, { f: 90, zoom: 1.15, rx: 16, y: -60 }]}>
-          <RestaurantInterior>
-            <Abs x={830} y={330}><BossActor size={500} enter="jump" enterAt={frame - b3} poses={[{ f: 0, pose: "wave", expression: "joy" }]} /></Abs>
-          </RestaurantInterior>
+          <PhotoBg src="stock/interior.jpg" blur={4} tag={false} />
+          <Abs x={760} y={330}><BossActor size={600} enter="jump" enterAt={frame - b3} poses={[{ f: 0, pose: "wave", expression: "joy" }]} /></Abs>
           <Abs x={560} y={16}><Pop f={b3 + 8} from={{ y: -150, scale: 0.4 }}><div style={{ display: "flex", alignItems: "center", gap: 20, background: "#fff", border: `7px solid ${color.ink}`, borderRadius: 30, padding: "14px 30px", boxShadow: ui.shadow(10) }}><TodayCalendar size={90} /><Wordmark size={56} /></div></Pop></Abs>
         </Camera>
       </Beat>
