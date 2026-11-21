@@ -14,7 +14,7 @@ import { CAMERA_ANGLES } from "./compositions/CameraAngles";
 import { Boss3DHero, Ep002Thumb3D, FlatVsSoft, ParallaxDemo } from "./compositions/DepthSamples";
 import { MixA, MixB, MixC, MixD } from "./compositions/PhotoMixSample";
 import { Ep003ThumbA, Ep003ThumbB, Ep003ThumbC, Ep003ThumbD, Ep003ThumbD2, Ep003ThumbD3 } from "./episodes/ep003/Thumb";
-import { Ep004ThumbA } from "./episodes/ep004/Thumb";
+import { Ep004ThumbA, Ep004ThumbB } from "./episodes/ep004/Thumb";
 import { calcEp004, Ep004Video } from "./episodes/ep004/Ep004Video";
 import { calcEp003, Ep003Video } from "./episodes/ep003/Ep003Video";
 import { loadFonts } from "./styles/fonts";
@@ -66,6 +66,7 @@ export const RemotionRoot: React.FC = () => (
     <Still id="MixC" component={MixC} width={1920} height={1080} />
     <Still id="MixD" component={MixD} width={1920} height={1080} />
     <Still id="Ep004ThumbA" component={Ep004ThumbA} width={1280} height={720} />
+    <Still id="Ep004ThumbB" component={Ep004ThumbB} width={1280} height={720} />
     <Still id="Ep003ThumbA" component={Ep003ThumbA} width={1280} height={720} />
     <Still id="Ep003ThumbB" component={Ep003ThumbB} width={1280} height={720} />
     <Still id="Ep003ThumbC" component={Ep003ThumbC} width={1280} height={720} />

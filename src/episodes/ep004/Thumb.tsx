@@ -40,3 +40,28 @@ export const Ep004ThumbA: React.FC = () => (
     <div style={{ position: "absolute", right: 14, bottom: 12, background: "rgba(27,37,65,0.8)", color: "#fff", borderRadius: 999, padding: "2px 10px", fontWeight: 700, fontSize: 14 }}>📷 참고 사진</div>
   </AbsoluteFill>
 );
+
+/** B안: 글자 최대 크기 */
+export const Ep004ThumbB: React.FC = () => (
+  <AbsoluteFill style={{ fontFamily: font.family, overflow: "hidden", background: color.accent }}>
+    <div style={{ position: "absolute", inset: -300, background: "repeating-conic-gradient(from 0deg at 82% 52%, rgba(255,255,255,0) 0deg 7deg, rgba(255,255,255,0.4) 7deg 14deg)" }} />
+    <div style={{ position: "absolute", left: 820, top: -40, width: 560, height: 800, background: "linear-gradient(135deg,#8EE68A,#3FAE4A)", clipPath: "polygon(22% 0, 100% 0, 100% 100%, 0 100%)" }} />
+    {/* 실사 시계 */}
+    <div style={{ position: "absolute", left: 1060, top: 22, width: 190, height: 190, borderRadius: "50%", overflow: "hidden", border: `7px solid ${color.ink}`, boxShadow: ui.shadow(8), transform: "rotate(8deg)" }}>
+      <Img src={staticFile("stock/clockface.jpg")} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    </div>
+    {/* 피클 로고 */}
+    <div style={{ position: "absolute", left: 900, top: 230 }}>
+      <div style={{ position: "absolute", inset: -40, background: "rgba(255,255,255,0.8)", filter: "blur(50px)", borderRadius: "50%" }} />
+      <div style={{ position: "relative", filter: "drop-shadow(12px 12px 0 rgba(14,42,18,0.85))" }}><BrandIcon id="pickle" size={330} /></div>
+    </div>
+    {/* 문구 (크게) */}
+    <div style={{ position: "absolute", left: 26, top: 14, transform: "rotate(-3deg)" }}><ExperimentTag no={4} size={20} /></div>
+    <div style={{ position: "absolute", left: 30, top: 70, transform: "rotate(-2deg)" }}><span style={{ background: color.ink, color: "#fff", borderRadius: 16, padding: "0 20px 6px", fontWeight: 900, fontSize: 66, letterSpacing: "-0.04em", display: "inline-block", boxShadow: "7px 7px 0 rgba(0,0,0,0.25)" }}>사장님 시간 돌려주는</span></div>
+    <div style={{ position: "absolute", left: 22, top: 172, fontWeight: 900, fontSize: 200, lineHeight: 0.98, letterSpacing: "-0.06em", color: color.ink, textShadow: "8px 8px 0 #fff" }}>
+      AI 비서<br /><span style={{ color: PK, ...outline(20), textShadow: `11px 11px 0 ${color.ink}` }}>피클</span>
+    </div>
+    <div style={{ position: "absolute", left: 470, top: 560, background: "#fff", border: `6px solid ${color.ink}`, borderRadius: 18, padding: "4px 20px 8px", fontWeight: 900, fontSize: 52, transform: "rotate(-4deg)", boxShadow: ui.shadow(8), whiteSpace: "nowrap" }}>활용 5가지</div>
+    <div style={{ position: "absolute", right: 14, bottom: 12, background: "rgba(27,37,65,0.8)", color: "#fff", borderRadius: 999, padding: "2px 10px", fontWeight: 700, fontSize: 14 }}>📷 참고 사진</div>
+  </AbsoluteFill>
+);
