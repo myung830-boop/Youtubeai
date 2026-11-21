@@ -113,7 +113,7 @@ export const E5S01: React.FC = () => {
           <Abs x={60} y={300}><BossActor size={700} body="sit" enter="none" poses={[{ f: 0, pose: "typing", expression: "talk" }, { f: frame - r2, pose: "point", expression: "determined" }, { f: frame - r3, pose: "thumbsUp", expression: "wink" }]} /></Abs>
           <Abs x={470} y={120}><BossSays key={ri} f={rf[ri] - 4} text={REQ[ri][0]} w={760} size={38} real /></Abs>
           <Abs x={760} y={420}><ClaudeSays key={`c${ri}`} f={rf[ri] - 40} w={560} size={34} text={REQ[ri][1]} /></Abs>
-          <Abs x={1420} y={560}><Pop key={`t${ri}`} f={rf[ri] - 52} from={{ scale: 0.3, rotate: 15 }}><div style={{ background: "#fff", border: `7px solid ${color.ink}`, borderRadius: 16, padding: 8, boxShadow: ui.shadow(10), transform: "rotate(4deg)" }}><Img src={staticFile(REQ[ri][2])} style={{ width: 420, height: 236, objectFit: "cover", borderRadius: 8, display: "block" }} /></div></Pop></Abs>
+          <Abs x={1340} y={600}><Pop key={`t${ri}`} f={rf[ri] - 52} from={{ scale: 0.3, rotate: 15 }}><div style={{ background: "#fff", border: `7px solid ${color.ink}`, borderRadius: 16, padding: 8, boxShadow: ui.shadow(10), transform: "rotate(4deg)" }}><Img src={staticFile(REQ[ri][2])} style={{ width: 400, height: 225, objectFit: "cover", borderRadius: 8, display: "block" }} /></div></Pop></Abs>
         </Camera>
         {rf.map((f, i) => <React.Fragment key={i}><Sfx at={f} name="typing" vol={0.25} /><Sfx at={f} name="notify" delay={40} /></React.Fragment>)}
       </Beat>
@@ -215,19 +215,19 @@ export const E5S04: React.FC = () => {
       <Beat f={b1} len={b1 - b2} inT="whip" outT="zoom">
         <Camera start={0} keys={[{ f: 0, zoom: 0.95, x: 80 }, { f: 280, zoom: 1.05, x: -40 }]}>
           <Studio screen={<Desktop w={1600} h={900} />} />
-          <Abs x={1260} y={250}><BossActor size={760} body="sit" enter="walkR" enterAt={0} poses={[{ f: 0, pose: "default", expression: "smile" }, { f: 50, pose: "present", expression: "talk" }]} /></Abs>
+          <Abs x={1060} y={250}><BossActor size={760} body="sit" enter="walkR" enterAt={0} poses={[{ f: 0, pose: "default", expression: "smile" }, { f: 50, pose: "present", expression: "talk" }]} /></Abs>
         </Camera>
         <Abs x={70} y={60}><Section f={b1 - 8} label="1단계 · 설치하기" /></Abs>
         <Sfx at={b1} name="click" delay={40} />
       </Beat>
       {/* ① 1인칭: 주소창 타이핑 (돋보기 확대) */}
       <Beat f={b2} len={b2 - b3} inT="zoom" outT="whip">
-        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }, { f: 60, zoom: 1.0 }, { f: 100, zoom: 1.5, x: -160, y: -250 }]} handheld={1.2}>
+        <Camera start={frame - b2} keys={[{ f: 0, zoom: 1.0 }, { f: 60, zoom: 1.0 }, { f: 100, zoom: 1.6, x: -60, y: -385 }]} handheld={1.2}>
           <div style={{ position: "absolute", inset: -300, background: "#2A2522" }} />
           <Abs x={160} y={70}><Browser w={1600} h={900} url={URL} typed={Math.floor(Math.max(0, b2 - 20) / 2.2)}>{b2 > 120 && <DownloadPage />}</Browser></Abs>
           <PovHands mode="type" />
         </Camera>
-        <Abs x={70} y={900}><Pop f={b2 - 60} from={{ y: 100 }}><Card bg={color.accent} style={{ padding: "8px 26px", fontSize: 44, fontWeight: 900 }}>⌨ claude.com/download</Card></Pop></Abs>
+        <Abs x={70} y={60}><Pop f={b2 - 60} from={{ y: -100 }}><Card bg={color.accent} style={{ padding: "8px 26px", fontSize: 44, fontWeight: 900 }}>⌨ claude.com/download</Card></Pop></Abs>
         <Sfx at={b2} name="typing" delay={20} vol={0.28} />
       </Beat>
       {/* ⑧ 클로즈업: 다운로드 → 설치 진행 */}
@@ -279,7 +279,7 @@ export const E5S05: React.FC = () => {
               <div style={{ position: "absolute", right: 16, bottom: 12, fontSize: 16, fontWeight: 700, color: "#8A8378" }}>설명용 재구성 화면</div>
             </Card>
           </Pop></Abs>
-          <Abs x={1040} y={560}><Pop f={paid} from={{ x: 300 }}><Card bg={color.accent} style={{ padding: "18px 30px", fontSize: 42, fontWeight: 900 }}>💳 Claude Code는<br />지원 유료 요금제 필요</Card></Pop></Abs>
+          <Abs x={180} y={760}><Pop f={paid} from={{ y: 200 }}><Card bg={color.accent} style={{ padding: "18px 30px", fontSize: 42, fontWeight: 900 }}>💳 Claude Code는<br />지원 유료 요금제 필요</Card></Pop></Abs>
           <Abs x={1240} y={130}><Bust f={b1 - 10} pose="point" expression="talk" size={560} /></Abs>
         </Camera>
         <Sfx at={paid} name="pop" />
@@ -290,7 +290,7 @@ export const E5S05: React.FC = () => {
           <div style={{ position: "absolute", inset: -300, background: "#2A2522" }} />
           <Abs x={480} y={60} style={{ transform: "perspective(1800px) rotateY(-8deg)" }}><ClaudeApp w={1320} h={760} tab={b2 > 40 ? "code" : "chat"} tabHi={b2 > 30}><CodeChat f={0} msgs={[]} /><ChatInput /></ClaudeApp></Abs>
           <Abs x={-200} y={380} style={{ filter: "blur(1.5px)" }}><Pop f={b2} from={{ x: -300 }} bouncy={false}><BossBack size={1000} turn={8} /></Pop></Abs>
-          <Abs x={1100} y={700}><Stamp f={noInstall} bg={CL} size={66} rot={-5}>Claude Code 별도 설치 X</Stamp></Abs>
+          <Abs x={980} y={520}><Stamp f={noInstall} bg={CL} size={66} rot={-5}>Claude Code 별도 설치 X</Stamp></Abs>
         </Camera>
         <Sfx at={b2} name="click" delay={30} /><Sfx at={noInstall} name="stamp" />
       </Beat>
@@ -325,7 +325,7 @@ export const E5S06: React.FC = () => {
       <Beat f={b1} len={b1 - b2} inT="whip" outT="zoom">
         <Camera start={0} keys={[{ f: 0, zoom: 0.8, rot: 6 }, { f: 300, zoom: 0.9, rot: 0 }]}>
           <DeskTop screen={pick >= 0 ? <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#2A2522" }}><FolderPicker sel={pick > 20} /></div> : <Desktop w={1600} h={900} folder={mk} />}>
-            <Abs x={1180} y={1180}><BossTop size={320} angle={180} /></Abs>
+            <Abs x={1150} y={1060}><BossTop size={340} angle={180} /></Abs>
           </DeskTop>
         </Camera>
         <Abs x={70} y={60}><Section f={b1 - 6} label="2단계 · 작업 폴더" /></Abs>
@@ -363,7 +363,7 @@ export const E5S07: React.FC = () => {
       <Beat f={b1} len={b1 - b2} inT="whip" outT="whip">
         <Camera start={0} keys={[{ f: 0, zoom: 1.15, x: -200 }, { f: 280, zoom: 1.0, x: 0 }]}>
           <Studio screen={<ClaudeApp w={1600} h={900} folder="내 첫 유튜브"><CodeChat f={0} msgs={[]} /><ChatInput /></ClaudeApp>} />
-          <Abs x={1260} y={250}><BossActor size={760} body="sit" enter="none" poses={[{ f: 0, pose: "typing", expression: "determined" }]} /></Abs>
+          <Abs x={1060} y={250}><BossActor size={760} body="sit" enter="none" poses={[{ f: 0, pose: "typing", expression: "determined" }]} /></Abs>
         </Camera>
         <Abs x={70} y={60}><Section f={b1 - 6} label="3단계 · 영상 요청하기" /></Abs>
         <Abs x={70} y={180}><Pop f={b1 - 60} from={{ x: -200 }}><Card bg="#FFF7D6" style={{ padding: "8px 24px", fontSize: 36, fontWeight: 800 }}>예: 카페 사장님이라면 ☕ (예시)</Card></Pop></Abs>
@@ -413,7 +413,7 @@ export const E5S08: React.FC = () => {
             <Abs x={1050} y={120}><ClaudeSays f={b1 - 10} w={620} size={30} text="좋아요! 먼저 대본과 화면 구성을 보여드릴게요 👇" /></Abs>
             <Abs x={1130} y={380}><Pop f={b1 - 40} from={{ x: 200 }}><ScriptCard f={b1 - 40} w={640} /></Pop></Abs>
           </MonitorPOV>
-          <Abs x={90} y={90}><Pop f={b1 - 4} from={{ x: -200 }}><Card bg={color.accent} style={{ padding: "10px 28px", fontSize: 52, fontWeight: 900 }}>바로 완성 ✗ → 대본 먼저 ✓</Card></Pop></Abs>
+          <Abs x={110} y={130}><Pop f={b1 - 4} from={{ x: -200 }}><Card bg={color.accent} style={{ padding: "10px 28px", fontSize: 52, fontWeight: 900 }}>바로 완성 ✗ → 대본 먼저 ✓</Card></Pop></Abs>
           {["시작", "중간", "마무리"].map((t, i) => <Abs key={t} x={110 + i * 250} y={860}><Pop f={parts[i]} from={{ y: 100 }}><Card style={{ padding: "8px 26px", fontSize: 40, fontWeight: 900, background: [CL, "#fff", "#FFE08A"][i], color: i === 0 ? "#fff" : color.ink }}>{t}</Card></Pop></Abs>)}
         </Camera>
         <Sfx at={b1} name="notify" delay={24} />{parts.map((f, i) => <Sfx key={i} at={f} name="pop" />)}
@@ -533,13 +533,13 @@ export const E5S11: React.FC = () => {
       <Beat f={b1} len={b1 - b2} inT="whip" outT="zoom">
         <Camera start={0} keys={[{ f: 0, zoom: 1.1 }, { f: 400, zoom: 1.0 }]}>
           <Cream />
-          <Abs x={500} y={330} style={{ filter: `blur(${lerp(sync, 0, 20, 8, 0)}px)` }}><PreviewPlayer f={sync} w={1100}><CoffeeDemo f={sync} w={1068} h={600} /></PreviewPlayer></Abs>
-          <Abs x={80} y={120} style={{ filter: `blur(${lerp(sync, 0, 20, 0, 10)}px)` }}>
+          <Abs x={700} y={300} style={{ filter: `blur(${lerp(sync, 0, 20, 8, 0)}px)` }}><PreviewPlayer f={sync} w={1000}><CoffeeDemo f={sync} w={968} h={544} /></PreviewPlayer></Abs>
+          <Abs x={110} y={300} style={{ filter: `blur(${lerp(sync, 0, 20, 0, 10)}px)` }}>
             <Pop f={b1} from={{ x: -300 }}><ScriptCard f={60} w={520} /></Pop>
           </Abs>
-          <Abs x={680} y={110} style={{ filter: `blur(${lerp(sync, 0, 20, 0, 8)}px)` }}><Pop f={tts} from={{ scale: 0.3 }}><Card bg={color.accent} style={{ padding: "14px 28px", fontSize: 40, fontWeight: 900 }}>🎙 음성 생성 도구 (별도 서비스)</Card></Pop></Abs>
-          <svg width={1920} height={1080} style={{ position: "absolute", left: 0, top: 0 }}><path d="M600,300 C800,300 900,240 1000,200" stroke={CL} strokeWidth={10} fill="none" strokeDasharray="600" strokeDashoffset={lerp(tts, 0, 20, 600, 0)} /></svg>
-          <Abs x={1180} y={180}><Pop f={sync} from={{ y: 200 }}><Card bg="#fff" style={{ padding: "10px 24px", fontSize: 36, fontWeight: 900 }}>말에 맞춰 글자·애니메이션 등장</Card></Pop></Abs>
+          <Abs x={110} y={120} style={{ filter: `blur(${lerp(sync, 0, 20, 0, 8)}px)` }}><Pop f={tts} from={{ scale: 0.3 }}><Card bg={color.accent} style={{ padding: "14px 28px", fontSize: 40, fontWeight: 900 }}>🎙 음성 생성 도구 (별도 서비스)</Card></Pop></Abs>
+          <svg width={1920} height={1080} style={{ position: "absolute", left: 0, top: 0 }}><path d="M640,420 C700,420 680,300 760,300" opacity={0} stroke={CL} strokeWidth={10} fill="none" strokeDasharray="600" strokeDashoffset={lerp(tts, 0, 20, 600, 0)} /></svg>
+          <Abs x={900} y={150}><Pop f={sync} from={{ y: 200 }}><Card bg="#fff" style={{ padding: "10px 24px", fontSize: 40, fontWeight: 900 }}>🎵 말에 맞춰 글자·애니메이션 등장</Card></Pop></Abs>
         </Camera>
         <Sfx at={tts} name="pop" /><Sfx at={sync} name="whoosh" />
       </Beat>
@@ -596,12 +596,12 @@ export const E5S12: React.FC = () => {
       </Beat>
       {/* ⑥ 로우앵글: MP4 → 유튜브 */}
       <Beat f={b3} len={100000} inT="whip">
-        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.18, rx: -14 }, { f: 220, zoom: 1.0, rx: -8 }]}>
+        <Camera start={frame - b3} keys={[{ f: 0, zoom: 1.1, rx: -10 }, { f: 220, zoom: 1.0, rx: -6 }]}>
           <div style={{ position: "absolute", inset: -500, background: "linear-gradient(180deg,#FFF4E6 0%,#F1D9C8 100%)" }} />
-          <Abs x={200} y={300}><Pop f={b3} from={{ y: 300 }}><ExportCard p={lerp(b3, 10, 70, 0, 1)} /></Pop></Abs>
-          <svg width={1920} height={1080} style={{ position: "absolute", left: 0, top: 0 }}><path d="M740,420 C900,420 980,420 1100,420" stroke={CL} strokeWidth={14} fill="none" strokeDasharray="20 16" strokeDashoffset={-frame * 3} opacity={yt >= 0 ? 1 : 0} /></svg>
-          <Abs x={1120} y={280}><Pop f={yt} from={{ x: 300, rotate: 10 }}><YouTubeCard f={yt} /></Pop></Abs>
-          <Abs x={760} y={560}><BossActor size={520} body="stand" enter="jump" enterAt={frame - yt + 20} poses={[{ f: 0, pose: "cheer", expression: "starstruck" }]} /></Abs>
+          <Abs x={120} y={200} style={{ transform: "scale(1.3)", transformOrigin: "0 0" }}><Pop f={b3} from={{ y: 300 }}><ExportCard p={lerp(b3, 10, 70, 0, 1)} /></Pop></Abs>
+          <svg width={1920} height={1080} style={{ position: "absolute", left: 0, top: 0 }}><path d="M800,330 C900,330 960,330 1040,330" stroke={CL} strokeWidth={14} fill="none" strokeDasharray="20 16" strokeDashoffset={-frame * 3} opacity={yt >= 0 ? 1 : 0} /></svg>
+          <Abs x={1060} y={180} style={{ transform: "scale(1.3)", transformOrigin: "0 0" }}><Pop f={yt} from={{ x: 300, rotate: 10 }}><YouTubeCard f={yt} /></Pop></Abs>
+          <Abs x={780} y={480}><BossActor size={580} body="stand" enter="jump" enterAt={frame - yt + 20} poses={[{ f: 0, pose: "cheer", expression: "starstruck" }]} /></Abs>
           <Confetti f={yt - 30} x={1400} y={300} />
         </Camera>
         <Sfx at={b3} name="rise" delay={10} /><Sfx at={b3} name="ding" delay={70} /><Sfx at={yt} name="whoosh" /><Sfx at={yt} name="sparkle" delay={30} />
@@ -642,13 +642,13 @@ export const E5S13: React.FC = () => {
       </Beat>
       {/* ⑬ 트래킹: 영상 카드 계단을 걸어 올라감 */}
       <Beat f={b3} len={b3 - b4} inT="whip" outT="zoom">
-        <Camera start={frame - b3} keys={[{ f: 0, x: -200, y: 120 }, { f: 220, x: 260, y: -80 }]}>
+        <Camera start={frame - b3} keys={[{ f: 0, x: -200, y: 60 }, { f: 220, x: 300, y: -420 }]}>
           <div style={{ position: "absolute", inset: -900, background: "linear-gradient(180deg,#DCE9FF,#F3EEE4)" }} />
           {Array.from({ length: 6 }, (_, k) => (
             <Abs key={k} x={100 + k * 300} y={820 - k * 110}><Pop f={b3 - k * 10} from={{ y: 300, scale: 0.5 }}><div style={{ width: 300, height: 110, background: ["#FFE08A", "#DCE9FF", "#FFD9C2", "#DDF5E6", "#F6D6FF", "#FFE08A"][k], border: `6px solid ${color.ink}`, borderRadius: 14, boxShadow: ui.shadow(6), fontFamily: F, fontWeight: 900, fontSize: 30, display: "flex", alignItems: "center", justifyContent: "center" }}>▶ 영상 {k + 1}</div></Pop></Abs>
           ))}
           {(() => { const p = lerp(b3, 20, 200, 0, 5, easeInOut); const x = 100 + p * 300 + 20; const y = 820 - p * 110 - 470; return <Abs x={x} y={y}><Boss pose="happy" expression="joy" crop="body" legs="walk" size={480} t={frame} /></Abs>; })()}
-          <Abs x={1500} y={-60}><Pop f={b3 - 160} from={{ scale: 0 }}><Card bg={color.accent} style={{ padding: "10px 26px", fontSize: 40, fontWeight: 900 }}>🏪 가게 홍보 + 유용한 정보</Card></Pop></Abs>
+          <Abs x={1480} y={-300}><Pop f={b3 - 160} from={{ scale: 0 }}><Card bg={color.accent} style={{ padding: "10px 26px", fontSize: 40, fontWeight: 900 }}>🏪 가게 홍보 + 유용한 정보</Card></Pop></Abs>
         </Camera>
         <Sfx at={b3} name="pop" delay={0} vol={0.2} /><Sfx at={b3} name="pop" delay={20} vol={0.2} /><Sfx at={b3} name="pop" delay={40} vol={0.2} />
       </Beat>
