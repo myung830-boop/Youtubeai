@@ -42,23 +42,21 @@ export const PhotoCard: React.FC<{ src: string; w: number; h: number; label?: st
   </div>
 );
 
-/** 3D 회전목마: items가 원형으로 돌다가 front 인덱스가 정면에 멈춤 */
-export const Carousel3D: React.FC<{ f: number; items: React.ReactNode[]; radius?: number; front?: number; spinFrames?: number }> = ({ f, items, radius = 620, front = 0, spinFrames = 70 }) => {
+/** 3D 회전목마 (카드는 항상 정면): 원형으로 돌다가 front 카드가 가운데 앞에 멈춤 */
+export const Carousel3D: React.FC<{ f: number; items: React.ReactNode[]; radius?: number; front?: number; spinFrames?: number; cy?: number }> = ({ f, items, radius = 700, front = 0, spinFrames = 70, cy = 560 }) => {
   const n = items.length;
-  const turns = 1;
-  const target = -(front * 360) / n;
-  const a = lerp(f, 0, spinFrames, target - 360 * turns, target, easeInOut);
+  const base = lerp(f, 0, spinFrames, 360, 0, easeInOut) - (front * 360) / n;
+  const placed = items.map((it, i) => {
+    const a = ((base + (i * 360) / n) * Math.PI) / 180;
+    const z = Math.cos(a);
+    return { it, i, x: Math.sin(a) * radius, z, y: -z * 60 };
+  }).sort((p, q) => p.z - q.z);
   return (
-    <div style={{ position: "absolute", left: 960, top: 520, perspective: 1800 }}>
-      <div style={{ transformStyle: "preserve-3d", transform: `rotateX(-8deg) rotateY(${a}deg)` }}>
-        {items.map((it, i) => {
-          const ang = (i * 360) / n;
-          return (
-            <div key={i} style={{ position: "absolute", left: 0, top: 0, transform: `rotateY(${ang}deg) translateZ(${radius}px) translate(-50%,-50%)`, backfaceVisibility: "hidden" }}>{it}</div>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      {placed.map((p) => (
+        <div key={p.i} style={{ position: "absolute", left: 960 + p.x, top: cy + p.y, transform: `translate(-50%,-50%) scale(${0.5 + 0.5 * ((p.z + 1) / 2) ** 1.4})`, filter: p.z < 0 ? `blur(${(-p.z * 3).toFixed(1)}px) brightness(${0.75 + 0.25 * (p.z + 1)})` : "none" }}>{p.it}</div>
+      ))}
+    </>
   );
 };
 
