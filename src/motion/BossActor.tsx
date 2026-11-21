@@ -1,5 +1,6 @@
 import React from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { Legs } from "../character/Boss";
 import { Boss, BossStyle, Expression, Pose } from "../character/Boss";
 import { floatY } from "./core";
 
@@ -20,7 +21,11 @@ export const BossActor: React.FC<{
   lean?: number;
   flip?: boolean;
   style?: React.CSSProperties;
-}> = ({ poses, size = 640, enter = "jump", enterAt = 0, hops = [], lean = 0, flip = false, style }) => {
+  /** 전신(다리 포함): "stand" | "walk" | "sit". 지정하면 size는 전신 높이 */
+  body?: Legs;
+  /** 전신일 때 바닥 그림자 (플랫에서도) */
+  floorShadow?: boolean;
+}> = ({ poses, size = 640, enter = "jump", enterAt = 0, hops = [], lean = 0, flip = false, style, body, floorShadow }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const sorted = [...poses].sort((a, b) => a.f - b.f);
@@ -74,13 +79,15 @@ export const BossActor: React.FC<{
   const sway = Math.sin(frame * 0.07) * 1.2;
 
   const soft = React.useContext(BossStyle) === "soft";
-  const w = (size * 440) / 510;
+  const w = (size * 440) / (body ? 790 : 510);
+  const footY = body ? size * 0.955 : size * 0.93;
+  const walking = body && (enter === "walkL" || enter === "walkR") && ef >= 0 && ef < 40;
   const lift = Math.min(1, Math.max(0, -(ey + hy) / (size * 0.4)));
   return (
     <div style={{ position: "relative", ...style }}>
       {/* 2.5D: 바닥 그림자 (점프하면 작고 흐려짐) */}
-      {soft && visible && (
-        <div style={{ position: "absolute", left: ex + w * 0.16, top: size * 0.93, width: w * 0.68, height: size * 0.07, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(27,37,65,0.38), rgba(27,37,65,0) 70%)", transform: `scale(${1 - lift * 0.5})`, opacity: 1 - lift * 0.6 }} />
+      {(soft || floorShadow) && visible && (
+        <div style={{ position: "absolute", left: ex + w * 0.16, top: footY - size * 0.02, width: w * 0.68, height: size * 0.07, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(27,37,65,0.38), rgba(27,37,65,0) 70%)", transform: `scale(${1 - lift * 0.5})`, opacity: 1 - lift * 0.6 }} />
       )}
       <div
         style={{
@@ -90,7 +97,7 @@ export const BossActor: React.FC<{
           filter: soft ? "drop-shadow(10px 14px 10px rgba(27,37,65,0.22))" : undefined,
         }}
       >
-        <Boss pose={cur.pose} expression={cur.expression} size={size} headTilt={(cur.tilt ?? 0) + Math.sin(frame * 0.05) * 2} look={cur.look} />
+        <Boss pose={cur.pose} expression={cur.expression} size={size} headTilt={(cur.tilt ?? 0) + Math.sin(frame * 0.05) * 2} look={cur.look} crop={body ? "body" : "full"} legs={walking ? "walk" : body} />
       </div>
     </div>
   );

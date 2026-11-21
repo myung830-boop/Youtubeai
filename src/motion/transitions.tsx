@@ -41,7 +41,7 @@ const exitStyle = (t: TransitionType, p: number): React.CSSProperties => {
  * 화면 한 '비트'. f = 이 비트 시작 후 프레임, len = 다음 비트까지 길이(프레임).
  * inT/outT 로 들어오고 나가는 전환을 고른다.
  */
-export const Beat: React.FC<{ f: number; len: number; inT?: TransitionType; outT?: TransitionType; inDur?: number; outDur?: number; children: React.ReactNode; bg?: string }> = ({
+export const Beat: React.FC<{ f: number; len: number; inT?: TransitionType; outT?: TransitionType; inDur?: number; outDur?: number; children: React.ReactNode; bg?: string; overlap?: boolean }> = ({
   f,
   len,
   inT = "whip",
@@ -50,11 +50,15 @@ export const Beat: React.FC<{ f: number; len: number; inT?: TransitionType; outT
   outDur = 7,
   children,
   bg,
+  overlap = false,
 }) => {
-  if (f < 0 || f >= len) return null;
+  // overlap: 나가는 화면이 다음 비트 위에서 함께 움직이며 빠짐 (빈 화면 없음, 5편부터)
+  const end = overlap && outT !== "cut" ? len + outDur : len;
+  if (f < 0 || f >= end) return null;
   const pin = interpolate(f, [0, inDur], [0, 1], { ...clamp01, easing: easeOut });
-  const pout = interpolate(f, [len - outDur, len], [0, 1], { ...clamp01, easing: easeInOut });
-  const st = f < inDur ? enterStyle(inT, pin) : f > len - outDur && outT !== "cut" ? exitStyle(outT, pout) : {};
+  const pout = overlap ? interpolate(f, [len, len + outDur], [0, 1], { ...clamp01, easing: easeInOut }) : interpolate(f, [len - outDur, len], [0, 1], { ...clamp01, easing: easeInOut });
+  const outing = overlap ? f >= len : f > len - outDur;
+  const st = f < inDur ? enterStyle(inT, pin) : outing && outT !== "cut" ? exitStyle(outT, pout) : {};
   return (
     <AbsoluteFill style={{ background: bg, ...st }}>
       {children}
