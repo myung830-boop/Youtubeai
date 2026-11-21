@@ -130,6 +130,16 @@ export const BRANDS = {
         </svg>,
       ),
   },
+  pickle: {
+    id: "pickle",
+    name: "Pickle",
+    ko: "피클",
+    // 로고·색: 사장님이 보내준 피클 앱 '내 피클' 화면 캡처에서 추출 (2026-11). 초록 네잎 캐릭터.
+    colors: { primary: "#63D361", secondary: "#3FAE4A", text: "#0E2A12", gradient: "linear-gradient(135deg, #8EE68A 0%, #63D361 50%, #3FAE4A 100%)" },
+    logo: "brands/pickle.png",
+    verified: true,
+    Glyph: ({ size }) => tile(size, "#63D361", <span style={{ fontFamily: font.family, fontWeight: 900, fontSize: size * 0.4, color: "#0E2A12" }}>P</span>, 0.5),
+  },
   remotion: {
     id: "remotion",
     name: "Remotion",

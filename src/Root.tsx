@@ -14,6 +14,7 @@ import { CAMERA_ANGLES } from "./compositions/CameraAngles";
 import { Boss3DHero, Ep002Thumb3D, FlatVsSoft, ParallaxDemo } from "./compositions/DepthSamples";
 import { MixA, MixB, MixC, MixD } from "./compositions/PhotoMixSample";
 import { Ep003ThumbA, Ep003ThumbB, Ep003ThumbC, Ep003ThumbD, Ep003ThumbD2, Ep003ThumbD3 } from "./episodes/ep003/Thumb";
+import { calcEp004, Ep004Video } from "./episodes/ep004/Ep004Video";
 import { calcEp003, Ep003Video } from "./episodes/ep003/Ep003Video";
 import { loadFonts } from "./styles/fonts";
 
@@ -86,6 +87,9 @@ export const RemotionRoot: React.FC = () => (
 
     {/* 실험 #002: public/ep002/voice.mp3 + voice.srt */}
     <Composition id="Ep002" component={Ep002Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep002/voice.mp3", srt: "ep002/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp002} />
+
+    {/* 실험 #004: public/ep004/voice.mp3 + voice.srt */}
+    <Composition id="Ep004" component={Ep004Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep004/voice.mp3", srt: "ep004/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp004} />
 
     {/* 실험 #003: public/ep003/voice.mp3 + voice.srt */}
     <Composition id="Ep003" component={Ep003Video} width={1920} height={1080} fps={30} durationInFrames={300} defaultProps={{ audio: "ep003/voice.mp3", srt: "ep003/voice.srt", bgm: "bgm/bright-lab.mp3" }} calculateMetadata={calcEp003} />
