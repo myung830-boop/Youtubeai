@@ -261,6 +261,68 @@ const Body: React.FC = () => (
   </g>
 );
 
+/* ---------------- 전신: 다리 · 신발 · 의자 ---------------- */
+export type Legs = "stand" | "walk" | "sit";
+const PANTS = "#2F3B57";
+const Sneaker: React.FC<{ x: number; y: number; rot?: number }> = ({ x, y, rot = 0 }) => (
+  <g transform={`rotate(${rot} ${x} ${y})`}>
+    <path d={`M${x - 46},${y + 26} Q${x - 50},${y - 4} ${x - 22},${y - 10} L${x + 18},${y - 10} Q${x + 50},${y - 6} ${x + 52},${y + 18} L${x + 52},${y + 26} Z`} fill="#FFFFFF" {...line} strokeWidth={5} />
+    <path d={`M${x - 46},${y + 20} L${x + 52},${y + 20}`} stroke={C.apron} strokeWidth={7} />
+    <path d={`M${x - 10},${y - 6} L${x + 10},${y + 4} M${x - 2},${y - 9} L${x + 18},${y + 1}`} stroke={C.badge} strokeWidth={4} strokeLinecap="round" />
+  </g>
+);
+const LegsShape: React.FC<{ mode: Legs; t: number }> = ({ mode, t }) => {
+  if (mode === "sit") {
+    return (
+      <g>
+        {/* 무릎이 앞으로 나온 앉은 자세: 넓은 무릎 + 짧은 정강이 */}
+        <path d="M104,500 L296,500 Q312,560 290,604 Q250,616 200,608 Q150,616 110,604 Q88,560 104,500 Z" fill={PANTS} {...line} />
+        <path d="M200,540 L200,606" stroke="rgba(0,0,0,0.25)" strokeWidth={5} />
+        <ellipse cx={150} cy={590} rx={36} ry={16} fill="rgba(255,255,255,0.10)" />
+        <ellipse cx={250} cy={590} rx={36} ry={16} fill="rgba(255,255,255,0.10)" />
+        <path d="M128,600 L180,600 L176,686 L136,686 Z" fill={PANTS} {...line} />
+        <path d="M220,600 L272,600 L264,686 L224,686 Z" fill={PANTS} {...line} />
+        <Sneaker x={156} y={696} />
+        <Sneaker x={244} y={696} />
+      </g>
+    );
+  }
+  const sw = mode === "walk" ? Math.sin(t * 0.45) : 0;
+  const lift = (k: number) => Math.max(0, k) * 34;
+  const L = lift(sw), R = lift(-sw);
+  return (
+    <g>
+      <path d="M116,470 L284,470 L284,540 Q200,556 116,540 Z" fill={PANTS} {...line} />
+      <path d={`M120,520 L196,520 L192,${684 - L} L130,${684 - L} Z`} fill={PANTS} {...line} />
+      <path d={`M204,520 L280,520 L270,${684 - R} L208,${684 - R} Z`} fill={PANTS} {...line} />
+      <path d="M200,540 L200,600" stroke="rgba(27,37,65,0.35)" strokeWidth={4} />
+      <Sneaker x={158} y={694 - L} rot={-L * 0.3} />
+      <Sneaker x={242} y={694 - R} rot={R * 0.3} />
+    </g>
+  );
+};
+/** 앞치마 아랫단 (전신일 때 허벅지까지 내려옴) */
+const ApronHem: React.FC<{ short?: boolean }> = ({ short }) => (
+  <g>
+    <path d={short ? "M140,470 L260,470 L262,534 Q200,546 138,534 Z" : "M140,470 L260,470 L264,566 Q200,578 136,566 Z"} fill={React.useContext(PaintCtx).apron} {...line} />
+    <path d="M150,478 L250,478" stroke={C.apron} strokeWidth={12} />
+  </g>
+);
+const Chair: React.FC<{ part: "back" | "seat" }> = ({ part }) =>
+  part === "back" ? (
+    <g>
+      <rect x={76} y={250} width={248} height={290} rx={46} fill="#3A4766" {...line} />
+      <rect x={96} y={270} width={208} height={250} rx={34} fill="#4A5A80" />
+    </g>
+  ) : (
+    <g>
+      <rect x={92} y={548} width={216} height={40} rx={18} fill="#3A4766" {...line} />
+      <rect x={188} y={588} width={24} height={110} fill="#2A3350" {...line} strokeWidth={4} />
+      <path d="M120,742 L200,700 L280,742" fill="none" stroke="#2A3350" strokeWidth={14} strokeLinecap="round" />
+      <circle cx={120} cy={748} r={11} fill="#1B2541" /><circle cx={280} cy={748} r={11} fill="#1B2541" /><circle cx={200} cy={752} r={11} fill="#1B2541" />
+    </g>
+  );
+
 /* ---------------- 머리 ---------------- */
 
 const Head: React.FC<{ expression: Expression; blink: boolean; talk: number; tilt?: number; look?: Pt }> = ({ expression, blink, talk, tilt = 0, look }) => (
@@ -491,7 +553,9 @@ export type BossProps = {
   blink?: boolean;
   talk?: number;
   size?: number; // 높이(px)
-  crop?: "full" | "head" | "bust" | "eyes"; // head: 얼굴 / bust: 얼굴+어깨 / eyes: 눈만
+  crop?: "full" | "head" | "bust" | "eyes" | "body"; // head: 얼굴 / bust: 얼굴+어깨 / eyes: 눈만 / body: 전신(다리 포함)
+  /** 전신 다리 모양 (crop="body"일 때 그려짐) */
+  legs?: Legs;
   headTilt?: number; // 고개 기울기(도)
   look?: Pt; // 눈동자 방향 [x, y]
   t?: number; // 반복 동작용 프레임 (없으면 현재 프레임)
@@ -500,12 +564,12 @@ export type BossProps = {
 };
 
 // full: 상반신 / head: 얼굴 / bust: 얼굴+어깨+손 (2인칭 정면샷) / eyes: 눈만 (익스트림 클로즈업)
-const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288], bust: [-10, 10, 420, 420], eyes: [112, 150, 176, 100] } as const;
+const VIEWBOX = { full: [-20, -30, 440, 510], head: [56, 24, 288, 288], bust: [-10, 10, 420, 420], eyes: [112, 150, 176, 100], body: [-20, -30, 440, 790] } as const;
 
 /** 영상 모드에서 모든 캐릭터에 깜빡임/말하기를 자동으로 넣기 위한 컨텍스트 */
 export const BossLive = React.createContext<{ blink: boolean; talk: number } | null>(null);
 
-export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink: blinkProp, talk: talkProp, size = 480, crop = "full", headTilt = 0, look, t: tProp, soft: softProp, style }) => {
+export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink: blinkProp, talk: talkProp, size = 480, crop = "full", headTilt = 0, look, t: tProp, soft: softProp, style, legs }) => {
   const live = React.useContext(BossLive);
   const soft = softProp ?? React.useContext(BossStyle) === "soft";
   const uid = React.useId().replace(/[^a-zA-Z0-9]/g, "");
@@ -552,10 +616,14 @@ export const Boss: React.FC<BossProps> = ({ pose = "default", expression, blink:
         </defs>
       )}
       <PaintCtx.Provider value={paint}>
+      {crop === "body" && legs === "sit" && <Chair part="back" />}
+      {crop === "body" && legs === "sit" && <Chair part="seat" />}
+      {crop === "body" && <LegsShape mode={legs ?? "stand"} t={t} />}
       {back.map((a, i) => (
         <ArmShape key={`b${i}`} arm={a} />
       ))}
       <Body />
+      {crop === "body" && <ApronHem short={legs === "sit"} />}
       <Head expression={exp} blink={blink} talk={talk} tilt={headTilt} look={look} />
       {pose === "typing" && <LaptopProp />}
       {front.map((a, i) => (

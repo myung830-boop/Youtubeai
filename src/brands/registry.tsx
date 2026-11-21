@@ -117,8 +117,10 @@ export const BRANDS = {
     id: "claude",
     name: "Claude",
     ko: "클로드",
+    // 로고: 사장님이 보내준 Claude 앱 아이콘 캡처에서 추출 (2026-11). 변형 금지.
     colors: { primary: "#D97757", secondary: "#F5F0E8", text: "#FFFFFF" },
-    verified: false,
+    logo: "brands/claude.png",
+    verified: true,
     Glyph: ({ size }) =>
       tile(
         size,
@@ -139,6 +141,22 @@ export const BRANDS = {
     logo: "brands/pickle.png",
     verified: true,
     Glyph: ({ size }) => tile(size, "#63D361", <span style={{ fontFamily: font.family, fontWeight: 900, fontSize: size * 0.4, color: "#0E2A12" }}>P</span>, 0.5),
+  },
+  youtube: {
+    id: "youtube",
+    name: "YouTube",
+    ko: "유튜브",
+    colors: { primary: "#FF0000", text: "#FFFFFF" },
+    verified: false, // 공식 로고 파일 없음 → 빨간 재생 버튼 모양 심볼만 사용
+    Glyph: ({ size }) =>
+      tile(
+        size,
+        "#FF0000",
+        <svg viewBox="0 0 40 40" width={size * 0.6} height={size * 0.6}>
+          <path d="M14,10 L30,20 L14,30 Z" fill="#fff" />
+        </svg>,
+        0.28,
+      ),
   },
   remotion: {
     id: "remotion",
